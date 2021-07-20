@@ -1,0 +1,47 @@
+h1, h2, h3 {
+	text-align: center;
+}
+
+h1 {
+	font-size: 48px;
+}
+
+h2 {
+	font-size: 36px;
+}
+
+img {
+	width: 100px;
+	border-radius: 50%;
+	border: 5px solid var(--secondary-color);
+}
+
+table {
+	border-spacing: 0;
+	width: 90%;
+	margin: auto;
+	font-size: 24px;
+}
+
+table tr:hover {
+	background-color: var(--secondary-color);
+	color: var(--third-color);
+	text-shadow: -1px 1px 0 var(--primary-color), 1px 1px 0 var(--primary-color), 1px -1px 0 var(--primary-color), -1px -1px 0 var(--primary-color);
+}
+
+table tr:hover .front {
+
+}
+
+table tr:hover button {
+	background-color: var(--primary-color);
+}
+
+table tr:hover img {
+	border: 5px solid var(--primary-color);
+}
+
+.link {
+	text-decoration: none;
+	color: inherit;
+}
