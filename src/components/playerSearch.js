@@ -8,7 +8,7 @@ class PlayerSearch extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			username: this.props.match.params.username,
+			username: this.props.match.params.username.replace(/ /g,'').toLowerCase(),
 			player: this.props.match.params.player,
 			user_id: '',
 			player_id: '',
