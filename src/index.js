@@ -7,6 +7,8 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import Leagues from './components/leagues';
 import Roster from './components/roster';
 import PlayerSearch from './components/playerSearch';
+import Leaguemates from './components/leaguemates';
+import CommonLeagues from './components/commonLeagues';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -14,6 +16,8 @@ ReactDOM.render(
     <Route path="/leagues/:username" component={Leagues}/>
     <Route path="/roster/:league_id/:username" component={Roster}/>
     <Route path="/playersearch/:username/:player" component={PlayerSearch}/>
+    <Route path="/leaguemates/:username" component={Leaguemates}/>
+    <Route path="/commonleagues/:username/:username2" component={CommonLeagues}/>
   </BrowserRouter>,
   document.getElementById('root')
 );

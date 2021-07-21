@@ -15,6 +15,7 @@ class Homepage extends Component {
 			playerShares: 'hidden',
 			transactions: 'hidden',
 			username: '',
+			username2: '',
 			player_search: '',
 			keys: []	
 		}
@@ -151,19 +152,23 @@ class Homepage extends Component {
 				{this.state.leaguemates !== 'hidden' ? 
 				(<div className="nav-item" id="leaguemates">
 					<form method="POST">
-						<input type="text"/>
-						<button name="submitButton" value="leaguemates">
-							<span className="front">View All Leaguemates</span>
-						</button>
+						<input type="text" name="username" onBlur={this.handleChange}/>
+						<Link to={"/leaguemates/" + this.state.username}>
+							<button name="submitButton" value="leaguemates">
+								<span className="front">View All Leaguemates</span>
+							</button>
+						</Link>
 					</form>
 				</div>) : null }
 				{this.state.commonLeagues !== 'hidden' ? 
 				(<div className="nav-item" id="common-leagues">
 					<form method="POST">
-						<input type="text"/><input type="text"/>
-						<button name="submitButton" value="common-leagues">
-							<span className="front">View Common Leagues</span>
-						</button>
+						<input type="text" name="username" onBlur={this.handleChange}/><input type="text" name="username2" onBlur={this.handleChange}/>
+						<Link to={"/commonleagues/" + this.state.username + "/" + this.state.username2}>
+							<button name="submitButton" value="common-leagues">
+								<span className="front">View Common Leagues</span>
+							</button>
+						</Link>
 					</form>
 				</div>) : null }
 				{this.state.playerShares !== 'hidden' ? 

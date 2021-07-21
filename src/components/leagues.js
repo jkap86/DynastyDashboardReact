@@ -69,7 +69,7 @@ class Leagues extends Component {
 				<tr style={{ textAlign: 'left' }}>
 					<th></th>
 					<th>League</th>
-					<th>Previous Year Record</th>
+					<th>2020 Record</th>
 					<th>Record</th>
 					<th>Fantasy Points</th>
 					<th>Fantasy Points Against</th>

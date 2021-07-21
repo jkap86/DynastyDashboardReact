@@ -24,7 +24,7 @@ class PlayerSearch extends Component {
 	toggleOwned() {
 		let not_owned = document.getElementsByClassName("not_owned");
 		let available = document.getElementsByClassName("available");
-		if (not_owned[0].style.display === "none") {
+		if (not_owned.length > 0 && not_owned[0].style.display === "none") {
 			for (let i = 0; i < not_owned.length; i++) {
 				not_owned[i].style.display = "table-row";
 			}
@@ -44,7 +44,7 @@ class PlayerSearch extends Component {
 	toggleAvailable() {
 		let owned = document.getElementsByClassName("owned");
 		let not_owned = document.getElementsByClassName("not_owned");
-		if (owned[0].style.display === "none") {
+		if (owned.length > 0 && owned[0].style.display === "none") {
 			for (let i = 0; i < owned.length; i++) {
 				owned[i].style.display = "table-row";
 			}
@@ -64,7 +64,7 @@ class PlayerSearch extends Component {
 	componentDidMount() {
 		let keys = Object.keys(allPlayers);
 		for (let i = 0; i < keys.length; i++) {
-			if ((allPlayers[keys[i]].first_name + " " + allPlayers[keys[i]].last_name + " " + allPlayers[keys[i]].position + " " + allPlayers[keys[i]].team) === this.state.player)  {
+			if ((allPlayers[keys[i]].first_name + " " + allPlayers[keys[i]].last_name + " " + allPlayers[keys[i]].position + " " + (allPlayers[keys[i]].team === null ? 'FA' : allPlayers[keys[i]].team)) === this.state.player)  {
 				let player_id = keys[i];
 				this.setState({
 					player_id: player_id
@@ -91,6 +91,7 @@ class PlayerSearch extends Component {
 						let ownerID = owner === undefined ? 'available' : owner.owner_id
 						let wins = owner === undefined ? 0 : owner.settings.wins
 						let losses = owner === undefined ? 0 : owner.settings.losses
+						let status = owner === undefined ? '-' : (owner.starters.includes(this.state.player_id) ? 'starter' : 'bench')
 						axios.get(`https://api.sleeper.app/v1/user/${ownerID}`)
 						.then(res =>{
 							let ownerName = res.data.username
@@ -99,6 +100,7 @@ class PlayerSearch extends Component {
 								owner: ownerName,
 								wins: wins,
 								losses: losses,
+								status: status,
 								pwins: owner === undefined || owner.metadata === null || owner.metadata.record === undefined ? 0 : (owner.metadata.record.match(/W/g) || []).length,
 								plosses: owner === undefined || owner.metadata === null || owner.metadata.record === undefined ? 0 : (owner.metadata.record.match(/L/g) || []).length
 							})
@@ -125,11 +127,18 @@ class PlayerSearch extends Component {
 			<h3>{this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.pwins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.plosses, 0)}</h3>
 			<h3><button onClick={this.toggleOwned}><span className="front">Toggle Owned</span></button>&nbsp;
 			<button onClick={this.toggleAvailable}><span className="front">Toggle Available</span></button></h3>
-			<table>	
+			<table>
+				<tr style={{ textAlign: 'left' }}>
+					<th>League</th>
+					<th>Owner</th>
+					<th>Current Record</th>
+					<th>2020 Record</th>
+				</tr>	
 				{this.state.info.map(league => 
 					<tr className={league.owner === this.state.username ? 'owned' : (league.owner === 'available' ? 'available' : 'not_owned')}>
 						<td>{league.name}</td>
 						<td>{league.owner}</td>
+						<td>{league.status}</td>
 						<td>{league.wins + " - " + league.losses}</td>
 						<td>{league.pwins + " - " + league.plosses}</td>
 					</tr>
