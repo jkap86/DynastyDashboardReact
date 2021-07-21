@@ -26,7 +26,7 @@ button {
 	text-shadow: -1px 1px 0 var(--secondary-color), 1px 1px 0 var(--secondary-color), 1px -1px 0 var(--secondary-color), -1px -1px 0 var(--secondary-color);
 	font-weight: 900;
 	padding: 5px;
-	font-family: Fantasy;
+	font-family: Papyrus;
 }
 
 button:active .front {

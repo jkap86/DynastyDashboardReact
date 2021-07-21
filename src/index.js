@@ -9,6 +9,7 @@ import Roster from './components/roster';
 import PlayerSearch from './components/playerSearch';
 import Leaguemates from './components/leaguemates';
 import CommonLeagues from './components/commonLeagues';
+import PlayerShares from './components/playerShares';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -18,6 +19,7 @@ ReactDOM.render(
     <Route path="/playersearch/:username/:player" component={PlayerSearch}/>
     <Route path="/leaguemates/:username" component={Leaguemates}/>
     <Route path="/commonleagues/:username/:username2" component={CommonLeagues}/>
+    <Route path="/playershares/:username" component={PlayerShares}/>
   </BrowserRouter>,
   document.getElementById('root')
 );

@@ -123,7 +123,7 @@ class Homepage extends Component {
 				{this.state.viewLeagues !== 'hidden' ? 
 				(<div className="nav-item" id="view-leagues">
 					<form method="POST">
-						<input type="text" name="username" onBlur={this.handleChange}/>
+						<input type="text" placeholder="username" name="username" onBlur={this.handleChange}/>
 						<Link to={"/leagues/" + this.state.username}>
 							<button type="submit" name="submitButton" value="view-leagues">
 								<span className="front">View All Leagues</span>
@@ -134,7 +134,7 @@ class Homepage extends Component {
 				{this.state.playerSearch !== 'hidden' ? 
 				(<div className="nav-item" id="player-search">
 					<form method="POST">
-						<input type="text" list="playersAuto" name="player_search" onBlur={this.handleChange}/><input type="text" name="username" onChange={this.handleChange}/>
+						<input type="text" placeholder="player" list="playersAuto" name="player_search" onBlur={this.handleChange}/><input type="text" placeholder="username" name="username" onChange={this.handleChange}/>
 						<datalist id="playersAuto">
 						{this.state.keys.sort((a, b) => (allPlayers[a].last_name > allPlayers[b].last_name) ? 1 : (allPlayers[a].last_name === allPlayers[b].last_name) ? ((allPlayers[a].first_name > allPlayers[b].first_name) ? 1 : -1) : -1).map(key => 
 							<option>
@@ -152,7 +152,7 @@ class Homepage extends Component {
 				{this.state.leaguemates !== 'hidden' ? 
 				(<div className="nav-item" id="leaguemates">
 					<form method="POST">
-						<input type="text" name="username" onBlur={this.handleChange}/>
+						<input type="text" placeholder="username" name="username" onBlur={this.handleChange}/>
 						<Link to={"/leaguemates/" + this.state.username}>
 							<button name="submitButton" value="leaguemates">
 								<span className="front">View All Leaguemates</span>
@@ -174,10 +174,12 @@ class Homepage extends Component {
 				{this.state.playerShares !== 'hidden' ? 
 				(<div className="nav-item" id="player-shares">
 					<form method="POST">
-						<input type="text"/>
-						<button name="submitButton" value="player-shares">
-							<span className="front">View Player Shares</span>
-						</button>
+						<input type="text" name="username" onBlur={this.handleChange}/>
+						<Link to={"/playershares/" + this.state.username}>
+							<button name="submitButton" value="player-shares">
+								<span className="front">View Player Shares</span>
+							</button>
+						</Link>
 					</form>
 				</div>) : null }
 				{this.state.transactions !== 'hidden' ? 

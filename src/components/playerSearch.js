@@ -3,6 +3,7 @@ import axios from 'axios';
 import Theme from './theme';
 import allPlayers from '../allplayers.json';
 import { Link } from 'react-router-dom';
+import blankplayer from '../blankplayer.jpeg';
 
 class PlayerSearch extends Component {
 	constructor(props) {
@@ -97,6 +98,7 @@ class PlayerSearch extends Component {
 							let ownerName = res.data.username
 							let info = this.state.info.concat({
 								name: this.state.leagues[i].name,
+								avatar: this.state.leagues[i].avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${this.state.leagues[i].avatar}`,
 								owner: ownerName,
 								wins: wins,
 								losses: losses,
@@ -129,6 +131,7 @@ class PlayerSearch extends Component {
 			<button onClick={this.toggleAvailable}><span className="front">Toggle Available</span></button></h3>
 			<table>
 				<tr style={{ textAlign: 'left' }}>
+					<th></th>
 					<th>League</th>
 					<th>Owner</th>
 					<th>Current Record</th>
@@ -136,6 +139,7 @@ class PlayerSearch extends Component {
 				</tr>	
 				{this.state.info.map(league => 
 					<tr className={league.owner === this.state.username ? 'owned' : (league.owner === 'available' ? 'available' : 'not_owned')}>
+						<td><img src={league.avatar}/></td>
 						<td>{league.name}</td>
 						<td>{league.owner}</td>
 						<td>{league.status}</td>
