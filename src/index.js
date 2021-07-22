@@ -10,6 +10,7 @@ import PlayerSearch from './components/playerSearch';
 import Leaguemates from './components/leaguemates';
 import CommonLeagues from './components/commonLeagues';
 import PlayerShares from './components/playerShares';
+import Transactions from './components/transactions';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -20,6 +21,7 @@ ReactDOM.render(
     <Route path="/leaguemates/:username" component={Leaguemates}/>
     <Route path="/commonleagues/:username/:username2" component={CommonLeagues}/>
     <Route path="/playershares/:username" component={PlayerShares}/>
+    <Route path="/transactions/:username" component={Transactions}/>
   </BrowserRouter>,
   document.getElementById('root')
 );

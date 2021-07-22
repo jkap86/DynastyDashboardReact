@@ -33,7 +33,7 @@ class Roster extends Component {
 		.then(res => {
 			let rosters = res.data === null ? [] : res.data;
 			for (let i = 0; i < rosters.length; i++) {
-				if (rosters[i].owner_id === this.state.user_id && rosters[i].players !== null) {
+				if (rosters[i].owner_id === this.state.user_id || rosters[i].co_owners.includes(this.state.user_id) && rosters[i].players !== null) {
 					for (let j = 0; j < rosters[i].players.length; j++) {
 						let players = this.state.players.concat(rosters[i].players[j]);
 						this.setState({
@@ -61,7 +61,7 @@ class Roster extends Component {
 					<th>Age</th>
 					<th>Years Exp</th>
 				</tr>
-				{this.state.players.map(player => 
+				{this.state.players.sort((a, b) => (allPlayers[a].position > allPlayers[b].position) ? 1 : -1).map(player => 
 					<tr>
 						<td>{allPlayers[player].position}</td>
 						<td>{allPlayers[player].number}</td>

@@ -185,10 +185,12 @@ class Homepage extends Component {
 				{this.state.transactions !== 'hidden' ? 
 				(<div className="nav-item" id="transactions">
 					<form method="POST">
-						<input type="text"/>
-						<button name="submitButton" value="transactions">
-							<span className="front">View All Transactions</span>
-						</button>
+						<input type="text" name="username" onBlur={this.handleChange}/>
+						<Link to={"/transactions/" + this.state.username}>
+							<button name="submitButton" value="transactions">
+								<span className="front">View All Transactions</span>
+							</button>
+						</Link>
 					</form>
 				</div>) : null }
 			</div>

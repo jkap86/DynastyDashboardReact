@@ -79,7 +79,7 @@ class Leagues extends Component {
 				{this.state.leagues.map(league => 
 					<tr>
 						<td>
-							<img src={league.avatar !== null ? "https://sleepercdn.com/avatars/thumbs/" + league.avatar : blankplayer} />
+							<img src={league.avatar === null ? blankplayer : "https://sleepercdn.com/avatars/thumbs/" + league.avatar} />
 						</td>
 						<td>
 							{league.name}
