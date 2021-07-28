@@ -100,6 +100,7 @@ class PlayerSearch extends Component {
 								name: this.state.leagues[i].name,
 								avatar: this.state.leagues[i].avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${this.state.leagues[i].avatar}`,
 								owner: ownerName,
+								league_id: this.state.leagues[i].league_id,
 								wins: wins,
 								losses: losses,
 								status: status,
@@ -126,19 +127,24 @@ class PlayerSearch extends Component {
 			<h1>{this.state.username}</h1>
 			<h2>{this.state.player}</h2>
 			<h3>{this.state.info.filter(x => x.owner === this.state.username).length} Shares</h3>
-			<h3>{this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.pwins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.plosses, 0)}</h3>
+			<h3>2021 Record: {this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.wins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.losses, 0)}</h3>
+			<h3>2020 Record: {this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.pwins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.plosses, 0)}</h3>
 			<h3><button onClick={this.toggleOwned}><span className="front">Toggle Owned</span></button>&nbsp;
 			<button onClick={this.toggleAvailable}><span className="front">Toggle Available</span></button></h3>
 			<table>
-				<tr style={{ textAlign: 'left' }}>
-					<th></th>
-					<th>League</th>
-					<th>Owner</th>
-					<th>Current Record</th>
-					<th>2020 Record</th>
-				</tr>	
+				<thead>
+					<tr>
+						<th></th>
+						<th>League</th>
+						<th>Owner</th>
+						<th>Status</th>
+						<th>Current Record</th>
+						<th>2020 Record</th>
+					</tr>
+				</thead>
+				<tbody>	
 				{this.state.info.map(league => 
-					<tr className={league.owner === this.state.username ? 'owned' : (league.owner === 'available' ? 'available' : 'not_owned')}>
+					<tr key={league.league_id} className={league.owner === this.state.username ? 'owned row' : (league.owner === 'available' ? 'available row' : 'not_owned row')}>
 						<td><img src={league.avatar}/></td>
 						<td>{league.name}</td>
 						<td>{league.owner}</td>
@@ -147,6 +153,7 @@ class PlayerSearch extends Component {
 						<td>{league.pwins + " - " + league.plosses}</td>
 					</tr>
 				)}
+				</tbody>
 			</table>
 		</div> 
 	}

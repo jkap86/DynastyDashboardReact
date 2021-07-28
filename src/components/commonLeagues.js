@@ -57,7 +57,20 @@ class CommonLeagues extends Component {
 			<h1><img src={this.state.avatar1}/>{this.state.username1 + " & " + this.state.username2}<img src={this.state.avatar2} /></h1>
 			<h3>{this.state.leagues2.filter(x => this.state.leagues1.map(x => x.league_id).includes(x.league_id)).length} Leagues</h3>
 			<table>
-				{this.state.leagues2.filter(x => this.state.leagues1.map(x => x.league_id).includes(x.league_id)).map(league => <tr><td><img src={league.avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${league.avatar}`}/></td><td>{league.name}</td></tr>)}
+				<thead>
+					<tr>
+						<th></th>
+						<th>League</th>
+					</tr>
+				</thead>
+				<tbody>
+				{this.state.leagues2.filter(x => this.state.leagues1.map(x => x.league_id).includes(x.league_id)).map(league => 
+					<tr key={league.league_id} className="row">
+						<td><img src={league.avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${league.avatar}`}/></td>
+						<td>{league.name}</td>
+					</tr>
+				)}
+				</tbody>
 			</table>
 		</div>
 	}

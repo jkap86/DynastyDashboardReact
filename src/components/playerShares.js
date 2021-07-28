@@ -71,15 +71,18 @@ class PlayerShares extends Component {
 			<Theme/>
 			<h1>{this.state.username} Player Shares</h1>
 			<table>
-				<tr style={{ textAlign: 'left' }}>
-					<th>Player</th>
-					<th>Age</th>
-					<th>College</th>
-					<th>Years Exp</th>
-					<th>Shares</th>
-				</tr>
-				{this.state.playersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player => 
+				<thead>
 					<tr>
+						<th>Player</th>
+						<th>Age</th>
+						<th>College</th>
+						<th>Years Exp</th>
+						<th>Shares</th>
+					</tr>
+				</thead>
+				<tbody>
+				{this.state.playersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player => 
+					<tr key={player.name} className="row">
 						<td>{allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team}</td>
 						<td>{allPlayers[player.name].age}</td>
 						<td>{allPlayers[player.name].college}</td>
@@ -87,6 +90,7 @@ class PlayerShares extends Component {
 						<td>{player.count}</td>
 					</tr>
 				)}
+				</tbody>
 			</table>
 		</div>
 	}

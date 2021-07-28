@@ -52,17 +52,20 @@ class Roster extends Component {
 			<h1>{this.state.username}</h1>
 			<h2>{this.state.league_name}</h2>
 			<table>
-				<tr style={{  textAlign: 'left'}}>
-					<th>Position</th>
-					<th>Number</th>
-					<th>Name</th>
-					<th>Team</th>
-					<th>College</th>
-					<th>Age</th>
-					<th>Years Exp</th>
-				</tr>
-				{this.state.players.sort((a, b) => (allPlayers[a].position > allPlayers[b].position) ? 1 : -1).map(player => 
+				<thead>
 					<tr>
+						<th>Position</th>
+						<th>Number</th>
+						<th>Name</th>
+						<th>Team</th>
+						<th>College</th>
+						<th>Age</th>
+						<th>Years Exp</th>
+					</tr>
+				</thead>
+				<tbody>
+				{this.state.players.sort((a, b) => (allPlayers[a].position > allPlayers[b].position) ? 1 : -1).map(player => 
+					<tr key={player} className="row">
 						<td>{allPlayers[player].position}</td>
 						<td>{allPlayers[player].number}</td>
 						<td>{allPlayers[player].first_name} {allPlayers[player].last_name}</td>
@@ -72,6 +75,7 @@ class Roster extends Component {
 						<td>{allPlayers[player].years_exp}</td>
 					</tr>
 				)}
+				</tbody>
 			</table>
 		</div>
 	}

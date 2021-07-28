@@ -12,12 +12,12 @@ img {
 table {
 	border-spacing: 0;
 	width: 90vw;
-	height: 100vh;
+	height: 85vh;
 	overflow: scroll;
 	margin: auto;
 }
 
-table tr:hover {
+table tr.row:hover {
 	background-color: var(--secondary-color);
 	color: var(--third-color);
 	text-shadow: -1px 1px 0 var(--primary-color), 1px 1px 0 var(--primary-color), 1px -1px 0 var(--primary-color), -1px -1px 0 var(--primary-color);
@@ -27,14 +27,17 @@ table tr:hover .front {
 
 }
 
-table tr:hover button {
+table tr.row:hover button {
 	background-color: var(--primary-color);
 }
 
-table tr:hover img {
+table tr.row:hover img {
 	border: 5px solid var(--primary-color);
 }
 
+th {
+	text-align: left;
+}
 
 .link {
 	text-decoration: none;

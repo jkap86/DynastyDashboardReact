@@ -19,22 +19,22 @@ class Theme extends Component {
 
 	render() {
 		return <div>
-		<select onChange={this.toggleTheme}>
-			<option value='bal' selected={this.state.theme === 'bal'}>BAL</option>
-			<option value='buf' selected={this.state.theme === 'buf'}>BUF</option>
-			<option value='chi' selected={this.state.theme === 'chi'}>CHI</option>
-			<option value='dal' selected={this.state.theme === 'dal'}>DAL</option>
-			<option value='den' selected={this.state.theme === 'den'}>DEN</option>
-			<option value='gb' selected={this.state.theme === 'gb'}>GB</option>
-			<option value='jax' selected={this.state.theme === 'jax'}>JAX</option>
-			<option value='kc' selected={this.state.theme === 'kc'}>KC</option>
-			<option value='mia' selected={this.state.theme === 'mia'}>MIA</option>
-			<option value='ne' selected={this.state.theme === 'ne'}>NE</option>
-			<option value='nyg' selected={this.state.theme === 'nyg'}>NYG</option>
-			<option value='oak' selected={this.state.theme === 'oak'}>OAK</option>
-			<option value='phi' selected={this.state.theme === 'phi'}>PHI</option>
-			<option value='sf' selected={this.state.theme === 'sf'}>SF</option>
-			<option value='was' selected={this.state.theme === 'was'}>WAS</option>		
+		<select onChange={this.toggleTheme} defaultValue={this.state.theme}>
+			<option value='bal'>BAL</option>
+			<option value='buf'>BUF</option>
+			<option value='chi'>CHI</option>
+			<option value='dal'>DAL</option>
+			<option value='den'>DEN</option>
+			<option value='gb'>GB</option>
+			<option value='jax'>JAX</option>
+			<option value='kc'>KC</option>
+			<option value='mia'>MIA</option>
+			<option value='ne'>NE</option>
+			<option value='nyg'>NYG</option>
+			<option value='oak'>OAK</option>
+			<option value='phi'>PHI</option>
+			<option value='sf'>SF</option>
+			<option value='was'>WAS</option>		
 		</select>
 		</div>
 	}

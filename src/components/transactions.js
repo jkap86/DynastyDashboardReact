@@ -3,7 +3,8 @@ import axios from 'axios';
 import Theme from './theme';
 import { Link } from 'react-router-dom';
 import allPlayers from '../allplayers.json';
-import { FixedSizeList as List } from "react-window";
+import ReactPaginate from 'react-paginate';
+
 
 class Transactions extends Component {
 	constructor(props) {
@@ -14,27 +15,12 @@ class Transactions extends Component {
 			leagues: [],
 			transactions: [],
 			transactionsAll: [],
-			roster_id: ''
+			roster_id: '',
+			page: '1'
 		}
-		this.getUsernamefromRosterID = this.getUsernamefromRosterID.bind(this);
+		this.handleClick = this.handleClick.bind(this);
 	}
 
-	getUsernamefromRosterID(roster_id, league_id) {
-		axios.get(`https://api.sleeper.app/v1/league/${league_id}/rosters`)
-		.then(res => {
-			let rosters = res.data === null ? [] : res.data;
-			let roster = rosters.find(x => x.roster_id === roster_id);
-			let owner = roster.owner_id;
-			axios.get(`https://api.sleeper.app/v1/user/${owner}`)
-			.then(res => {
-				let username = res.data.display_name;
-				this.setState({
-					ownername: username
-				})
-			});
-		});
-		return this.state.ownername
-	}
 
 
 	componentDidMount() {
@@ -67,6 +53,7 @@ class Transactions extends Component {
 								}
 								let transactionsAll = this.state.transactionsAll.concat({
 									status_updated: transactions[j].status_updated,
+									id: transactions[j].transaction_id,
 									type: transactions[j].type.replace("_", " "),
 									league: this.state.leagues[i].name,
 									league_id: this.state.leagues[i].league_id,
@@ -89,25 +76,29 @@ class Transactions extends Component {
 		})
 	}
 
+	handleClick(e) {
+		this.setState({
+			page: e.target.value
+		})
+	}
+
 	render() {
 		return <div>
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
 			<h1>{this.state.username} Transactions</h1>
 			<table>
-				{this.state.transactionsAll.sort((a, b) => (a.status_updated < b.status_updated) ? 1 : -1).slice(0, 100).map(transaction => 
-
-					<tr>
-						<td>{new Date(transaction.status_updated).toLocaleString("en-US")}</td>
-						<td>{transaction.type.replace("_", " ")}</td>
-						<td>{transaction.league}</td>
-						<td>{transaction.status}</td>
-						<td>{transaction.adds.map(player => <p><span style={{  fontSize: '36px' }}>+</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)}</p>)}</td>
-						<td>{transaction.drops.map(player => <p><span style={{  fontSize: '36px' }}>-</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)}</p>)}</td>
-					</tr>
-				
-				)}
-			</table>
+			 {this.state.transactionsAll.sort((a, b ) => (a.status_updated < b.status_updated) ? 1 : (a.id < b.id ? 1 : -1)).slice(0, 25).map(transaction =>
+				<tr key={transaction.id} className="row">
+					<td>{new Date(transaction.status_updated).toLocaleString("en-US")}</td>
+					<td>{transaction.type.replace("_", " ")}</td>
+					<td>{transaction.league}</td>
+					<td>{transaction.status}</td>
+					<td>{transaction.adds.map(player => <p><span style={{  fontSize: '36px' }}>+</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)}</p>)}</td>
+					<td>{transaction.drops.map(player => <p><span style={{  fontSize: '36px' }}>-</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)}</p>)}</td>
+				</tr>
+			)}
+			</table>	
 		</div>
 	}
 }

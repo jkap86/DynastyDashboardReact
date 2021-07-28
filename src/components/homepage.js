@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import "./homepage.css";
 import Theme from './theme';
 import allPlayers from '../allplayers.json';
+import JSSoup from 'jssoup';
 
 class Homepage extends Component {
 	constructor(props) {
@@ -137,7 +138,7 @@ class Homepage extends Component {
 						<input type="text" placeholder="player" list="playersAuto" name="player_search" onBlur={this.handleChange}/><input type="text" placeholder="username" name="username" onChange={this.handleChange}/>
 						<datalist id="playersAuto">
 						{this.state.keys.sort((a, b) => (allPlayers[a].last_name > allPlayers[b].last_name) ? 1 : (allPlayers[a].last_name === allPlayers[b].last_name) ? ((allPlayers[a].first_name > allPlayers[b].first_name) ? 1 : -1) : -1).map(key => 
-							<option>
+							<option key={key}>
 								{allPlayers[key].first_name + " " + allPlayers[key].last_name + " " + allPlayers[key].position + " " + (allPlayers[key].team === null ? 'FA' : allPlayers[key].team)}
 							</option>
 						)}

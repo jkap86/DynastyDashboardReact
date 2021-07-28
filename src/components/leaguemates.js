@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import Theme from './theme';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import blankplayer from '../blankplayer.jpeg';
 
 class Leaguemates extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			username: this.props.match.params.username,
+			username: this.props.match.params.username.toLowerCase(),
 			user_id: '',
 			avatar: '',
 			leagues: [],
@@ -37,13 +38,14 @@ class Leaguemates extends Component {
 							const res = [];
 							leaguemates.forEach(el => {
 								const index = res.findIndex(obj => {
-									return obj['name'] === el.display_name;
+									return obj['user_id'] === el.user_id;
 								});
 								if (index === -1) {
 									res.push({
 										"name": el.display_name,
+										user_id: el.user_id,
 										"count": 1,
-										"avatar": `https://sleepercdn.com/avatars/thumbs/${el.avatar}`
+										"avatar": el.avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${el.avatar}`
 									})
 								}
 								else {
@@ -70,7 +72,22 @@ class Leaguemates extends Component {
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username} Leaguemates</h1>
 			<table>
-				{this.state.leaguematesDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(leaguemate => <tr><td><img src={leaguemate.avatar}/></td><td>{leaguemate.name}</td><td>{leaguemate.count}</td></tr>)}
+				<thead>
+					<tr>
+						<th></th>
+						<th>Leaguemate</th>
+						<th>Common Leagues</th>
+					</tr>
+				</thead>
+				<tbody>
+				{this.state.leaguematesDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(leaguemate => 
+					<tr key={leaguemate.user_id} className="row">
+						<td><img src={leaguemate.avatar}/></td>
+						<td>{leaguemate.name}</td>
+						<td>{leaguemate.count}</td>
+					</tr>
+				)}
+				</tbody>
 			</table>
 		</div>
 	}
