@@ -48,8 +48,8 @@
 
 [data-theme="jax"] {
 	--primary-color: #006778;
-	--secondary-color: #D7A22A;
-	--third-color: #101820;
+	--secondary-color: #101820;
+	--third-color: #D7A22A;
 }
 
 [data-theme="buf"] {
@@ -60,8 +60,8 @@
 
 [data-theme="mia"] {
 	--primary-color: #008E97;
-	--secondary-color: #FC4C02;
-	--third-color: #005778;
+	--secondary-color: #005778;
+	--third-color: #FC4C02;
 }
 
 [data-theme="bal"] {

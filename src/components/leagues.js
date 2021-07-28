@@ -101,7 +101,8 @@ class Leagues extends Component {
 			<Theme/>
 			<h1><img src={this.state.avatar} />{this.state.username}</h1>
 			<h2>2021 Record {this.state.leagues.reduce((accumulator, current) => accumulator + current.wins, 0)} - {this.state.leagues.reduce((accumulator, current) => accumulator + current.losses, 0)}</h2>
-			<h2>2020 Record {this.state.leagues.reduce((accumulator, current) => accumulator + current.pwins, 0)} - {this.state.leagues.reduce((accumulator, current) => accumulator + current.plosses, 0)}</h2>
+			<h2>2020 Record {this.state.leagues.reduce((accumulator, current) => accumulator + current.pwins, 0)} - {this.state.leagues.reduce((accumulator, current) => accumulator + current.plosses, 0)} ({this.state.leagues.filter(x => x.pwins + x.plosses !== 0).length} Leagues)</h2>
+			<h2>2020 Champ {this.state.leagues.filter(x => x.winner === x.roster_id).length} Runner Up {this.state.leagues.filter(x => x.second === x.roster_id).length}</h2>
 			<h2>Total Leagues - {this.state.leagues.length}  Best Ball - {this.state.leagues.filter(x => x.best_ball === 1).length}</h2> 
 			<table>
 				<thead>
