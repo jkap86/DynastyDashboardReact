@@ -16,7 +16,9 @@ class Roster extends Component {
 		}
 	}
 
-	componentWillMount() {
+	
+	
+	componentDidMount() {
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
 		.then(res => {
 			this.setState({
