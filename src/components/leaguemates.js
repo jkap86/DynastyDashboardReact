@@ -85,6 +85,7 @@ class Leaguemates extends Component {
 						<td><img src={leaguemate.avatar}/></td>
 						<td>{leaguemate.name}</td>
 						<td>{leaguemate.count}</td>
+						<td><Link to={'/commonleagues/' + this.state.username + '/' + leaguemate.name}><button><span className="front">View Common Leagues</span></button></Link></td>
 					</tr>
 				)}
 				</tbody>

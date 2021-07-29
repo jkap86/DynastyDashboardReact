@@ -151,6 +151,7 @@ class PlayerSearch extends Component {
 						<td>{league.status}</td>
 						<td>{league.wins + " - " + league.losses}</td>
 						<td>{league.pwins + " - " + league.plosses}</td>
+						<td><Link to={'/roster/' + league.league_id + '/' + league.owner}><button><span className="front">View Roster</span></button></Link></td>
 					</tr>
 				)}
 				</tbody>

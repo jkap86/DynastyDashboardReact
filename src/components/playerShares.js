@@ -17,7 +17,7 @@ class PlayerShares extends Component {
 		}
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
 		.then(res => {
 			this.setState({
@@ -88,6 +88,7 @@ class PlayerShares extends Component {
 						<td>{allPlayers[player.name].college}</td>
 						<td>{allPlayers[player.name].years_exp}</td>
 						<td>{player.count}</td>
+						<td style={{ paddingBottom: '10px' }}><Link to={'/playersearch/' + this.state.username + '/' + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].position + " " + (allPlayers[player.name].team === null ? 'FA' : allPlayers[player.name].team)}><button><span className="front">Search Player</span></button></Link></td>
 					</tr>
 				)}
 				</tbody>

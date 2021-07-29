@@ -4,6 +4,7 @@ import Theme from './theme';
 import { Link } from 'react-router-dom';
 import allPlayers from '../allplayers.json';
 import ReactPaginate from 'react-paginate';
+import blankplayer from '../blankplayer.jpeg';
 
 
 class Transactions extends Component {
@@ -12,6 +13,7 @@ class Transactions extends Component {
 		this.state = {
 			username: this.props.match.params.username,
 			user_id: '',
+			avatar: '',
 			leagues: [],
 			transactions: [],
 			transactionsAll: [],
@@ -27,7 +29,8 @@ class Transactions extends Component {
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
 		.then(res => {
 			this.setState({
-				user_id: res.data.user_id
+				user_id: res.data.user_id,
+				avatar: res.data.avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`
 			})
 			axios.get(`https://api.sleeper.app/v1/user/${this.state.user_id}/leagues/nfl/2021`)
 			.then(res => {
@@ -86,7 +89,7 @@ class Transactions extends Component {
 		return <div>
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
-			<h1>{this.state.username} Transactions</h1>
+			<h1><img src={this.state.avatar}/>{this.state.username} Transactions</h1>
 			<table>
 			 {this.state.transactionsAll.sort((a, b ) => (a.status_updated < b.status_updated) ? 1 : (a.id < b.id ? 1 : -1)).slice(0, 25).map(transaction =>
 				<tr key={transaction.id} className="row">
