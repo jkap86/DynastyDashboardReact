@@ -1,1 +1,1 @@
-web pip3 install flask  & flask run
+web pip3 install & flask run
