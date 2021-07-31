@@ -3,6 +3,7 @@ import axios from 'axios';
 import Theme from './theme';
 import allPlayers from '../allplayers.json';
 import { Link } from 'react-router-dom';
+import blankplayer from '../blankplayer.jpeg';
 
 
 class PlayerShares extends Component {
@@ -13,15 +14,17 @@ class PlayerShares extends Component {
 			user_id: '',
 			leagues: [],
 			players: [],
-			playersDict: []
+			playersDict: [],
+			avatar: ''
 		}
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
 		.then(res => {
 			this.setState({
-				user_id: res.data.user_id
+				user_id: res.data.user_id,
+				avatar: res.data.avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`
 			})
 			axios.get(`https://api.sleeper.app/v1/user/${this.state.user_id}/leagues/nfl/2021`)
 			.then(res => {
@@ -69,7 +72,7 @@ class PlayerShares extends Component {
 		return <div>
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
-			<h1>{this.state.username} Player Shares</h1>
+			<h1><img src={this.state.avatar}/>{this.state.username} Player Shares</h1>
 			<table>
 				<thead>
 					<tr>

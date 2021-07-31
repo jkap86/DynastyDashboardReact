@@ -22,7 +22,7 @@ class CommonLeagues extends Component {
 
 
 
-	componentWillMount() {
+	componentDidMount() {
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username1}`)
 		.then(res => {
 			this.setState({
@@ -52,34 +52,35 @@ class CommonLeagues extends Component {
 					.then(res => {
 						let roster1 = res.data.find(x => x.owner_id === this.state.user_id1 || (x.co_owners !== null && x.co_owners.includes(this.state.user_id1)))
 						let roster2 = res.data.find(x => x.owner_id === this.state.user_id2 || (x.co_owners !== null && x.co_owners.includes(this.state.user_id2)))
-						axios.get(`https://api.sleeper.app/v1/league/${this.state.leagues2[i].previous_league_id}/winners_bracket`)
-						.then(res => {
-							let winner = res.data === null ? null : res.data.find(x => x.p === 1).w;
-							let second = res.data === null ? null : res.data.find(x => x.p === 1).l;
-							let leaguesCommon = this.state.leaguesCommon.concat({
-								avatar: this.state.leagues2[i].avatar,
-								name: this.state.leagues2[i].name,
-								league_id: this.state.leagues2[i].league_id,
-								wins1: roster1 === undefined ? null : roster1.settings.wins,
-								losses1: roster1 === undefined ? null : roster1.settings.losses,
-								pWins1: roster1 === undefined || roster1.metadata === null || roster1.metadata.record === undefined ? null : (roster1.metadata.record.match(/W/g) || []).length,
-								pLosses1: roster1 === undefined || roster1.metadata === null || roster1.metadata.record === undefined ? null : (roster1.metadata.record.match(/L/g) || []).length,
-								wins2: roster2 === undefined ? null : roster2.settings.wins,
-								losses2: roster2 === undefined ? null : roster2.settings.losses,
-								pWins2: roster2 === undefined || roster2.metadata === null || roster2.metadata.record === undefined ? null : (roster2.metadata.record.match(/W/g) || []).length,
-								pLosses2: roster2 === undefined || roster2.metadata === null || roster2.metadata.record === undefined ? null : (roster2.metadata.record.match(/L/g) || []).length,
-								roster_id1: roster1 === undefined ? null : roster1.roster_id,
-								roster_id2: roster2 === undefined ? null : roster2.roster_id,
-								winner: winner,
-								second: second
+						if (this.state.leagues2[i].previous_league_id !== null && this.state.leagues2[i].previous_league_id.length > 1) {
+							axios.get(`https://api.sleeper.app/v1/league/${this.state.leagues2[i].previous_league_id}/winners_bracket`)
+							.then(res => {
+								let winner = res.data === null ? null : res.data.find(x => x.p === 1).w;
+								let second = res.data === null ? null : res.data.find(x => x.p === 1).l;
+								let leaguesCommon = this.state.leaguesCommon.concat({
+									avatar: this.state.leagues2[i].avatar,
+									name: this.state.leagues2[i].name,
+									league_id: this.state.leagues2[i].league_id,
+									wins1: roster1 === undefined ? null : roster1.settings.wins,
+									losses1: roster1 === undefined ? null : roster1.settings.losses,
+									pWins1: roster1 === undefined || roster1.metadata === null || roster1.metadata.record === undefined ? null : (roster1.metadata.record.match(/W/g) || []).length,
+									pLosses1: roster1 === undefined || roster1.metadata === null || roster1.metadata.record === undefined ? null : (roster1.metadata.record.match(/L/g) || []).length,
+									wins2: roster2 === undefined ? null : roster2.settings.wins,
+									losses2: roster2 === undefined ? null : roster2.settings.losses,
+									pWins2: roster2 === undefined || roster2.metadata === null || roster2.metadata.record === undefined ? null : (roster2.metadata.record.match(/W/g) || []).length,
+									pLosses2: roster2 === undefined || roster2.metadata === null || roster2.metadata.record === undefined ? null : (roster2.metadata.record.match(/L/g) || []).length,
+									roster_id1: roster1 === undefined ? null : roster1.roster_id,
+									roster_id2: roster2 === undefined ? null : roster2.roster_id,
+									winner: winner,
+									second: second
 
+								})
+								this.setState({
+									leaguesCommon: leaguesCommon
+								})
 							})
-							this.setState({
-								leaguesCommon: leaguesCommon
-							})
-						})
-						.catch()
-							if (this.state.leagues2[i].previous_league_id === null || this.state.leagues2[i].previous_league_id.length < 2) {
+						}
+						else {
 								let leaguesCommon = this.state.leaguesCommon.concat({
 									avatar: this.state.leagues2[i].avatar,
 									name: this.state.leagues2[i].name,
@@ -103,6 +104,8 @@ class CommonLeagues extends Component {
 								})
 
 							}
+
+							
 						
 					})
 					

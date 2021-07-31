@@ -17,8 +17,7 @@ class Transactions extends Component {
 			leagues: [],
 			transactions: [],
 			transactionsAll: [],
-			roster_id: '',
-			page: '1'
+			roster_id: ''
 		}
 		this.handleClick = this.handleClick.bind(this);
 	}
@@ -86,12 +85,13 @@ class Transactions extends Component {
 	}
 
 	render() {
+		let transactionsAll = this.state.transactionsAll.sort((a, b) => (a.status_updated < b.status_updated) ? 1 : (a.id < b.id ? 1 : -1))
 		return <div>
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username} Transactions</h1>
 			<table>
-			 {this.state.transactionsAll.sort((a, b ) => (a.status_updated < b.status_updated) ? 1 : (a.id < b.id ? 1 : -1)).slice(0, 25).map(transaction =>
+			 {transactionsAll.slice(0, 25).map(transaction =>
 				<tr key={transaction.id} className="row">
 					<td>{new Date(transaction.status_updated).toLocaleString("en-US")}</td>
 					<td>{transaction.type.replace("_", " ")}</td>

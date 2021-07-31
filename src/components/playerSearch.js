@@ -12,6 +12,7 @@ class PlayerSearch extends Component {
 			username: this.props.match.params.username.replace(/ /g,'').toLowerCase(),
 			player: this.props.match.params.player,
 			user_id: '',
+			avatar: '',
 			player_id: '',
 			leagues: [],
 			rosters: [],
@@ -76,7 +77,8 @@ class PlayerSearch extends Component {
 		.then(res => {
 			let user_id = res.data.user_id;
 			this.setState({
-				user_id: user_id
+				user_id: user_id,
+				avatar: res.data.avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`
 			})
 			axios.get(`https://api.sleeper.app/v1/user/${this.state.user_id}/leagues/nfl/2021`)
 			.then(res => {
@@ -124,7 +126,7 @@ class PlayerSearch extends Component {
 		return <div>
 			<Link className="link" to="/">Home</Link>
 			<Theme/>
-			<h1>{this.state.username}</h1>
+			<h1><img src={this.state.avatar}/>{this.state.username}</h1>
 			<h2>{this.state.player}</h2>
 			<h3>{this.state.info.filter(x => x.owner === this.state.username).length} Shares</h3>
 			<h3>2021 Record: {this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.wins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.losses, 0)}</h3>
@@ -151,7 +153,7 @@ class PlayerSearch extends Component {
 						<td>{league.status}</td>
 						<td>{league.wins + " - " + league.losses}</td>
 						<td>{league.pwins + " - " + league.plosses}</td>
-						<td><Link to={'/roster/' + league.league_id + '/' + league.owner}><button><span className="front">View Roster</span></button></Link></td>
+						<td><Link to={'/roster/' + league.league_id + '/' + (league.owner === 'available' ? this.state.username : league.owner)}><button><span className="front">View {league.owner === 'available' ? this.state.username : league.owner} Roster</span></button></Link></td>
 					</tr>
 				)}
 				</tbody>

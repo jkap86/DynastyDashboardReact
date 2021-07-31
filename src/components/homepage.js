@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import "./homepage.css";
 import Theme from './theme';
 import allPlayers from '../allplayers.json';
-import JSSoup from 'jssoup';
+import axios from 'axios';
+
 
 class Homepage extends Component {
 	constructor(props) {
@@ -18,7 +19,8 @@ class Homepage extends Component {
 			username: '',
 			username2: '',
 			player_search: '',
-			keys: []	
+			keys: [],
+			players: []
 		}
 		this.handleClick1 = this.handleClick1.bind(this);
 		this.handleClick2 = this.handleClick2.bind(this);
@@ -101,11 +103,29 @@ class Homepage extends Component {
 		})
 	}
 
+
+
 	componentDidMount() {
 		let keys = Object.keys(allPlayers);
 		this.setState({
 			keys: keys
 		});
+		fetch('/dynastyvalues')
+		.then(res => res.json()).then(data => {
+			let players = data.name
+			for (let i = 0; i < players.length; i++) {
+				let playerx = this.state.players.concat({
+					name: players[i].name,
+					searchName: players[i].searchName,
+					team: players[i].team,
+					value: players[i].value,
+					position: players[i].position
+				})
+				this.setState({
+					players: playerx
+				})
+			}
+		})
 	}
 
 	render() {
@@ -164,7 +184,7 @@ class Homepage extends Component {
 				{this.state.commonLeagues !== 'hidden' ? 
 				(<div className="nav-item" id="common-leagues">
 					<form method="POST">
-						<input type="text" name="username" onBlur={this.handleChange}/><input type="text" name="username2" onBlur={this.handleChange}/>
+						<input type="text" name="username" placeholder="username" onBlur={this.handleChange}/><input type="text" placeholder="username" name="username2" onBlur={this.handleChange}/>
 						<Link to={"/commonleagues/" + this.state.username + "/" + this.state.username2}>
 							<button name="submitButton" value="common-leagues">
 								<span className="front">View Common Leagues</span>
@@ -175,7 +195,7 @@ class Homepage extends Component {
 				{this.state.playerShares !== 'hidden' ? 
 				(<div className="nav-item" id="player-shares">
 					<form method="POST">
-						<input type="text" name="username" onBlur={this.handleChange}/>
+						<input type="text" name="username" placeholder="username" onBlur={this.handleChange}/>
 						<Link to={"/playershares/" + this.state.username}>
 							<button name="submitButton" value="player-shares">
 								<span className="front">View Player Shares</span>
@@ -186,7 +206,7 @@ class Homepage extends Component {
 				{this.state.transactions !== 'hidden' ? 
 				(<div className="nav-item" id="transactions">
 					<form method="POST">
-						<input type="text" name="username" onBlur={this.handleChange}/>
+						<input type="text" name="username" placeholder="username" onBlur={this.handleChange}/>
 						<Link to={"/transactions/" + this.state.username}>
 							<button name="submitButton" value="transactions">
 								<span className="front">View All Transactions</span>
@@ -195,7 +215,21 @@ class Homepage extends Component {
 					</form>
 				</div>) : null }
 			</div>
-
+			<h1>Dynasty Values</h1>
+			<table style={{ width: '35%', textAlign: 'left' }}>
+				<tr>
+					<th>Position</th>
+					<th>Name</th>
+					<th>Value</th>
+				</tr>
+				{this.state.players.map(player => 
+					<tr className="row">
+						<td>{player.position}</td>
+						<td>{player.name} {player.team}</td>
+						<td>{player.value}</td>
+					</tr>)
+				}
+			</table>
 		</div>
 	}
 }
