@@ -1,1 +1,1 @@
-web cd api & flask run
+web npm start & cd api & flask run
