@@ -110,7 +110,13 @@ class Homepage extends Component {
 		this.setState({
 			keys: keys
 		});
-		fetch('/dynastyvalues')
+		fetch('/dynastyvalues', {
+			headers: {
+				'Content-Type': 'application/json',
+				'Accept': 'application/json'
+			}
+		})
+			
 		.then(res => res.json()).then(data => {
 			let players = data.name
 			for (let i = 0; i < players.length; i++) {
