@@ -1,1 +1,1 @@
-web pip3 install & flask run
+web gunicorn app:app $PORT & npm start
