@@ -15,9 +15,27 @@ class PlayerShares extends Component {
 			leagues: [],
 			players: [],
 			playersDict: [],
-			avatar: ''
+			avatar: '',
+			qbcheck: true,
+			rbcheck: true,
+			wrcheck: true,
+			techeck: true
+
 		}
+		this.filterPosition = this.filterPosition.bind(this)
 	}
+
+	filterPosition(e) {
+		const position = e.target.value
+		const name = e.target.name
+		let positionSelected = document.getElementsByClassName(position)
+		for (let i = 0; i < positionSelected.length; i++) {
+			positionSelected[i].style.display = positionSelected[i].style.display === 'none' ? 'table-row' : 'none' 
+		}
+		this.setState({
+			[name]: e.target.checked
+		})
+	} 
 
 	componentDidMount() {
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
@@ -73,6 +91,14 @@ class PlayerShares extends Component {
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username} Player Shares</h1>
+			<h2>{this.state.leagues.length} Leagues</h2>
+			<label>
+				Position
+				QB <input value="QB" name="qbcheck" checked={this.state.qbcheck} onChange={this.filterPosition} type="checkbox"/>
+				RB <input value="RB" name="rbcheck" checked={this.state.rbcheck} onChange={this.filterPosition} type="checkbox"/>
+				WR <input value="WR" name="wrcheck" checked={this.state.wrcheck} onChange={this.filterPosition} type="checkbox"/>
+				TE <input value="TE" name="techeck" checked={this.state.techeck} onChange={this.filterPosition} type="checkbox"/>
+			</label>
 			<table>
 				<thead>
 					<tr>
@@ -85,7 +111,7 @@ class PlayerShares extends Component {
 				</thead>
 				<tbody>
 				{this.state.playersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player => 
-					<tr key={player.name} className="row">
+					<tr key={player.name} className={`row player ${allPlayers[player.name].position}`}>
 						<td>{allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team}</td>
 						<td>{allPlayers[player.name].age}</td>
 						<td>{allPlayers[player.name].college}</td>
