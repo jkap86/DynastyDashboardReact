@@ -1,1 +1,1 @@
-web cd venv/ & flask run
+web flask run
