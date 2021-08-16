@@ -133,7 +133,7 @@ class PlayerShares extends Component {
 				<input onChange={this.filterYear} checked={this.state.six} value="2015" name="six" type="checkbox"/> 2015
 				<input onChange={this.filterYear} checked={this.state.seven} value="2014" name="seven" type="checkbox"/> 2014
 				<input onChange={this.filterYear} checked={this.state.eight} value="2013" name="eight" type="checkbox"/> 2013
-				<input onChange={this.filterYear} checked={this.state.nine} value="2012" name="nine" type="checkbox"/> 2012
+				<input onChange={this.filterYear} checked={this.state.nine} value="2012" name="nine" type="checkbox"/> Pre-2013
 			</label>
 			</h3>
 			<table>

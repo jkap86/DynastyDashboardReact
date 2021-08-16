@@ -119,7 +119,7 @@ class Leagues extends Component {
 					</tr>
 				</thead>
 				<tbody>
-				{this.state.leagues.map(league => 
+				{this.state.leagues.sort((a, b) => (a.name > b.name) ? 1 : -1).map(league => 
 					<tr key={league.league_id} className="row">
 						<td>
 							<img src={league.avatar === null ? blankplayer : "https://sleepercdn.com/avatars/thumbs/" + league.avatar} />
