@@ -53,7 +53,10 @@ class Leagues extends Component {
 									pwins: roster === undefined || roster.metadata === null || roster.metadata.record === undefined ? 0 : (roster.metadata.record.match(/W/g) || []).length,
 									plosses: roster === undefined || roster.metadata === null || roster.metadata.record === undefined ? 0 : (roster.metadata.record.match(/L/g) || []).length,
 									winner: winner,
-									second: second
+									second: second,
+									spots: leagues[i].roster_positions.filter(x => x !== 'BN').length,
+									starters: roster === undefined ? 0 : roster.starters.filter(x => x !== '0').length
+
 								})
 								this.setState({
 									leagues: leagues2
@@ -75,7 +78,9 @@ class Leagues extends Component {
 										pwins: roster === undefined || roster.metadata === null || roster.metadata.record === undefined ? 0 : (roster.metadata.record.match(/W/g) || []).length,
 										plosses: roster === undefined || roster.metadata === null || roster.metadata.record === undefined ? 0 : (roster.metadata.record.match(/L/g) || []).length,
 										winner: null,
-										second: null
+										second: null,
+										spots: leagues[i].roster_positions.filter(x => x !== 'BN').length,
+										starters: roster === undefined ? 0 : roster.starters.filter(x => x !== '0').length
 									})
 									this.setState({
 										leagues: leagues2
@@ -126,6 +131,7 @@ class Leagues extends Component {
 						</td>
 						<td>
 							{league.name}
+							<div>{league.spots !== league.starters && (league.best_ball !== 1) ? 'INVALID' : null}</div>
 						</td>
 						<td>
 							{league.pwins} - {league.plosses} {league.roster_id === league.winner ? 'Champ' : (league.roster_id === league.second ? 'Runner Up' : null)}
