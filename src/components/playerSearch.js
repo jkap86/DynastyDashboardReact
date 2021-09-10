@@ -94,7 +94,7 @@ class PlayerSearch extends Component {
 						let ownerID = owner === undefined ? 'available' : owner.owner_id
 						let wins = owner === undefined ? 0 : owner.settings.wins
 						let losses = owner === undefined ? 0 : owner.settings.losses
-						let status = owner === undefined ? '-' : (owner.starters.includes(this.state.player_id) ? 'starter' : 'bench')
+						let status = owner === undefined ? '-' : (owner.starters.includes(this.state.player_id) ? 'starter' : (owner.taxi !== null && owner.taxi.includes(this.state.player_id) ? 'taxi' : (owner.reserve !== null && owner.reserve.includes(this.state.player_id) ? 'IR' : 'bench')))
 						axios.get(`https://api.sleeper.app/v1/user/${ownerID}`)
 						.then(res =>{
 							let ownerName = res.data.username
@@ -145,7 +145,7 @@ class PlayerSearch extends Component {
 					</tr>
 				</thead>
 				<tbody>	
-				{this.state.info.map(league => 
+				{this.state.info.sort((a, b) => (a.name > b.name) ? 1 : -1).map(league => 
 					<tr key={league.league_id} className={league.owner === this.state.username ? 'owned row' : (league.owner === 'available' ? 'available row' : 'not_owned row')}>
 						<td><img src={league.avatar}/></td>
 						<td>{league.name}</td>
