@@ -62,7 +62,8 @@ class Transactions extends Component {
 									owners: owners,
 									adds: Object.keys(transactions[j].adds === null ? {} : transactions[j].adds).filter(x => transactions[j].adds[x] === this.state.roster_id),
 									drops: Object.keys(transactions[j].drops === null ? {} : transactions[j].drops).filter(x => transactions[j].drops[x] === this.state.roster_id),
-									roster_id: this.state.roster_id
+									roster_id: this.state.roster_id,
+									draft_picks: transactions[j].draft_picks
 
 								})
 								this.setState({
@@ -91,14 +92,20 @@ class Transactions extends Component {
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username} Transactions</h1>
 			<table>
-			 {transactionsAll.slice(0, 25).map(transaction =>
+			 {transactionsAll.slice(0, 100).map(transaction =>
 				<tr key={transaction.id} className="row">
 					<td>{new Date(transaction.status_updated).toLocaleString("en-US")}</td>
 					<td>{transaction.type.replace("_", " ")}</td>
 					<td>{transaction.league}</td>
 					<td>{transaction.status}</td>
-					<td>{transaction.adds.map(player => <p><span style={{  fontSize: '36px' }}>+</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)}</p>)}</td>
-					<td>{transaction.drops.map(player => <p><span style={{  fontSize: '36px' }}>-</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)}</p>)}</td>
+					<td>
+						{transaction.adds.map(player => <p><span style={{  fontSize: '36px' }}>+</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)}</p>)}
+						{transaction.draft_picks.filter(x => x.owner_id === transaction.roster_id).map(pick => <p><span style={{  fontSize: '36px' }}>+</span> {pick.season + ' Round ' + pick.round}</p>)}
+					</td>
+					<td>
+						{transaction.drops.map(player => <p><span style={{  fontSize: '36px' }}>-</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)}</p>)}
+						{transaction.draft_picks.filter(x => x.previous_owner_id === transaction.roster_id).map(pick => <p><span style={{  fontSize: '36px' }}>-</span> {pick.season + ' Round ' + pick.round}</p>)}
+					</td>
 				</tr>
 			)}
 			</table>	
