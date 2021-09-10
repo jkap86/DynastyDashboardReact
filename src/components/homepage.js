@@ -20,7 +20,9 @@ class Homepage extends Component {
 			username2: '',
 			player_search: '',
 			keys: [],
-			players: []
+			players: [],
+			matchups: 'hidden',
+			week: ''
 		}
 		this.handleClick1 = this.handleClick1.bind(this);
 		this.handleClick2 = this.handleClick2.bind(this);
@@ -28,6 +30,7 @@ class Homepage extends Component {
 		this.handleClick4 = this.handleClick4.bind(this);
 		this.handleClick5 = this.handleClick5.bind(this);
 		this.handleClick6 = this.handleClick6.bind(this);
+		this.handleClick7 = this.handleClick7.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
 
@@ -38,7 +41,8 @@ class Homepage extends Component {
 			leaguemates: 'hidden',
 			commonLeagues: 'hidden',
 			playerShares: 'hidden',
-			transactions: 'hidden'
+			transactions: 'hidden',
+			matchups: 'hidden'
 		})
 	}
 
@@ -49,7 +53,8 @@ class Homepage extends Component {
 			leaguemates: 'hidden',
 			commonLeagues: 'hidden',
 			playerShares: 'hidden',
-			transactions: 'hidden'
+			transactions: 'hidden',
+			matchups: 'hidden'
 		})
 	}
 
@@ -60,7 +65,8 @@ class Homepage extends Component {
 			leaguemates: 'visible',
 			commonLeagues: 'hidden',
 			playerShares: 'hidden',
-			transactions: 'hidden'
+			transactions: 'hidden',
+			matchups: 'hidden'
 		})
 	}
 
@@ -71,7 +77,8 @@ class Homepage extends Component {
 			leaguemates: 'hidden',
 			commonLeagues: 'visible',
 			playerShares: 'hidden',
-			transactions: 'hidden'
+			transactions: 'hidden',
+			matchups: 'hidden'
 		})
 	}
 
@@ -82,7 +89,8 @@ class Homepage extends Component {
 			leaguemates: 'hidden',
 			commonLeagues: 'hidden',
 			playerShares: 'visible',
-			transactions: 'hidden'
+			transactions: 'hidden',
+			matchups: 'hidden'
 		})
 	}
 
@@ -93,7 +101,20 @@ class Homepage extends Component {
 			leaguemates: 'hidden',
 			commonLeagues: 'hidden',
 			playerShares: 'hidden',
-			transactions: 'visible'
+			transactions: 'visible',
+			matchups: 'hidden'
+		})
+	}
+
+	handleClick7(e) {
+		this.setState({
+			viewLeagues: 'hidden',
+			playerSearch: 'hidden',
+			leaguemates: 'hidden',
+			commonLeagues: 'hidden',
+			playerShares: 'hidden',
+			transactions: 'hidden',
+			matchups: 'visible'
 		})
 	}
 
@@ -139,6 +160,7 @@ class Homepage extends Component {
 				<li><button onClick={this.handleClick4}><span className="front">View Common Leagues</span></button></li>
 				<li><button onClick={this.handleClick5}><span className="front">View Player Shares</span></button></li>
 				<li><button onClick={this.handleClick6}><span className="front">View All Transactions</span></button></li>
+				<li><button onClick={this.handleClick7}><span className="front">View Matchups</span></button></li>
 			</ol>
 			<div className="input">
 				{this.state.viewLeagues !== 'hidden' ? 
@@ -214,14 +236,41 @@ class Homepage extends Component {
 						</Link>
 					</form>
 				</div>) : null }
+				{this.state.matchups !== 'hidden' ? 
+				(<div className = "nav-item" id="matchups">
+					<form method="POST">
+						<input type="text" name="username" placeholder="username" onBlur={this.handleChange}/>
+						<select type="text" name="week" placeholder="week" onBlur={this.handleChange}>
+							<option>select week</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+						</select>
+						<Link to={"/matchups/" + this.state.username + "/" + this.state.week}>
+							<button name="submitButton" value="matchups">
+								<span className="front">View Matchups</span>
+							</button>
+						</Link>
+					</form>
+				</div>) : null}
+			
 			</div>
-			<h1>Dynasty Values</h1>
 			<table style={{ width: '35%', textAlign: 'left' }}>
-				<tr>
-					<th>Position</th>
-					<th>Name</th>
-					<th>Value</th>
-				</tr>
 				{this.state.players.map(player => 
 					<tr className="row">
 						<td>{player.position}</td>

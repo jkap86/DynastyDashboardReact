@@ -11,6 +11,7 @@ import Leaguemates from './components/leaguemates';
 import CommonLeagues from './components/commonLeagues';
 import PlayerShares from './components/playerShares';
 import Transactions from './components/transactions';
+import Matchups from './components/matchups';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -22,6 +23,7 @@ ReactDOM.render(
     <Route path="/commonleagues/:username/:username2" component={CommonLeagues}/>
     <Route path="/playershares/:username" component={PlayerShares}/>
     <Route path="/transactions/:username" component={Transactions}/>
+    <Route path="/matchups/:username/:week" component={Matchups}/> 
   </BrowserRouter>,
   document.getElementById('root')
 );
