@@ -67,7 +67,7 @@ class Transactions extends Component {
 
 								})
 								this.setState({
-									transactionsAll: transactionsAll.filter(x => x.owners.includes(this.state.user_id))
+									transactionsAll: transactionsAll.filter(x => x.owners.includes(this.state.user_id)).sort((a, b) => (a.status_updated < b.status_updated) ? 1 : (a.id < b.id ? 1 : -1))
 								})
 							}
 						})
@@ -92,7 +92,7 @@ class Transactions extends Component {
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username} Transactions</h1>
 			<table>
-			 {transactionsAll.slice(0, 100).map(transaction =>
+			 {transactionsAll.slice(0, 25).map(transaction =>
 				<tr key={transaction.id} className="row">
 					<td>{new Date(transaction.status_updated).toLocaleString("en-US")}</td>
 					<td>{transaction.type.replace("_", " ")}</td>
