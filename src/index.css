@@ -1,4 +1,16 @@
 :root {
+	--primary-color: black;
+	--secondary-color: lightgrey;
+	--third-color: blue;
+}
+
+[data-theme="light"] {
+	--primary-color: lightgrey;
+	--secondary-color: black;
+	--third-color: blue;
+}
+
+[data-theme="was"] {
 	--primary-color: #773141;
 	--secondary-color: #FFB612;
 	--third-color: white;
@@ -97,7 +109,7 @@
 
 body {
   margin: 0;
-  font-family: Papyrus;
+  font-family: Courier New;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 

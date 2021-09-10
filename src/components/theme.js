@@ -20,6 +20,8 @@ class Theme extends Component {
 	render() {
 		return <div>
 		<select onChange={this.toggleTheme} defaultValue={this.state.theme} style={{ fontSize: '14px', padding: '0'}}>
+			<option value="default">default</option>
+			<option value="light">light</option>
 			<option value='bal'>BAL</option>
 			<option value='buf'>BUF</option>
 			<option value='chi'>CHI</option>
