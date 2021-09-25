@@ -35,7 +35,7 @@ class Matchups extends Component {
 						let rid = res.data.find(x => x.owner_id === this.state.user_id) === undefined ? null : res.data.find(x => x.owner_id === this.state.user_id).roster_id
 						axios.get(`https://api.sleeper.app/v1/league/${leagues[i].league_id}/matchups/${this.state.week}`)
 						.then(res => {
-							let matchup = res.data.find(x => x.roster_id === rid)
+							let matchup = res.data.find(x => x.roster_id === rid || (x.co_owners !== undefined && x.co_owners.includes(x.roster_id)))
 							let starters = this.state.players.concat(matchup === undefined ? null : matchup.starters)
 							let opponent = res.data.find(x => x !== undefined && matchup !== undefined && x.matchup_id === matchup.matchup_id && x.roster_id !== rid)
 							let oppStarters = this.state.oppPlayers.concat(opponent === undefined ? null : opponent.starters)
@@ -72,6 +72,8 @@ class Matchups extends Component {
 
 	render() {
 		return <>
+				<Link to="/" className="link">Home</Link>
+				<Theme/>
 				<h1>Matchups</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
 				<table style={{  margin: 'auto', width: '75%'}}>
@@ -82,7 +84,7 @@ class Matchups extends Component {
 					<tr style={{ verticalAlign: 'top'}}>
 						<td>
 							{this.state.playersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player => 
-								<tr className="row"><td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td><td>{player.count}</td></tr>
+								<tr className="row"><td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td><td>{player.count}</td><td>({this.state.oppPlayersDict.find(x => x.name === player.name) === undefined ? 0 : this.state.oppPlayersDict.find(x => x.name === player.name).count})</td></tr>
 								)}
 						</td>
 						<td>

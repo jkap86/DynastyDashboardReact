@@ -127,6 +127,12 @@ class Homepage extends Component {
 
 
 	componentDidMount() {
+		axios.get(`https://api.sleeper.app/v1/state/nfl`)
+		.then(res => {
+			this.setState({
+				week: res.data.week
+			})
+		})
 		let keys = Object.keys(allPlayers);
 		this.setState({
 			keys: keys
@@ -229,7 +235,29 @@ class Homepage extends Component {
 				(<div className="nav-item" id="transactions">
 					<form method="POST">
 						<input type="text" name="username" placeholder="username" onBlur={this.handleChange}/>
-						<Link to={"/transactions/" + this.state.username}>
+						<label for="week" style={{ fontSize: "24px", padding: "10px" }}>Week</label>
+						<select type="text" name="week" placeholder="week" onBlur={this.handleChange} defaultValue={this.state.week}>
+							<option>select week</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+						</select>
+						<Link to={"/transactions/" + this.state.username + "/" + this.state.week}>
 							<button name="submitButton" value="transactions">
 								<span className="front">View All Transactions</span>
 							</button>
@@ -240,7 +268,8 @@ class Homepage extends Component {
 				(<div className = "nav-item" id="matchups">
 					<form method="POST">
 						<input type="text" name="username" placeholder="username" onBlur={this.handleChange}/>
-						<select type="text" name="week" placeholder="week" onBlur={this.handleChange}>
+						<label for="week" style={{ fontSize: "24px", padding: "10px" }}>Week</label>
+						<select type="text" name="week" placeholder="week" onBlur={this.handleChange} defaultValue={this.state.week}>
 							<option>select week</option>
 							<option value="1">1</option>
 							<option value="2">2</option>

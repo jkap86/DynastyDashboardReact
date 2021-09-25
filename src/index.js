@@ -22,7 +22,7 @@ ReactDOM.render(
     <Route path="/leaguemates/:username" component={Leaguemates}/>
     <Route path="/commonleagues/:username/:username2" component={CommonLeagues}/>
     <Route path="/playershares/:username" component={PlayerShares}/>
-    <Route path="/transactions/:username" component={Transactions}/>
+    <Route path="/transactions/:username/:week" component={Transactions}/>
     <Route path="/matchups/:username/:week" component={Matchups}/> 
   </BrowserRouter>,
   document.getElementById('root')

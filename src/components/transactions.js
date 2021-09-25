@@ -17,14 +17,17 @@ class Transactions extends Component {
 			leagues: [],
 			transactions: [],
 			transactionsAll: [],
-			roster_id: ''
+			roster_id: '',
+			week: this.props.match.params.week
 		}
 		this.handleClick = this.handleClick.bind(this);
+		this.toggleWeek = this.toggleWeek.bind(this);
 	}
 
 
 
 	componentDidMount() {
+		
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
 		.then(res => {
 			this.setState({
@@ -38,7 +41,7 @@ class Transactions extends Component {
 					leagues: leagues
 				})
 				for (let i = 0; i < this.state.leagues.length; i++) {
-					axios.get(`https://api.sleeper.app/v1/league/${this.state.leagues[i].league_id}/transactions/1`)
+					axios.get(`https://api.sleeper.app/v1/league/${this.state.leagues[i].league_id}/transactions/${this.state.week}`)
 					.then(res => {
 						const transactions = res.data
 						axios.get(`https://api.sleeper.app/v1/league/${this.state.leagues[i].league_id}/rosters`)
@@ -63,7 +66,8 @@ class Transactions extends Component {
 									adds: Object.keys(transactions[j].adds === null ? {} : transactions[j].adds).filter(x => transactions[j].adds[x] === this.state.roster_id),
 									drops: Object.keys(transactions[j].drops === null ? {} : transactions[j].drops).filter(x => transactions[j].drops[x] === this.state.roster_id),
 									roster_id: this.state.roster_id,
-									draft_picks: transactions[j].draft_picks
+									draft_picks: transactions[j].draft_picks,
+									bid: transactions[j].type === 'waiver' && transactions[j].settings !== null ? transactions[j].settings.waiver_bid : null
 
 								})
 								this.setState({
@@ -85,21 +89,27 @@ class Transactions extends Component {
 		})
 	}
 
+	toggleWeek(e) {
+		this.setState({
+			week: e.target.value
+		})
+	}
+
 	render() {
-		let transactionsAll = this.state.transactionsAll.sort((a, b) => (a.status_updated < b.status_updated) ? 1 : (a.id < b.id ? 1 : -1))
 		return <div>
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username} Transactions</h1>
+			<h2>Week {this.state.week}</h2>
 			<table>
-			 {transactionsAll.slice(0, 25).map(transaction =>
+			 {this.state.transactionsAll.sort((a,b) => a.status_updated < b.status_updated ? 1 : -1).map(transaction =>
 				<tr key={transaction.id} className="row">
 					<td>{new Date(transaction.status_updated).toLocaleString("en-US")}</td>
 					<td>{transaction.type.replace("_", " ")}</td>
 					<td>{transaction.league}</td>
 					<td>{transaction.status}</td>
 					<td>
-						{transaction.adds.map(player => <p><span style={{  fontSize: '36px' }}>+</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)}</p>)}
+						{transaction.adds.map(player => <p><span style={{  fontSize: '36px' }}>+</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)} {transaction.type === 'waiver' ? '$' + transaction.bid : null}</p>)}
 						{transaction.draft_picks.filter(x => x.owner_id === transaction.roster_id).map(pick => <p><span style={{  fontSize: '36px' }}>+</span> {pick.season + ' Round ' + pick.round}</p>)}
 					</td>
 					<td>

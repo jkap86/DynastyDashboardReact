@@ -141,7 +141,7 @@ class PlayerSearch extends Component {
 						<th>Owner</th>
 						<th>Status</th>
 						<th>Current Record</th>
-						<th>2020 Record</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>	
@@ -152,7 +152,6 @@ class PlayerSearch extends Component {
 						<td>{league.owner}</td>
 						<td>{league.status}</td>
 						<td>{league.wins + " - " + league.losses}</td>
-						<td>{league.pwins + " - " + league.plosses}</td>
 						<td><Link to={'/roster/' + league.league_id + '/' + (league.owner === 'available' ? this.state.username : league.owner)}><button><span className="front">View {league.owner === 'available' ? this.state.username : league.owner} Roster</span></button></Link></td>
 					</tr>
 				)}

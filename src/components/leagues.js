@@ -14,7 +14,7 @@ class Leagues extends Component {
 			user_id: '',
 			roster: '',
 			avatar: '',
-			winner: []
+			rosterp: ''
 		}
 	}
 
@@ -36,6 +36,11 @@ class Leagues extends Component {
 					axios.get(`https://api.sleeper.app/v1/league/${leagues[i].league_id}/rosters`)
 					.then(res => {
 						let roster = res.data.find(x => x.owner_id === this.state.user_id)
+						axios.get(`https://api.sleeper.app/v1/league/${leagues[i].previous_league_id}/rosters`)
+						.then(res => {
+							let rosterp = res.data === null ? null : res.data.find(x => x.owner_id === this.state.user_id)
+
+						})
 						axios.get(`https://api.sleeper.app/v1/league/${leagues[i].previous_league_id}/winners_bracket`)
 						.then(res => {
 							let winner = res.data === null ? null : res.data.find(x => x.p === 1).w
@@ -108,7 +113,6 @@ class Leagues extends Component {
 			<Theme/>
 			<h1><img src={this.state.avatar} />{this.state.username}</h1>
 			<h2>2021 Record: {record}</h2>
-			<h2>2020 Record: {pRecord} ({this.state.leagues.filter(x => x.pwins + x.plosses !== 0).length} Leagues)</h2>
 			<h2>2020: Champ {this.state.leagues.filter(x => x.winner === x.roster_id).length} Runner Up {this.state.leagues.filter(x => x.second === x.roster_id).length}</h2>
 			<h2>Total Leagues - {this.state.leagues.length}  Best Ball - {this.state.leagues.filter(x => x.best_ball === 1).length}</h2>
 			<h2>{this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1).length > 0 ? this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1).length + " Invalid Lineups" : null}</h2> 
@@ -117,7 +121,7 @@ class Leagues extends Component {
 					<tr>
 						<th></th>
 						<th>League</th>
-						<th>2020 Record</th>
+						<th></th>
 						<th>Record</th>
 						<th>Fantasy Points</th>
 						<th>Fantasy Points Against</th>
@@ -135,7 +139,7 @@ class Leagues extends Component {
 							<div>{league.spots !== league.starters && (league.best_ball !== 1) ? 'INVALID' : null}</div>
 						</td>
 						<td>
-							{league.pwins} - {league.plosses} {league.roster_id === league.winner ? 'Champ' : (league.roster_id === league.second ? 'Runner Up' : null)}
+							{league.roster_id === league.winner ? ' 2020 Champ' : (league.roster_id === league.second ? 'Runner Up' : null)}
 						</td>
 						<td>
 							{league.wins} - {league.losses}
