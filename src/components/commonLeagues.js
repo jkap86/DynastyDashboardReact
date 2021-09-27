@@ -136,8 +136,8 @@ class CommonLeagues extends Component {
 				</tr>
 				<tr className="row">
 					<td>2020 Record</td> 
-					<td>{this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.pWins1, 0)} - {this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.pLosses1, 0)}<br/>1st {this.state.leaguesCommon.filter(x => x.roster_id1 === x.winner).length}<br/>2nd {this.state.leaguesCommon.filter(x => x.roster_id1 === x.second).length}</td>
-					<td>{this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.pWins2, 0)} - {this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.pLosses2, 0)}<br/>1st {this.state.leaguesCommon.filter(x => x.roster_id2 === x.winner).length}<br/>2nd {this.state.leaguesCommon.filter(x => x.roster_id2 === x.second).length}</td>
+					<td>1st {this.state.leaguesCommon.filter(x => x.roster_id1 === x.winner).length}<br/>2nd {this.state.leaguesCommon.filter(x => x.roster_id1 === x.second).length}</td>
+					<td>1st {this.state.leaguesCommon.filter(x => x.roster_id2 === x.winner).length}<br/>2nd {this.state.leaguesCommon.filter(x => x.roster_id2 === x.second).length}</td>
 				</tr>
 			</table>			
 			<table>

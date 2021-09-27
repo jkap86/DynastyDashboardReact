@@ -54,6 +54,7 @@ class Leagues extends Component {
 									losses: roster === undefined || roster.settings === undefined ? 0 : roster.settings.losses,
 									league_id: leagues[i].league_id,
 									fpts: roster === undefined || roster.settings === undefined ? 0 : roster.settings.fpts,
+									fpts_decimal: roster === undefined || roster.settings === undefined ? 0 : roster.settings.fpts_decimal,
 									fpts_against: roster === undefined || roster.settings === undefined || roster.settings.fpts_against === undefined ? 0 : roster.settings.fpts_against,
 									pwins: roster === undefined || roster.metadata === null || roster.metadata.record === undefined ? 0 : (roster.metadata.record.match(/W/g) || []).length,
 									plosses: roster === undefined || roster.metadata === null || roster.metadata.record === undefined ? 0 : (roster.metadata.record.match(/L/g) || []).length,
@@ -84,7 +85,7 @@ class Leagues extends Component {
 										plosses: roster === undefined || roster.metadata === null || roster.metadata.record === undefined ? 0 : (roster.metadata.record.match(/L/g) || []).length,
 										winner: null,
 										second: null,
-										spots: leagues[i].roster_positions.filter(x => x !== 'BN').length,
+										spots: leagues[i].roster_positions === null ? null : leagues[i].roster_positions.filter(x => x !== 'BN').length,
 										starters: roster === undefined ? 0 : roster.starters.filter(x => x !== '0').length
 									})
 									this.setState({
@@ -145,7 +146,7 @@ class Leagues extends Component {
 							{league.wins} - {league.losses}
 						</td>
 						<td>
-							{league.fpts}
+							{league.fpts + "." + (league.fpts_decimal === undefined ? 0 : league.fpts_decimal)} 
 						</td>
 						<td>
 							{league.fpts_against}

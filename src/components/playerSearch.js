@@ -107,7 +107,8 @@ class PlayerSearch extends Component {
 								losses: losses,
 								status: status,
 								pwins: owner === undefined || owner.metadata === null || owner.metadata.record === undefined ? 0 : (owner.metadata.record.match(/W/g) || []).length,
-								plosses: owner === undefined || owner.metadata === null || owner.metadata.record === undefined ? 0 : (owner.metadata.record.match(/L/g) || []).length
+								plosses: owner === undefined || owner.metadata === null || owner.metadata.record === undefined ? 0 : (owner.metadata.record.match(/L/g) || []).length,
+								bestball: this.state.leagues[i].settings.best_ball
 							})
 							this.setState({
 								rosters: rosters,
@@ -128,9 +129,8 @@ class PlayerSearch extends Component {
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username}</h1>
 			<h2>{this.state.player}</h2>
-			<h3>{this.state.info.filter(x => x.owner === this.state.username).length} Shares</h3>
+			<h3>{this.state.info.filter(x => x.owner === this.state.username).length} Shares ({this.state.leagues.length} Leagues)</h3>
 			<h3>2021 Record: {this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.wins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.losses, 0)}</h3>
-			<h3>2020 Record: {this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.pwins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.plosses, 0)}</h3>
 			<h3><button onClick={this.toggleOwned}><span className="front">Toggle Owned</span></button>&nbsp;
 			<button onClick={this.toggleAvailable}><span className="front">Toggle Available</span></button></h3>
 			<table>
@@ -138,6 +138,7 @@ class PlayerSearch extends Component {
 					<tr>
 						<th></th>
 						<th>League</th>
+						<th></th>
 						<th>Owner</th>
 						<th>Status</th>
 						<th>Current Record</th>
@@ -149,6 +150,7 @@ class PlayerSearch extends Component {
 					<tr key={league.league_id} className={league.owner === this.state.username ? 'owned row' : (league.owner === 'available' ? 'available row' : 'not_owned row')}>
 						<td><img src={league.avatar}/></td>
 						<td>{league.name}</td>
+						<td>{league.bestball !== 1 ? null : '(bestball)'}</td>
 						<td>{league.owner}</td>
 						<td>{league.status}</td>
 						<td>{league.wins + " - " + league.losses}</td>
