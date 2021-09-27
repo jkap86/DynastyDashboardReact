@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath api api:app && npm start
+web: gunicorn --pythonpath api app:app & npm start
