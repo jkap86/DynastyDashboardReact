@@ -1,6 +1,7 @@
 {
   "name": "dynastydashboard",
   "version": "0.1.0",
+  "proxy": "http://localhost:3000",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
@@ -23,7 +24,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "flask run & react-scripts start",
     "start-api": "flask run && npm start",
     "build": "react-scripts build",
     "test": "react-scripts test",
