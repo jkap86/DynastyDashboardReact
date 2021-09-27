@@ -1,1 +1,1 @@
-web gunicorn app:app $PORT & npm start
+web gunicorn app:app 3000 & npm start
