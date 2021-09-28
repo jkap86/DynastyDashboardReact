@@ -10,7 +10,9 @@ app = Flask(__name__, static_folder='../build', static_url_path='/')
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-	print(repr(path))
+	return render_template('index.html')
+if __name__ == '__main__':
+	app.run(debug=True)
 
 
 @app.route('/')
