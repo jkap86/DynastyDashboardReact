@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from bs4 import BeautifulSoup
 import requests
 import concurrent.futures
@@ -9,12 +9,11 @@ app = Flask(__name__, static_folder='../build', static_url_path='/')
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
-def index(path):
-	return render_template('index.html')
+def catch_all(path):
+	return app.send_static_file('index.html')
 
 if __name__ == '__main__':
 	app.run(debug=True)
-
 
 
 @app.route('/dynastyvalues')
