@@ -7,7 +7,12 @@ import re
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 
-@app.route('/leagues/:username')
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+	return 'You want path: %s' % path
+
+	
 @app.route('/')
 def index():
 	return app.send_static_file('index.html')
