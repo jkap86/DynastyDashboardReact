@@ -17,7 +17,9 @@ class Roster extends Component {
 			league_avatar: '',
 			players: [],
 			playerValues: [],
-			value: ''
+			value: '',
+			teams: [],
+			record: ''
 		}
 	}
 
@@ -61,12 +63,30 @@ class Roster extends Component {
 			let rosters = res.data === null ? [] : res.data;
 			for (let i = 0; i < rosters.length; i++) {
 				if (rosters[i].owner_id === this.state.user_id && rosters[i].players !== null) {
+					let record = rosters[i].settings.wins + " - " + rosters[i].settings.losses
+					this.setState({
+						record: record
+					}) 
 					for (let j = 0; j < rosters[i].players.length; j++) {
 						let players = this.state.players.concat(rosters[i].players[j]);
 						this.setState({
 							players: players
 						})
 					}	
+				}
+				else if (rosters[i].players !== null) {
+					axios.get(`https://api.sleeper.app/v1/user/${rosters[i].owner_id}`)
+					.then(res => {
+						let teams = this.state.teams.concat({
+							name: res.data.display_name,
+							avatar: `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`,
+							players: rosters[i].players,
+							record: rosters[i].settings.wins + " - " + rosters[i].settings.losses
+						})
+						this.setState({
+							teams: teams
+						})
+					})
 				}
 			}
 		})
@@ -79,14 +99,32 @@ class Roster extends Component {
 			let p = this.state.playerValues.find(x => x.searchName === allPlayers[this.state.players[i]].search_full_name)
 			allPlayers[this.state.players[i]].value = p === undefined ? '0' : p.value
 		}
+		for (let i = 0; i < this.state.teams.length; i ++) {
+			for (let j = 0; j < this.state.teams[i].players.length; j++) {
+				let p = this.state.playerValues.find(x => x.searchName === allPlayers[this.state.teams[i].players[j]].search_full_name)
+				allPlayers[this.state.teams[i].players[j]].value = p === undefined ? '0' : p.value
+			}
+			let teamValue = this.state.teams[i].players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0)
+			this.state.teams[i].teamValue = teamValue
+		}
+
+
 		let value = this.state.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0)
 		let players = this.state.players.sort((a, b) => (allPlayers[a].position > allPlayers[b].position) ? 1 : (Number(allPlayers[a].value) < Number(allPlayers[b].value)) ? 1 : -1)
 		return <div>
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
+			<table style={{ height: "initial"}}>
+			<tr>
+				{this.state.teams.sort((a, b) => a.teamValue < b.teamValue ? 1 : -1).map(team =>
+					<td><img src={team.avatar} />{team.name}<br/>{team.record}<br/>{team.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</td>
+				)}
+			</tr>
+			</table>
 			<h1><img src={this.state.avatar}/>{this.state.username}</h1>
 			<h2>{this.state.league_name}<img src={this.state.league_avatar}/></h2>
-			<h2>{value}</h2>
+			<h2>{this.state.record}</h2>
+			<h2>{value.toLocaleString("en-US")}</h2>
 			<table>
 				<thead>
 					<tr>
@@ -110,7 +148,7 @@ class Roster extends Component {
 						<td>{allPlayers[player].college}</td>
 						<td>{allPlayers[player].age}</td>
 						<td>{allPlayers[player].years_exp}</td>
-						<td>{allPlayers[player].value}</td>
+						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
 				</tbody>

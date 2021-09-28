@@ -300,6 +300,11 @@ class Homepage extends Component {
 			
 			</div>
 			<table style={{ width: '35%', textAlign: 'left' }}>
+				<tr>
+					<td>Position</td>
+					<td>Player</td>
+					<td>KTC Value</td>
+				</tr>
 				{this.state.players.map(player => 
 					<tr className="row">
 						<td>{player.position}</td>

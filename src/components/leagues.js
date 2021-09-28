@@ -93,14 +93,7 @@ class Leagues extends Component {
 									})
 								}
 							})
-								
-														
-						
-					
-					
-					
 				}
-				
 			})
 		})
 		
