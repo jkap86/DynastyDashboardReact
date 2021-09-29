@@ -7,9 +7,9 @@ import re
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 
-@app.route('/', defaults={'path': 'jkap86'})
-@app.route('/<path:path>')
-def catch_all(path):
+@app.route('/', defaults={'username': ''})
+@app.route('/roster/<string:username>')
+def catch_all():
 	return render_template('index.html')
 
 @app.route('/')
