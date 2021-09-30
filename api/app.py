@@ -7,10 +7,10 @@ import re
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 
-@app.route('/', defaults={'u_path': ''})
-@app.route('/<path:u_path>')
-def catch_all(u_path):
-	return send_from_directory(app.static_folder, 'index.html')
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+	return app.send_static_file('index.html')
 
 @app.route('/')
 def index():
