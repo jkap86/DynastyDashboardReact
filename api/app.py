@@ -7,8 +7,8 @@ import re
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 
-@app.route('/leagues', defaults={'path': ''})
-@app.route('/leagues/<path:path>')
+
+@app.route('/<path:path>/<path:path>')
 def catch_all(path):
 	return render_template('index.html')
 
