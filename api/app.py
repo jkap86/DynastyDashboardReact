@@ -7,10 +7,14 @@ import re
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 
+@app.route('/', defaults={'path1': '', 'path2': ''})
+@app.route('/<path:path1>', defaults={'path2', ''})
+@app.route('/<path:path1>/<path:path2>')
+def catch_all(path1, path2):
+	return redirect(url_for('index'))
 
-@app.route('/', defaults={'path', ''})
-@app.route('/<path:path>')
-def index(path):
+@app.route('/')
+def index():
 	return app.send_static_file('index.html')
 
 @app.route('/dynastyvalues')
