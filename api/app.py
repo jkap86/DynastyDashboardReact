@@ -7,10 +7,9 @@ import re
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 
-
-@app.route('/<path:path>/<path:path>')
-def catch_all(path):
-	return render_template('index.html')
+@app.errorhandler(404)
+def catch():
+	return app.send_static_file('index.html')
 
 @app.route('/')
 def index():
