@@ -5,7 +5,7 @@ import concurrent.futures
 import re
 
 
-app = Flask(__name__, static_folder='../build')
+app = Flask(__name__)
 
 
 @app.route('/')
