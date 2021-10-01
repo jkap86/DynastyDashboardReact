@@ -16,7 +16,7 @@ def index():
 @app.route('/<path:path1>', defaults={'path2': ''})
 @app.route('/<path:path1>/<path:path2>')
 def catch_all(path1, path2):
-	return app.send_static_file('index.html')
+	return "hello world"
 
 @app.route('/dynastyvalues')
 def get_dynasty_values():
