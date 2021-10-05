@@ -35,7 +35,7 @@ class Leagues extends Component {
 					let leagues = res.data;
 					axios.get(`https://api.sleeper.app/v1/league/${leagues[i].league_id}/rosters`)
 					.then(res => {
-						let roster = res.data.find(x => x.owner_id === this.state.user_id)
+						let roster = res.data.find(x => x.owner_id === this.state.user_id || (x.co_owners !== null && x.co_owners.includes(this.state.user_id)))
 						axios.get(`https://api.sleeper.app/v1/league/${leagues[i].previous_league_id}/rosters`)
 						.then(res => {
 							let rosterp = res.data === null ? null : res.data.find(x => x.owner_id === this.state.user_id)
@@ -107,7 +107,12 @@ class Leagues extends Component {
 			<Theme/>
 			<h1><img src={this.state.avatar} />{this.state.username}</h1>
 			<h2>2021 Record: {record}</h2>
-			<h2>2020: Champ {this.state.leagues.filter(x => x.winner === x.roster_id).length} Runner Up {this.state.leagues.filter(x => x.second === x.roster_id).length}</h2>
+			<h2>
+				2021 PF - PA:&nbsp;&nbsp; 
+				{this.state.leagues.reduce((accumulator, current) => accumulator + current.fpts, 0).toLocaleString("en-US")} -&nbsp; 
+				{this.state.leagues.reduce((accumulator, current) => accumulator + current.fpts_against, 0).toLocaleString("en-US")}
+			</h2>
+			<h2>2020 Finishes: 1st {this.state.leagues.filter(x => x.winner === x.roster_id).length} 2nd {this.state.leagues.filter(x => x.second === x.roster_id).length}</h2>
 			<h2>Total Leagues - {this.state.leagues.length}  Best Ball - {this.state.leagues.filter(x => x.best_ball === 1).length}</h2>
 			<h2>{this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1).length > 0 ? this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1).length + " Invalid Lineups" : null}</h2> 
 			<table>
@@ -139,7 +144,7 @@ class Leagues extends Component {
 							{league.wins} - {league.losses}
 						</td>
 						<td>
-							{league.fpts + "." + (league.fpts_decimal === undefined ? 0 : league.fpts_decimal)} 
+							{league.fpts} 
 						</td>
 						<td>
 							{league.fpts_against}
