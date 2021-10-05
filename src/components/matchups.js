@@ -89,7 +89,7 @@ class Matchups extends Component {
 						</td>
 						<td>
 							{this.state.oppPlayersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
-								<tr className="row"><td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td><td>{player.count}</td></tr>
+								<tr className="row"><td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td><td>{player.count}</td>({this.state.playersDict.find(x => x.name === player.name) === undefined ? 0 : this.state.playersDict.find(x => x.name === player.name).count})<td></td></tr>
 								)}
 						</td>
 					</tr>

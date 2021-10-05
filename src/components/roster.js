@@ -21,8 +21,14 @@ class Roster extends Component {
 			teams: [],
 			record: ''
 		}
+		this.changeTeam = this.changeTeam.bind(this);
 	}
 
+	changeTeam(e) {
+		this.setState({
+			username: e.target.innerHTML
+		})
+	}
 
 
 	componentDidMount() {
@@ -117,7 +123,7 @@ class Roster extends Component {
 			<table style={{ height: "initial"}}>
 			<tr>
 				{this.state.teams.sort((a, b) => a.teamValue < b.teamValue ? 1 : -1).map(team =>
-					<td><img src={team.avatar} />{team.name}<br/>{team.record}<br/>{team.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</td>
+					<td><img src={team.avatar} /><a onClick={this.changeTeam} value={team.name}>{team.name}</a><br/>{team.record}<br/>{team.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</td>
 				)}
 			</tr>
 			</table>
@@ -125,6 +131,15 @@ class Roster extends Component {
 			<h2>{this.state.league_name}<img src={this.state.league_avatar}/></h2>
 			<h2>{this.state.record}</h2>
 			<h2>{value.toLocaleString("en-US")}</h2>
+			<h3>
+				Weighted Ages
+				<ol style={{ display: 'grid'}}>
+					<li>QB: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'QB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'QB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>
+					<li>RB: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'RB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'RB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>
+					<li>WR: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'WR').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'WR').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>
+					<li>TE: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'TE').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'TE').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>
+				</ol>
+			</h3>
 			<table>
 				<thead>
 					<tr>
