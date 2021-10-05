@@ -12,11 +12,11 @@ app = Flask(__name__, static_folder='../build', static_url_path='/')
 def index():
 	return app.send_static_file('index.html')
 
-@app.route('/<path>/<path2>/<path3>')
+
 @app.route('/commonleagues/<path>/<path2>')
 @app.route('/playershares/<path>')
 @app.route('/leagues/<path>')
-def catch_all(path, path2, path3):
+def catch_all(path, path2):
 	return app.send_static_file('index.html')
 
 @app.route('/dynastyvalues')
