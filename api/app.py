@@ -14,8 +14,8 @@ def index():
 
 
 @app.route('/commonleagues/<path>/<path2>')
-@app.route('/playershares/<path>')
-@app.route('/leagues/<path>')
+@app.route('/playershares/<path>' defaults={'path2': ''})
+@app.route('/leagues/<path>' defaults={'path2': ''})
 def catch_all(path, path2):
 	return app.send_static_file('index.html')
 
