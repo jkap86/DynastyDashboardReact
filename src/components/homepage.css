@@ -1,11 +1,17 @@
 ol li {
 	display: inline;
 	list-style: none;
-	margin: 2px;
+	margin: auto;
+	overflow: scroll;
+	border-spacing: 5em;
+}
+
+li {
+	margin-bottom: 5em;
+	padding-bottom: 0.25em;
 }
 
 button {
-	border: none;
 	padding: 0;
 	cursor: pointer;
 	border-radius: 25%;
@@ -21,36 +27,42 @@ button {
 	border-radius: inherit;
 	transform: translateY(-6px);
 	background-color: var(--secondary-color);
-	font-size: 24px;
+	font-size: 1.75em;
 	color: var(--primary-color);
-	text-shadow: -1px 1px 0 var(--third-color), 1px 1px 0 var(--third-color), 1px -1px 0 var(--third-color), -1px -1px 0 var(--third-color);
+	text-shadow: -.05em .05em 0 var(--third-color), .05em .05em 0 var(--third-color), .05em -.05em 0 var(--third-color), -.05em -.05em 0 var(--third-color);
 	font-weight: 900;
-	padding: 5px;
+	padding: 0.25em;
 	font-family: Courier New;
 }
 
 button:active .front {
-	transform: translateY(-2px);
+	transform: translateY(-.1em);
 }
 
 input {
 	border-radius: 25%;
-	font-size: 24px;
-	border: 5px solid var(--secondary-color);
-	padding: 10px;
+	font-size: 1.75em;
+	border: .15em solid var(--secondary-color);
+	padding: .25em;
 }
 
 select {
 	border-radius: 25%;
-	font-size: 24px;
-	border: 5px solid var(--secondary-color);
-	padding: 10px;
+	font-size: 1.75em;
+	border: .15em solid var(--secondary-color);
+	padding: .25em;
 }
 
 .link {
 	text-decoration: none;
 }
 
+.dynastyvalues {
+	border-collapse: collapse;
+	margin: auto;
+}
 
+.value-name {
+}
 
 

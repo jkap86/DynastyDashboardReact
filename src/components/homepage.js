@@ -299,16 +299,17 @@ class Homepage extends Component {
 				</div>) : null}
 			
 			</div>
-			<table style={{ width: '35%', textAlign: 'left' }}>
+			<h3>KeepTradeCut.com Dynasty Values</h3>
+			<table className="dynastyvalues">
 				<tr>
-					<td>Position</td>
+					<td>Pos</td>
 					<td>Player</td>
-					<td>KTC Value</td>
+					<td>Value</td>
 				</tr>
 				{this.state.players.map(player => 
 					<tr className="row">
 						<td>{player.position}</td>
-						<td>{player.name} {player.team}</td>
+						<td className="value-name">{player.name} {player.team}</td>
 						<td>{player.value}</td>
 					</tr>)
 				}

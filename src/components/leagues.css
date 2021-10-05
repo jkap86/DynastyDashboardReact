@@ -1,17 +1,17 @@
 h1, h2, h3 {
 	text-align: center;
+	white-space: nowrap;
 }
 
 
 img {
-	width: 100px;
+	width: 4em;
 	border-radius: 50%;
-	border: 5px solid var(--secondary-color);
+	border: .15em solid var(--secondary-color);
 }
 
 table {
 	border-spacing: 0;
-	width: 90vw;
 	height: 85vh;
 	overflow: scroll;
 	margin: auto;
