@@ -9,6 +9,7 @@ app = Flask(__name__, static_folder='../build', static_url_path='/')
 
 
 @app.route('/leagues/<path>')
+@app.route('/')
 def catch_all(path):
 	return app.send_static_file('index.html')
 
