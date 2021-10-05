@@ -11,7 +11,7 @@ app = Flask(__name__, static_folder='../build', static_url_path='/')
 @app.route('/<path:path1>', defaults={'path2': ''})
 @app.route('/<path:path1>/<path:path2>')
 def catch_all(path1, path2):
-	return app.send_static_file('index.html')
+	return render_template('index.html')
 
 @app.route('/dynastyvalues')
 def get_dynasty_values():
