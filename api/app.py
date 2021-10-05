@@ -8,8 +8,11 @@ import re
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 
 
-@app.route('/leagues/<path>')
 @app.route('/')
+def index():
+	return app.send_static_file('index.html')
+
+@app.route('/leagues/<path>')
 def catch_all(path):
 	return app.send_static_file('index.html')
 
