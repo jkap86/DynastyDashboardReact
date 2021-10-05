@@ -1,4 +1,4 @@
-from flask import Flask, redirect
+from flask import Flask, render_template
 from bs4 import BeautifulSoup
 import requests
 import concurrent.futures
