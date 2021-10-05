@@ -10,7 +10,7 @@ app = Flask(__name__, static_folder='../build')
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-	return app.send_static_file('index.html')
+	return path
 
 @app.route('/dynastyvalues')
 def get_dynasty_values():
