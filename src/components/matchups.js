@@ -47,8 +47,8 @@ class Matchups extends Component {
 			})
 			axios.get(`https://api.sleeper.app/v1/user/${this.state.user_id}/leagues/nfl/2021`)
 			.then(res => {
-				let leagues = res.data
-				for (let i = 0; i < leagues.filter(x => x.settings.best_ball !== 1).length; i++) {
+				let leagues = res.data.filter(x => x.settings.best_ball !== 1)
+				for (let i = 0; i < leagues.length; i++) {
 					axios.get(`https://api.sleeper.app/v1/league/${leagues[i].league_id}/rosters`)
 					.then(res => {
 						let rid = res.data.find(x => x.owner_id === this.state.user_id) === undefined ? null : res.data.find(x => x.owner_id === this.state.user_id).roster_id
