@@ -93,14 +93,14 @@ class Matchups extends Component {
 	}
 
 	render() {
-		for (let i = 0; i < Object.values(this.state.playersDict).length; i++) {
-			let p = this.state.projections.find(x => allPlayers[Object.values(this.state.playersDict)[i].name] !== undefined && x.searchName === allPlayers[Object.values(this.state.playersDict)[i].name].search_full_name)
+		for (let i = 0; i < this.state.playersDict.length; i++) {
+			let p = this.state.projections.find(x => allPlayers[this.state.playersDict[i].name] !== undefined && x.searchName === allPlayers[this.state.playersDict[i].name].search_full_name)
 			this.state.playersDict[i].projection = p === undefined ? '0' : p.projection
 			this.state.playersDict[i].opponent = p === undefined ? '-' : p.opponent
 		}
 
-		for (let i = 0; i < Object.values(this.state.oppPlayersDict).length; i++) {
-			let p = this.state.projections.find(x => allPlayers[Object.values(this.state.oppPlayersDict)[i].name] !== undefined && x.searchName === allPlayers[Object.values(this.state.oppPlayersDict)[i].name].search_full_name)
+		for (let i = 0; i < this.state.oppPlayersDict.length; i++) {
+			let p = this.state.projections.find(x => allPlayers[this.state.oppPlayersDict[i].name] !== undefined && x.searchName === allPlayers[this.state.oppPlayersDict[i].name].search_full_name)
 			this.state.oppPlayersDict[i].projection = p === undefined ? '0' : p.projection
 			this.state.oppPlayersDict[i].opponent = p === undefined ? '-' : p.opponent
 		}

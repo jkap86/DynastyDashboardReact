@@ -49,7 +49,7 @@ def get_dynasty_values():
 @app.route('/projectedpoints')
 def get_projected_points():
 	source = requests.get('https://www.dailyfantasyfuel.com/nfl/projections/draftkings').text
-	soup = BeautifulSoup(source, 'lxml')
+	soup = BeautifulSoup(source, 'html.parser')
 	results = soup.find_all('tr', class_='projections-listing')
 	def getPoints(result):
 		name = result['data-name']
