@@ -21,14 +21,6 @@ class Roster extends Component {
 			teams: [],
 			record: ''
 		}
-		this.changeTeam = this.changeTeam.bind(this);
-	}
-
-	changeTeam(e) {
-		this.setState({
-			username: e.target.innerHTML
-		})
-		
 	}
 
 	componentDidMount() {
@@ -123,7 +115,7 @@ class Roster extends Component {
 			<table style={{ height: "initial"}}>
 			<tr>
 				{this.state.teams.sort((a, b) => a.teamValue < b.teamValue ? 1 : -1).map(team =>
-					<td><img src={team.avatar} /><Link onClick={this.changeTeam} to={"/roster/" + this.state.league_id + "/" + team.name}>{team.name}</Link><br/>{team.record}<br/>{team.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</td>
+					<td><img src={team.avatar} /><Link to={"/roster/" + this.state.league_id + "/" + team.name}>{team.name}</Link><br/>{team.record}<br/>{team.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</td>
 				)}
 			</tr>
 			</table>
