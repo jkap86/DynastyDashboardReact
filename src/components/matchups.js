@@ -15,11 +15,30 @@ class Matchups extends Component {
 			players: [],
 			oppPlayers: [],
 			playersDict: [],
-			oppPlayersDict: []
+			oppPlayersDict: [],
+			projections: []
 		}
 	}
 
 	componentDidMount() {
+		fetch('/projectedpoints')
+		.then(res => res.json()).then(data => {
+			let players = data.points
+			for (let i = 0; i < players.length; i++) {
+				let playerx = this.state.projections.concat({
+					name: players[i].name,
+					searchName: players[i].searchName,
+					team: players[i].team,
+					projection: players[i].projection,
+					position: players[i].position,
+					opponent: players[i].opponent
+				})
+				this.setState({
+					projections: playerx
+				})
+			}
+		})
+
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
 		.then(res => {
 			const userID = res.data.user_id
@@ -29,16 +48,16 @@ class Matchups extends Component {
 			axios.get(`https://api.sleeper.app/v1/user/${this.state.user_id}/leagues/nfl/2021`)
 			.then(res => {
 				let leagues = res.data
-				for (let i = 0; i < leagues.length; i++) {
+				for (let i = 0; i < leagues.filter(x => x.settings.best_ball !== 1).length; i++) {
 					axios.get(`https://api.sleeper.app/v1/league/${leagues[i].league_id}/rosters`)
 					.then(res => {
 						let rid = res.data.find(x => x.owner_id === this.state.user_id) === undefined ? null : res.data.find(x => x.owner_id === this.state.user_id).roster_id
 						axios.get(`https://api.sleeper.app/v1/league/${leagues[i].league_id}/matchups/${this.state.week}`)
 						.then(res => {
 							let matchup = res.data.find(x => x.roster_id === rid || (x.co_owners !== undefined && x.co_owners.includes(x.roster_id)))
-							let starters = this.state.players.concat(matchup === undefined ? null : matchup.starters)
+							let starters = this.state.players.concat(matchup === undefined ? null : matchup.starters.filter(x => x !== '0'))
 							let opponent = res.data.find(x => x !== undefined && matchup !== undefined && x.matchup_id === matchup.matchup_id && x.roster_id !== rid)
-							let oppStarters = this.state.oppPlayers.concat(opponent === undefined ? null : opponent.starters)
+							let oppStarters = this.state.oppPlayers.concat(opponent === undefined ? null : opponent.starters.filter(x => x !== '0'))
 							const findOccurences = (players = []) => {
 									const res = [];
 									players.forEach(el => {
@@ -48,8 +67,9 @@ class Matchups extends Component {
 										if (index === -1) {
 											res.push({
 												"name": el,
-												"count": 1
-											})
+												"count": 1,
+												"projection": '0'
+ 											})
 										}
 										else {
 											res[index]["count"]++;
@@ -63,14 +83,27 @@ class Matchups extends Component {
 								playersDict: findOccurences(starters),
 								oppPlayersDict: findOccurences(oppStarters)
 							})
+
 						})
 					})
 				}
 			})
 		})
+
 	}
 
 	render() {
+		for (let i = 0; i < Object.values(this.state.playersDict).length; i++) {
+			let p = this.state.projections.find(x => allPlayers[Object.values(this.state.playersDict)[i].name] !== undefined && x.searchName === allPlayers[Object.values(this.state.playersDict)[i].name].search_full_name)
+			this.state.playersDict[i].projection = p === undefined ? '0' : p.projection
+			this.state.playersDict[i].opponent = p === undefined ? '-' : p.opponent
+		}
+
+		for (let i = 0; i < Object.values(this.state.oppPlayersDict).length; i++) {
+			let p = this.state.projections.find(x => allPlayers[Object.values(this.state.oppPlayersDict)[i].name] !== undefined && x.searchName === allPlayers[Object.values(this.state.oppPlayersDict)[i].name].search_full_name)
+			this.state.oppPlayersDict[i].projection = p === undefined ? '0' : p.projection
+			this.state.oppPlayersDict[i].opponent = p === undefined ? '-' : p.opponent
+		}
 		return <>
 				<Link to="/" className="link">Home</Link>
 				<Theme/>
@@ -83,13 +116,39 @@ class Matchups extends Component {
 					</tr>
 					<tr style={{ verticalAlign: 'top'}}>
 						<td>
+							<tr>
+								<th>Player</th>
+								<th>Projection</th>
+								<th>Opponent</th>
+								<th>Starting</th>
+								<th>(Opposing)</th>
+							</tr>
 							{this.state.playersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player => 
-								<tr className="row"><td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td><td>{player.count}</td><td>({this.state.oppPlayersDict.find(x => x.name === player.name) === undefined ? 0 : this.state.oppPlayersDict.find(x => x.name === player.name).count})</td></tr>
+								<tr className="row">
+									<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td>
+									<td>{player.projection} points</td>
+									<td>{player.opponent}</td>
+									<td>{player.count}</td>
+									<td>({this.state.oppPlayersDict.find(x => x.name === player.name) === undefined ? 0 : this.state.oppPlayersDict.find(x => x.name === player.name).count})</td>
+								</tr>
 								)}
 						</td>
 						<td>
+							<tr>
+								<th>Player</th>
+								<th>Projection</th>
+								<th>Opponent</th>
+								<th>Starting</th>
+								<th></th>
+							</tr>
 							{this.state.oppPlayersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
-								<tr className="row"><td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td><td>{player.count}</td>({this.state.playersDict.find(x => x.name === player.name) === undefined ? 0 : this.state.playersDict.find(x => x.name === player.name).count})<td></td></tr>
+								<tr className="row">
+									<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td>
+									<td>{player.projection} points</td>
+									<td>{player.opponent}</td>
+									<td>{player.count}</td>
+									<td>({this.state.playersDict.find(x => x.name === player.name) === undefined ? 0 : this.state.playersDict.find(x => x.name === player.name).count})</td>
+								</tr>
 								)}
 						</td>
 					</tr>
