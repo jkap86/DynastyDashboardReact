@@ -1,7 +1,7 @@
 h1, h2, h3 {
 	text-align: center;
 	white-space: nowrap;
-	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
+	text-shadow: -.025em .025em 0 var(--secondary-color), .025em .025em 0 var(--secondary-color), .025em -.025em 0 var(--secondary-color), -.025em -.025em 0 var(--secondary-color);
 }
 
 table.heading-table {

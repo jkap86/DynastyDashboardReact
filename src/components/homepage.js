@@ -127,16 +127,6 @@ class Homepage extends Component {
 
 
 	componentDidMount() {
-		axios.get(`https://api.sleeper.app/v1/state/nfl`)
-		.then(res => {
-			this.setState({
-				week: res.data.week
-			})
-		})
-		let keys = Object.keys(allPlayers);
-		this.setState({
-			keys: keys
-		});
 		fetch('/dynastyvalues')
 		.then(res => res.json()).then(data => {
 			let players = data.name
@@ -153,6 +143,17 @@ class Homepage extends Component {
 				})
 			}
 		})
+
+		axios.get(`https://api.sleeper.app/v1/state/nfl`)
+		.then(res => {
+			this.setState({
+				week: res.data.week
+			})
+		})
+		let keys = Object.keys(allPlayers);
+		this.setState({
+			keys: keys
+		});
 	}
 
 	render() {

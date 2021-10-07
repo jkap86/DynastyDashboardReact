@@ -1,0 +1,36 @@
+.tcontainer {
+	width: 100%;
+	overflow: hidden;
+	position: fixed;
+	bottom: 0;
+	opacity: 0.75;
+}
+
+.ticker-wrap {
+	width: 100%;
+	padding-left: 100%;
+	background-color: var(--third-color);
+	color: var(--primary-color);
+	text-shadow: -1px 1px 0 var(--secondary-color), 1px 1px 0 var(--secondary-color), 1px -1px 0 var(--secondary-color), -1px -1px 0 var(--secondary-color);
+	font-size: 24px;
+}
+
+.ticker-move {
+	display: inline-block;
+	white-space: nowrap;
+	padding-right: 100%;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	animation-name: ticker;
+	animation-duration: 45s;
+}
+
+.ticker-item {
+	display: inline-block;
+	padding: 2rem 2rem;
+}
+
+@keyframes ticker {
+	0% { transform: translate3d(0, 0, 0); }
+	100% { transform: translate3d(-100%, 0, 0); }
+}
