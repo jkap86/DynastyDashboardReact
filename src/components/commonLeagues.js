@@ -123,7 +123,7 @@ class CommonLeagues extends Component {
 			<h1>Common Leagues</h1>
 			<h1><img src={this.state.avatar1}/>{this.state.username1 + " & " + this.state.username2}<img src={this.state.avatar2} /></h1>
 			<h3>{this.state.leaguesCommon.length} Leagues</h3>
-			<table style={{ margin: 'auto', width: '50%', height: '20%', paddingBottom: '50px' }}>
+			<table className="heading-table" >
 				<tr>
 					<th></th>
 					<th>{this.state.username1}</th>

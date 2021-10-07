@@ -24,8 +24,8 @@
 
 [data-theme="phi"] {
 	--primary-color: #004C54;
-	--secondary-color: #A5ACAF;
-	--third-color: #565A5C;
+	--secondary-color: #565A5C;
+	--third-color: #A5ACAF;
 }
 
 [data-theme="nyg"] {
@@ -115,7 +115,7 @@ body {
 
   background-color: var(--primary-color);
   color: var(--third-color);
-  text-shadow: -1px 1px 0 var(--secondary-color), 1px 1px 0 var(--secondary-color), 1px -1px 0 var(--secondary-color), -1px -1px 0 var(--secondary-color);
+  text-shadow: -.05em .05em 0 var(--primary-color), .05em .05em 0 var(--primary-color), .05em -.05em 0 var(--primary-color), -.05em -.05em 0 var(--primary-color);
   font-weight: 900;
   font-size: 18px;
 

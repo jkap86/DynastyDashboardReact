@@ -16,7 +16,8 @@ class Matchups extends Component {
 			oppPlayers: [],
 			playersDict: [],
 			oppPlayersDict: [],
-			projections: []
+			projections: [],
+			avatar: ''
 		}
 	}
 
@@ -43,7 +44,9 @@ class Matchups extends Component {
 		.then(res => {
 			const userID = res.data.user_id
 			this.setState({
-				user_id: userID
+				user_id: userID,
+				avatar: `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`
+
 			})
 			axios.get(`https://api.sleeper.app/v1/user/${this.state.user_id}/leagues/nfl/2021`)
 			.then(res => {
@@ -109,10 +112,11 @@ class Matchups extends Component {
 				<Theme/>
 				<h1>Matchups</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
+				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
 				<table style={{  margin: 'auto', width: '75%'}}>
 					<tr>
-						<th>Starters</th>
-						<th>Opponent Starters</th>
+						<th style={{ textAlign: 'center'}}>Starters</th>
+						<th style={{ textAlign: 'center'}}>Opponent Starters</th>
 					</tr>
 					<tr style={{ verticalAlign: 'top'}}>
 						<td>

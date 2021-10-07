@@ -39,7 +39,7 @@ def get_dynasty_values():
 			'searchName': re.sub('[^A-Za-z]', '', playerName).lower(),
 			'team': team,
 			'position': position,
-			'value': value,
+			'value': value
 			})
 
 	with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:	

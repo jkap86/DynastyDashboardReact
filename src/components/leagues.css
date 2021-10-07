@@ -1,8 +1,15 @@
 h1, h2, h3 {
 	text-align: center;
 	white-space: nowrap;
+	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
 }
 
+table.heading-table {
+	background-color: var(--primary-color);
+	height: 20%;
+	width: 50%;
+	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
+}
 
 img {
 	width: 4em;
@@ -15,24 +22,32 @@ table {
 	height: 85vh;
 	overflow: scroll;
 	margin: auto;
+	background-color: var(--secondary-color);
+	border-radius: 2.5em 2.5em;
 }
 
 table tr.row:hover {
-	background-color: var(--secondary-color);
-	color: var(--third-color);
-	text-shadow: -1px 1px 0 var(--primary-color), 1px 1px 0 var(--primary-color), 1px -1px 0 var(--primary-color), -1px -1px 0 var(--primary-color);
+	background-color: var(--third-color);
+	color: var(--primary-color);
+	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05px 0 var(--secondary-color);
 }
 
 table tr:hover .front {
-
+	background-color: var(--primary-color);
+	color: var(--third-color);
+	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05px 0 var(--secondary-color);
 }
 
 table tr.row:hover button {
+	background-color: var(--secondary-color);
+}
+
+table tr.row button {
 	background-color: var(--primary-color);
 }
 
 table tr.row:hover img {
-	border: 5px solid var(--primary-color);
+	border: .15em solid var(--primary-color);
 }
 
 .link {
@@ -40,8 +55,14 @@ table tr.row:hover img {
 	color: inherit;
 }
 
-tr td {
+td {
 	padding: 1em;
 	text-align: left;
 	white-space: nowrap;
+}
+
+th {
+	font-size: 22px;
+	text-align: left;
+	padding: 0.5em;
 }
