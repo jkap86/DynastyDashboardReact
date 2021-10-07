@@ -19,11 +19,12 @@ img {
 
 table {
 	border-spacing: 0;
-	height: 85vh;
 	overflow: scroll;
 	margin: auto;
+	bottom: 200px;
 	background-color: var(--secondary-color);
 	border-radius: 2.5em 2.5em;
+
 }
 
 table tr.row:hover {

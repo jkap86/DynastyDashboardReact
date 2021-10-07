@@ -11,17 +11,30 @@ class TrendingPlayers extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			trending: []
+			trending: [],
+			players: []
 		}
 	}
 
 	componentDidMount() {
-		axios.get(`https://api.sleeper.app/v1/players/nfl/trending/add?limit=50`)
-		.then(res => {
-			this.setState({
-				trending: res.data
-			})
+		fetch('/dynastyvalues')
+		.then(res => res.json()).then(data => {
+			let players = data.name
+			for (let i = 0; i < players.length; i++) {
+				let playerx = this.state.players.concat({
+					name: players[i].name,
+					searchName: players[i].searchName,
+					team: players[i].team,
+					value: players[i].value,
+					position: players[i].position
+				})
+				this.setState({
+					players: playerx
+				})
+			}
 		})
+
+		
 	}
 
 	render() {
@@ -29,11 +42,13 @@ class TrendingPlayers extends Component {
 			<div className="tcontainer">
 				<div className="ticker-wrap">
 					<div className="ticker-move">
-						{this.state.trending.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player => 
+						{this.state.players.map(player => 
 							<div className="ticker-item">
-								{allPlayers[player.player_id].position + " " + allPlayers[player.player_id].first_name + " " + allPlayers[player.player_id].last_name + " " + allPlayers[player.player_id].team}
+								{player.position}
+								<br/> 
+								{player.name} {player.team}
 								<br/>
-								{player.count.toLocaleString("en-US")} Adds
+								{Number(player.value).toLocaleString("en-US")}
 							</div>
 						)}
 					</div>

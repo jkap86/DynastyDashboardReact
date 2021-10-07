@@ -22,7 +22,8 @@ class Homepage extends Component {
 			keys: [],
 			players: [],
 			matchups: 'hidden',
-			week: ''
+			week: '',
+			trending: []
 		}
 		this.handleClick1 = this.handleClick1.bind(this);
 		this.handleClick2 = this.handleClick2.bind(this);
@@ -127,21 +128,11 @@ class Homepage extends Component {
 
 
 	componentDidMount() {
-		fetch('/dynastyvalues')
-		.then(res => res.json()).then(data => {
-			let players = data.name
-			for (let i = 0; i < players.length; i++) {
-				let playerx = this.state.players.concat({
-					name: players[i].name,
-					searchName: players[i].searchName,
-					team: players[i].team,
-					value: players[i].value,
-					position: players[i].position
-				})
-				this.setState({
-					players: playerx
-				})
-			}
+		axios.get(`https://api.sleeper.app/v1/players/nfl/trending/add?limit=50`)
+		.then(res => {
+			this.setState({
+				trending: res.data
+			})
 		})
 
 		axios.get(`https://api.sleeper.app/v1/state/nfl`)
@@ -303,18 +294,21 @@ class Homepage extends Component {
 			<h3>KeepTradeCut.com Dynasty Values</h3>
 			<table className="dynastyvalues">
 				<tr>
-					<td>Pos</td>
-					<td>Player</td>
-					<td>Value</td>
+					<td>Trending Players</td>
+					<td>Adds</td>
 				</tr>
-				{this.state.players.map(player => 
-					<tr className="row">
-						<td>{player.position}</td>
-						<td className="value-name">{player.name} {player.team}</td>
-						<td>{player.value}</td>
-					</tr>)
-				}
+				{this.state.trending.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player => 
+					<tr>
+						<td>
+							{allPlayers[player.player_id].position + " " + allPlayers[player.player_id].first_name + " " + allPlayers[player.player_id].last_name + " " + allPlayers[player.player_id].team}
+						</td>
+						<td>
+							{player.count.toLocaleString("en-US")}
+						</td>
+					</tr>
+					)}
 			</table>
+			
 		</div>
 	}
 }
