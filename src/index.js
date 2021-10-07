@@ -12,6 +12,7 @@ import CommonLeagues from './components/commonLeagues';
 import PlayerShares from './components/playerShares';
 import Transactions from './components/transactions';
 import Matchups from './components/matchups';
+import TrendingPlayers from './components/trendingplayers';
 
 ReactDOM.render(
   <BrowserRouter>
@@ -26,6 +27,10 @@ ReactDOM.render(
     <Route path="/matchups/:username/:week" component={Matchups}/> 
   </BrowserRouter>,
   document.getElementById('root')
+);
+
+ReactDOM.render(
+  <TrendingPlayers/>, document.getElementById('root2')
 );
 
 // If you want to start measuring performance in your app, pass a function
