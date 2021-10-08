@@ -123,7 +123,6 @@ class Matchups extends Component {
 							<table className="table">
 								<tr>
 									<th>Player</th>
-									<th>Injury Status</th>
 									<th>Projection</th>
 									<th>Opponent</th>
 									<th>Starting</th>
@@ -132,7 +131,6 @@ class Matchups extends Component {
 								{this.state.playersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player => 
 									<tr className="row">
 										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td>
-										<td>{allPlayers[player.name] === undefined ? player.name : allPlayers[player.name].injury_status}</td>
 										<td>{player.projection} points</td>
 										<td>{player.opponent}</td>
 										<td>{player.count}</td>
@@ -145,7 +143,6 @@ class Matchups extends Component {
 							<table className="table">
 								<tr>
 									<th>Player</th>
-									<th>Injury Status</th>
 									<th>Projection</th>
 									<th>Opponent</th>
 									<th>Starting</th>
@@ -154,7 +151,6 @@ class Matchups extends Component {
 								{this.state.oppPlayersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
 									<tr className="row">
 										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td>
-										<td>{allPlayers[player.name] === undefined ? player.name : allPlayers[player.name].injury_status}</td>
 										<td>{player.projection} points</td>
 										<td>{player.opponent}</td>
 										<td>{player.count}</td>

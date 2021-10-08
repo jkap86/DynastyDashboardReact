@@ -133,7 +133,7 @@ class PlayerSearch extends Component {
 			<h3>2021 Record: {this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.wins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.losses, 0)}</h3>
 			<h3><button onClick={this.toggleOwned}><span className="front">Toggle Owned</span></button>&nbsp;
 			<button onClick={this.toggleAvailable}><span className="front">Toggle Available</span></button></h3>
-			<table>
+			<table className="table">
 				<thead>
 					<tr>
 						<th></th>

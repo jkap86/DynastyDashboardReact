@@ -48,25 +48,26 @@ def get_dynasty_values():
 
 @app.route('/projectedpoints')
 def get_projected_points():
-	source = requests.get('https://www.dailyfantasyfuel.com/nfl/projections/draftkings').text
+	source = requests.get('https://www.numberfire.com/nfl/fantasy/fantasy-football-ppr-projections').text
 	soup = BeautifulSoup(source, 'html.parser')
-	results = soup.find_all('tr', class_='projections-listing')
-	def getPoints(result):
-		name = result['data-name']
-		team = result['data-team']
-		opp = result['data-opp']
-		proj = result['data-ppg_proj']
-		position = result['data-pos']
+	results = soup.find_all('tbody', class_='projection-table__body')
+	players = results[0].find_all('tr')
+	projections = results[1].find_all('tr')
+	def getPoints(player):
+		playerName = player.select('td[class=player] > a > span[class=full]')[0].text
+		playerInfo = next(item for item in projections if item['data-row-index'] == player['data-row-index'])
+		projection = playerInfo.find_all('td')[0].text
+		opponent = playerInfo.find_all('td')[1].text
+		position = player.find('td').text
 		return({
-			'name': name,
-			'searchName': re.sub('[^A-Za-z]', '', name.replace('Jr', '').replace('Sr', '').replace('III', '')).lower(),
-			'team': team,
-			'position': position,
-			'opponent': opp,
-			'projection': proj
+			'name': playerName,
+			'searchName': re.sub('[^A-Za-z]', '', playerName).lower(),
+			'rank': player['data-row-index'],
+			'opponent': re.sub('[^A-Z]', '', opponent),
+			'projection': re.sub('[^0-9.]', '', projection)
 			})
-
+	
 	with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
-		playerPointsDict = list(executor.map(getPoints, results))
+		playerProjectionsDict = list(executor.map(getPoints, players))
 
-	return {'points': playerPointsDict}
+	return {'points': playerProjectionsDict}
