@@ -17,20 +17,23 @@ img {
 	border: .15em solid var(--secondary-color);
 }
 
-table {
+table.table {
 	border-spacing: 0;
 	overflow: scroll;
 	margin: auto;
 	bottom: 200px;
-	background-color: var(--secondary-color);
+	background-color: var(--third-color);
 	border-radius: 2.5em 2.5em;
-
+	color: var(--primary-color);
+	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05px 0 var(--secondary-color);
+	box-shadow: 1px 1px 15px 20px var(--secondary-color);
 }
 
 table tr.row:hover {
 	background-color: var(--third-color);
-	color: var(--primary-color);
-	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05px 0 var(--secondary-color);
+	color: var(--third-color);
+	text-shadow: -.05em .05em 0 var(--primary-color), .05em .05em 0 var(--primary-color), .05em -.05em 0 var(--primary-color), -.05em -.05px 0 var(--primary-color);
+	background-color: var(--secondary-color)
 }
 
 table tr:hover .front {
@@ -40,11 +43,21 @@ table tr:hover .front {
 }
 
 table tr.row:hover button {
-	background-color: var(--secondary-color);
+	background-color: var(--third-color);
 }
 
 table tr.row button {
 	background-color: var(--primary-color);
+}
+
+table tr.row .front {
+	background-color: var(--secondary-color);
+	text-shadow: -.05em .05em 0 var(--third-color), .05em .05em 0 var(--third-color), .05em -.05em 0 var(--third-color), -.05em -.05px 0 var(--third-color);
+}
+
+table tr.row:hover .front {
+	background-color: var(--primary-color);
+	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05px 0 var(--secondary-color);
 }
 
 table tr.row:hover img {

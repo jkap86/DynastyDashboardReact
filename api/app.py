@@ -70,4 +70,3 @@ def get_projected_points():
 		playerPointsDict = list(executor.map(getPoints, results))
 
 	return {'points': playerPointsDict}
-

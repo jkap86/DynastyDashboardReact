@@ -23,7 +23,8 @@ class Homepage extends Component {
 			players: [],
 			matchups: 'hidden',
 			week: '',
-			trending: []
+			trendingAdds: [],
+			trendingDrops: []
 		}
 		this.handleClick1 = this.handleClick1.bind(this);
 		this.handleClick2 = this.handleClick2.bind(this);
@@ -131,7 +132,13 @@ class Homepage extends Component {
 		axios.get(`https://api.sleeper.app/v1/players/nfl/trending/add?limit=50`)
 		.then(res => {
 			this.setState({
-				trending: res.data
+				trendingAdds: res.data
+			})
+		})
+		axios.get(`https://api.sleeper.app/v1/players/nfl/trending/drop?limit=50`)
+		.then(res => {
+			this.setState({
+				trendingDrops: res.data
 			})
 		})
 
@@ -291,22 +298,46 @@ class Homepage extends Component {
 				</div>) : null}
 			
 			</div>
-			<h3>KeepTradeCut.com Dynasty Values</h3>
-			<table className="dynastyvalues">
-				<tr>
-					<td>Trending Players</td>
-					<td>Adds</td>
-				</tr>
-				{this.state.trending.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player => 
+			<h3>Trending Players</h3>
+			<table style={{  margin: 'auto'  }}>
+			<tr>
+			<td style={{  verticalAlign: 'top'  }}>
+				<table className="table">
 					<tr>
-						<td>
-							{allPlayers[player.player_id].position + " " + allPlayers[player.player_id].first_name + " " + allPlayers[player.player_id].last_name + " " + allPlayers[player.player_id].team}
-						</td>
-						<td>
-							{player.count.toLocaleString("en-US")}
-						</td>
+						<td>Player</td>
+						<td>Adds</td>
 					</tr>
+					{this.state.trendingAdds.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player => 
+						<tr className="row">
+							<td>
+								{allPlayers[player.player_id].position + " " + allPlayers[player.player_id].first_name + " " + allPlayers[player.player_id].last_name + " " + allPlayers[player.player_id].team}
+							</td>
+							<td>
+								{player.count.toLocaleString("en-US")}
+							</td>
+						</tr>
 					)}
+				</table>
+			</td>
+			<td style={{  verticalAlign: 'top'  }}>
+				<table className="table">
+					<tr>
+						<td>Player</td>
+						<td>Drops</td>
+					</tr>
+					{this.state.trendingDrops.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player =>
+						<tr className="row">
+							<td>
+								{allPlayers[player.player_id].position + " " + allPlayers[player.player_id].first_name + " " + allPlayers[player.player_id].last_name + " " + allPlayers[player.player_id].team}
+							</td>
+							<td>
+								{player.count.toLocaleString("en-US")}
+							</td>
+						</tr>
+					)}
+				</table>
+			</td>
+			</tr>
 			</table>
 			
 		</div>

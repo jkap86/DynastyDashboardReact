@@ -123,7 +123,7 @@ class CommonLeagues extends Component {
 			<h1>Common Leagues</h1>
 			<h1><img src={this.state.avatar1}/>{this.state.username1 + " & " + this.state.username2}<img src={this.state.avatar2} /></h1>
 			<h3>{this.state.leaguesCommon.length} Leagues</h3>
-			<table className="heading-table">
+			<table className="heading-table" style={{  margin: 'auto'  }}>
 				<tr>
 					<th></th>
 					<th>{this.state.username1}</th>
@@ -145,7 +145,7 @@ class CommonLeagues extends Component {
 					<td>1st {this.state.leaguesCommon.filter(x => x.roster_id2 === x.winner).length}  2nd {this.state.leaguesCommon.filter(x => x.roster_id2 === x.second).length}</td>
 				</tr>
 			</table>			
-			<table>
+			<table className="table">
 				<thead>
 					<tr>
 						<th></th>

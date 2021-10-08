@@ -71,7 +71,7 @@ class Leaguemates extends Component {
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username} Leaguemates</h1>
-			<table>
+			<table className="table">
 				<thead>
 					<tr>
 						<th></th>

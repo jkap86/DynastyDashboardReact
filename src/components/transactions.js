@@ -101,7 +101,7 @@ class Transactions extends Component {
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username} Transactions</h1>
 			<h2>Week {this.state.week}</h2>
-			<table>
+			<table className="table">
 			 {this.state.transactionsAll.sort((a,b) => a.status_updated < b.status_updated ? 1 : -1).map(transaction =>
 				<tr key={transaction.id} className="row">
 					<td>{new Date(transaction.status_updated).toLocaleString("en-US")}</td>

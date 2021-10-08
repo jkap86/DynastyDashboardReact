@@ -224,7 +224,7 @@ class PlayerShares extends Component {
 				</span>
 			</button>
 			</h3>
-			<table>
+			<table className="table">
 				<thead>
 					<tr>
 						<th>Player</th>

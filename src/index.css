@@ -1,13 +1,25 @@
 :root {
-	--primary-color: black;
-	--secondary-color: lightgrey;
-	--third-color: blue;
+	--primary-color: darkblue;
+	--secondary-color: #69BE28;
+	--third-color: #FC4C02;
+}
+
+[data-theme="ari"] {
+	--primary-color: #97233F;
+	--secondary-color: #000000;
+	--third-color: #FFB612;
+}
+
+[data-theme="atl"] {
+	--primary-color: #A71930;
+	--secondary-color: #000000;
+	--third-color: #A5ACAF;
 }
 
 [data-theme="light"] {
-	--primary-color: lightgrey;
-	--secondary-color: black;
-	--third-color: blue;
+	--primary-color: white;
+	--secondary-color: grey;
+	--third-color: black;
 }
 
 [data-theme="was"] {
@@ -22,6 +34,66 @@
 	--third-color: white;
 }	
 
+[data-theme="car"] {
+	--primary-color: #0085CA;
+	--secondary-color: #101820;
+	--third-color: #BFC0BF;
+}
+
+[data-theme="cin"] {
+	--primary-color: #FB4F14;
+	--secondary-color: #000000;
+	--third-color: white;
+}
+
+[data-theme="cle"] {
+	--primary-color: #311D00;
+	--secondary-color: #FF3C00;
+	--third-color: #FFFFFF;
+}
+
+[data-theme="det"] {
+	--primary-color: #0076B6;
+	--secondary-color: #B0B7BC;
+	--third-color: #FFFFFF;
+}
+
+[data-theme="hou"] {
+	--primary-color: #03202F;
+	--secondary-color: #A71930;
+	--third-color: #FFFFFF;
+}
+
+[data-theme="ind"] {
+	--primary-color: #002C5F;
+	--secondary-color: #A2AAAD;
+	--third-color: #FFFFFF;
+}
+
+[data-theme="lac"] {
+	--primary-color: #0080C6;
+	--secondary-color: #FFC20E;
+	--third-color: #FFFFFF;
+}
+
+[data-theme="lar"] {
+	--primary-color: #003594;
+	--secondary-color: #FFD100;
+	--third-color: #FFFFFF;
+}
+
+[data-theme="min"] {
+	--primary-color: #4F2683;
+	--secondary-color: #FFC62F;
+	--third-color: #FFFFFF;
+}
+
+[data-theme="no"] {
+	--primary-color: #D3BC8D;
+	--secondary-color: #101820;
+	--third-color: #FFFFFF;
+}
+
 [data-theme="phi"] {
 	--primary-color: #004C54;
 	--secondary-color: #565A5C;
@@ -34,10 +106,34 @@
 	--third-color: #A5ACAF;
 }
 
+[data-theme="nyj"] {
+	--primary-color: #125740;
+	--secondary-color: #000000;
+	--third-color: #FFFFFF;
+}
+
+[data-theme="pit"] {
+	--primary-color: #FFB612;
+	--secondary-color: #101820;
+	--third-color: #A5ACAF;
+}
+
+[data-theme="sea"] {
+	--primary-color: #002244;
+	--secondary-color: #69BE28;
+	--third-color: #A5ACAF;
+}
+
 [data-theme="tb"] {
 	--primary-color: #34302B;
 	--secondary-color: #D50A0A;
 	--third-color: #FF7900;
+}
+
+[data-theme="ten"] {
+	--primary-color: #0C2340;
+	--secondary-color: #4B92DB;
+	--third-color: #C8102E;
 }
 
 [data-theme="kc"] {

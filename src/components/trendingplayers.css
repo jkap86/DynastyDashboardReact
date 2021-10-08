@@ -3,15 +3,15 @@
 	overflow: hidden;
 	position: fixed;
 	bottom: 0;
-	opacity: 0.75;
+	opacity: 0.9;
 }
 
 .ticker-wrap {
 	width: 100%;
 	padding-left: 100%;
-	background-color: var(--third-color);
+	background-color: var(--secondary-color);
 	color: var(--primary-color);
-	text-shadow: -1px 1px 0 var(--secondary-color), 1px 1px 0 var(--secondary-color), 1px -1px 0 var(--secondary-color), -1px -1px 0 var(--secondary-color);
+	text-shadow: -1px 1px 0 var(--third-color), 1px 1px 0 var(--third-color), 1px -1px 0 var(--third-color), -1px -1px 0 var(--third-color);
 	font-size: 24px;
 }
 

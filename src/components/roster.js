@@ -132,7 +132,7 @@ class Roster extends Component {
 					<li>TE: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'TE').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'TE').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>
 				</ol>
 			</h3>
-			<table>
+			<table className="table">
 				<thead>
 					<tr>
 						<th>Position</th>
