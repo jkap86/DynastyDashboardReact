@@ -71,3 +71,21 @@ def get_projected_points():
 		playerProjectionsDict = list(executor.map(getPoints, players))
 
 	return {'points': playerProjectionsDict}
+
+@app.route('/injuries')
+def get_injuries():
+	source = requests.get('https://www.espn.com/nfl/injuries').text
+	soup = BeautifulSoup(source, 'html.parser')
+	results = soup.find_all('tr', class_='Table__TR Table__TR--sm Table__even')
+	def getInjuries(result):
+		playerName = result.find('a', class_='AnchorLink').text
+		status = result.find('td', class_="col-stat Table__TD").find('span', class_='TextStatus').text
+		return({
+			'name': playerName,
+			'searchName': re.sub('[^A-Za-z]', '', playerName).lower(),
+			'status': status
+			})
+	with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+		playerInjuriesDict = list(executor.map(getInjuries, results))
+
+	return {'player': playerInjuriesDict}

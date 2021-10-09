@@ -17,6 +17,7 @@ class Matchups extends Component {
 			playersDict: [],
 			oppPlayersDict: [],
 			projections: [],
+			injuries: [],
 			avatar: ''
 		}
 	}
@@ -36,6 +37,21 @@ class Matchups extends Component {
 				})
 				this.setState({
 					projections: playerx
+				})
+			}
+		})
+
+		fetch('/injuries')
+		.then(res => res.json()).then(data => {
+			let players = data.player
+			for (let i = 0; i < players.length; i++) {
+				let playerx = this.state.injuries.concat({
+					name: players[i].name,
+					searchName: players[i].searchName,
+					status: players[i].status
+				})
+				this.setState({
+					injuries: playerx
 				})
 			}
 		})
@@ -98,12 +114,16 @@ class Matchups extends Component {
 	render() {
 		for (let i = 0; i < this.state.playersDict.length; i++) {
 			let p = this.state.projections.find(x => allPlayers[this.state.playersDict[i].name] !== undefined && x.searchName === allPlayers[this.state.playersDict[i].name].search_full_name)
+			let inj = this.state.injuries.find(x => allPlayers[this.state.playersDict[i].name] !== undefined && x.searchName === allPlayers[this.state.playersDict[i].name].search_full_name)
+			this.state.playersDict[i].status = inj === undefined ? null : inj.status 
 			this.state.playersDict[i].projection = p === undefined ? '0' : p.projection
 			this.state.playersDict[i].opponent = p === undefined ? '-' : p.opponent
 		}
 
 		for (let i = 0; i < this.state.oppPlayersDict.length; i++) {
 			let p = this.state.projections.find(x => allPlayers[this.state.oppPlayersDict[i].name] !== undefined && x.searchName === allPlayers[this.state.oppPlayersDict[i].name].search_full_name)
+			let inj = this.state.injuries.find(x => allPlayers[this.state.oppPlayersDict[i].name] !== undefined && x.searchName === allPlayers[this.state.oppPlayersDict[i].name].search_full_name)
+			this.state.oppPlayersDict[i].status = inj === undefined ? null : inj.status
 			this.state.oppPlayersDict[i].projection = p === undefined ? '0' : p.projection
 			this.state.oppPlayersDict[i].opponent = p === undefined ? '-' : p.opponent
 		}
@@ -130,7 +150,10 @@ class Matchups extends Component {
 								</tr>
 								{this.state.playersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player => 
 									<tr className="row">
-										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td>
+										<td>
+											{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
+											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
+										</td>
 										<td>{player.projection} points</td>
 										<td>{player.opponent}</td>
 										<td>{player.count}</td>
@@ -150,7 +173,9 @@ class Matchups extends Component {
 								</tr>
 								{this.state.oppPlayersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
 									<tr className="row">
-										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}</td>
+										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
+											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
+										</td>
 										<td>{player.projection} points</td>
 										<td>{player.opponent}</td>
 										<td>{player.count}</td>
