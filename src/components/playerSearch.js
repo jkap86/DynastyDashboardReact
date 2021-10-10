@@ -21,6 +21,8 @@ class PlayerSearch extends Component {
 		}
 		this.toggleOwned = this.toggleOwned.bind(this);
 		this.toggleAvailable = this.toggleAvailable.bind(this);
+		this.showBestBall = this.showBestBall.bind(this);
+		this.showStandard = this.showStandard.bind(this);
 	}
 
 	toggleOwned() {
@@ -63,7 +65,38 @@ class PlayerSearch extends Component {
 		}		
 	}
 
+	showBestBall() {
+		let bestball = document.getElementsByClassName("bestball")
+		let checkbox = document.getElementById("bestball")
+		if (checkbox.checked === true) {
+			for (let i = 0; i < bestball.length; i ++) {
+				bestball[i].style.display = "table-row";
+			}
+		}else {
+			for (let i = 0; i < bestball.length; i++) {
+				bestball[i].style.display = "none"
+			}
+		}
+	}
+
+	showStandard() {
+		let standard = document.getElementsByClassName("standard")
+		let checkbox = document.getElementById("standard")
+		if (checkbox.checked === true) {
+			for (let i = 0; i < standard.length; i ++) {
+				standard[i].style.display = "table-row";
+			}
+		}else {
+			for (let i = 0; i < standard.length; i++) {
+				standard[i].style.display = "none"
+			}
+		}
+
+	}
+
 	componentDidMount() {
+		document.getElementById("standard").checked = true;
+		document.getElementById("bestball").checked = true;
 		let keys = Object.keys(allPlayers);
 		for (let i = 0; i < keys.length; i++) {
 			if ((allPlayers[keys[i]].first_name + " " + allPlayers[keys[i]].last_name + " " + allPlayers[keys[i]].position + " " + (allPlayers[keys[i]].team === null ? 'FA' : allPlayers[keys[i]].team)) === this.state.player)  {
@@ -133,6 +166,7 @@ class PlayerSearch extends Component {
 			<h3>2021 Record: {this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.wins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.losses, 0)}</h3>
 			<h3><button onClick={this.toggleOwned}><span className="front">Toggle Owned</span></button>&nbsp;
 			<button onClick={this.toggleAvailable}><span className="front">Toggle Available</span></button></h3>
+			<h3><input id="bestball" onChange={this.showBestBall} type="checkbox"/>BestBall <input id="standard" onChange={this.showStandard} type="checkbox" />Standard</h3>
 			<table className="table">
 				<thead>
 					<tr>
@@ -146,8 +180,19 @@ class PlayerSearch extends Component {
 					</tr>
 				</thead>
 				<tbody>	
-				{this.state.info.sort((a, b) => (a.name > b.name) ? 1 : -1).map(league => 
-					<tr key={league.league_id} className={league.owner === this.state.username ? 'owned row' : (league.owner === 'available' ? 'available row' : 'not_owned row')}>
+				{this.state.info.filter(x => x.bestball === 1).sort((a, b) => (a.name > b.name) ? 1 : -1).map(league => 
+					<tr key={league.league_id} className={league.owner === this.state.username ? 'bestball owned row' : (league.owner === 'available' ? 'bestball available row' : 'bestball not_owned row')}>
+						<td><img src={league.avatar}/></td>
+						<td>{league.name}</td>
+						<td>{league.bestball !== 1 ? null : '(bestball)'}</td>
+						<td>{league.owner}</td>
+						<td>{league.status}</td>
+						<td>{league.wins + " - " + league.losses}</td>
+						<td><Link to={'/roster/' + league.league_id + '/' + (league.owner === 'available' ? this.state.username : league.owner)}><button><span className="front">View {league.owner === 'available' ? this.state.username : league.owner} Roster</span></button></Link></td>
+					</tr>
+				)}
+				{this.state.info.filter(x => x.bestball !== 1).sort((a, b) => (a.name > b.name) ? 1 : -1).map(league => 
+					<tr key={league.league_id} className={league.owner === this.state.username ? 'standard owned row' : (league.owner === 'available' ? 'standard available row' : 'standard not_owned row')}>
 						<td><img src={league.avatar}/></td>
 						<td>{league.name}</td>
 						<td>{league.bestball !== 1 ? null : '(bestball)'}</td>

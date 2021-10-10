@@ -6,9 +6,10 @@ ol li {
 	border-spacing: 5em;
 }
 
-li {
-	margin-bottom: 5em;
-	padding-bottom: 0.25em;
+ul li {
+	list-style: none;
+	margin: auto;
+	overflow: scroll;
 }
 
 button {

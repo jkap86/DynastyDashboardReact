@@ -10,6 +10,7 @@ table.heading-table {
 	width: 50%;
 	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
 	border-collapse: collapse;
+	margin: auto;
 }
 
 img {

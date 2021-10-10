@@ -100,21 +100,44 @@ class Leagues extends Component {
 	}
 
 	render() {
-		let record = this.state.leagues.reduce((accumulator, current) => accumulator + current.wins, 0) + " - " + this.state.leagues.reduce((accumulator, current) => accumulator + current.losses, 0);
-		let pRecord = this.state.leagues.reduce((accumulator, current) => accumulator + current.pwins, 0) + " - " + this.state.leagues.reduce((accumulator, current) => accumulator + current.plosses, 0);
+		let record = this.state.leagues.reduce((accumulator, current) => accumulator + current.wins, 0) + "-" + this.state.leagues.reduce((accumulator, current) => accumulator + current.losses, 0);
+		let bbRecord = this.state.leagues.filter(x => x.best_ball === 1).reduce((accumulator, current) => accumulator + current.wins, 0) + "-" + this.state.leagues.filter(x => x.best_ball === 1).reduce((accumulator, current) => accumulator + current.losses, 0)
+		let pRecord = this.state.leagues.reduce((accumulator, current) => accumulator + current.pwins, 0) + "-" + this.state.leagues.reduce((accumulator, current) => accumulator + current.plosses, 0);
 		return <div>
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
 			<h1><img src={this.state.avatar} />{this.state.username}</h1>
-			<h2>2021 Record: {record}</h2>
 			<h2>
-				2021 PF - PA:&nbsp;&nbsp; 
-				{this.state.leagues.reduce((accumulator, current) => accumulator + current.fpts, 0).toLocaleString("en-US")} -&nbsp; 
-				{this.state.leagues.reduce((accumulator, current) => accumulator + current.fpts_against, 0).toLocaleString("en-US")}
+			<table className="heading-table">
+			<tr className="row">
+				<td>2021 Record:</td>
+				<td>{record}</td>
+				<td>({bbRecord} BestBall)</td>
+			</tr>
+			<tr className="row">
+				<td>2021 PF-PA:</td>
+				<td>
+					{this.state.leagues.reduce((accumulator, current) => accumulator + current.fpts, 0).toLocaleString("en-US")}- 
+					{this.state.leagues.reduce((accumulator, current) => accumulator + current.fpts_against, 0).toLocaleString("en-US")}
+				</td>
+				<td>
+				 	({this.state.leagues.filter(x => x.best_ball === 1).reduce((accumulator, current) => accumulator + current.fpts, 0).toLocaleString("en-US")}-
+					{this.state.leagues.filter(x => x.best_ball === 1).reduce((accumulator, current) => accumulator + current.fpts_against, 0).toLocaleString("en-US")} BestBall)
+				</td>
+			</tr>
+			<tr className="row">
+				<td>2020 Finishes:</td> 
+				<td>1st {this.state.leagues.filter(x => x.winner === x.roster_id).length}</td> 
+				<td>2nd {this.state.leagues.filter(x => x.second === x.roster_id).length}</td>
+			</tr>
+			<tr className="row">
+				<td>Total Leagues:</td> 
+				<td>{this.state.leagues.length}</td>  
+				<td>BestBall: {this.state.leagues.filter(x => x.best_ball === 1).length}</td>
+			</tr>
+			<tr className="row">{this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1).length > 0 ? this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1).length + " Invalid Lineups" : null}</tr > 
+			</table>
 			</h2>
-			<h2>2020 Finishes: 1st {this.state.leagues.filter(x => x.winner === x.roster_id).length} 2nd {this.state.leagues.filter(x => x.second === x.roster_id).length}</h2>
-			<h2>Total Leagues - {this.state.leagues.length}  Best Ball - {this.state.leagues.filter(x => x.best_ball === 1).length}</h2>
-			<h2>{this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1).length > 0 ? this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1).length + " Invalid Lineups" : null}</h2> 
 			<table className="table">
 				<thead>
 					<tr>
@@ -128,8 +151,34 @@ class Leagues extends Component {
 					</tr>
 				</thead>
 				<tbody>
-				{this.state.leagues.sort((a, b) => (a.name > b.name) ? 1 : -1).map(league => 
+				{this.state.leagues.filter(x => x.best_ball === 1).sort((a, b) => (a.name > b.name) ? 1 : -1).map(league => 
 					<tr key={league.league_id} className="row">
+						<td>
+							<img src={league.avatar === null ? blankplayer : "https://sleepercdn.com/avatars/thumbs/" + league.avatar} />
+						</td>
+						<td>
+							{league.name}
+							<div>{league.spots !== league.starters && (league.best_ball !== 1) ? 'INVALID' : null}</div>
+						</td>
+						<td>
+							{league.roster_id === league.winner ? ' 2020 Champ' : (league.roster_id === league.second ? 'Runner Up' : null)}
+						</td>
+						<td>
+							{league.wins} - {league.losses}
+						</td>
+						<td>
+							{league.fpts} 
+						</td>
+						<td>
+							{league.fpts_against}
+						</td>
+						<td>
+							<Link to={"/roster/" + league.league_id + "/" + this.state.username}><button><span className="front">View Roster</span></button></Link>
+						</td>
+					</tr>
+				)}
+				{this.state.leagues.filter(x => x.best_ball !== 1).sort((a, b) => (a.name > b.name) ? 1 : -1).map(league => 
+					<tr key={league.league_id} className={"row"}>
 						<td>
 							<img src={league.avatar === null ? blankplayer : "https://sleepercdn.com/avatars/thumbs/" + league.avatar} />
 						</td>

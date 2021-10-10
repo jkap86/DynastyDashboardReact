@@ -19,7 +19,8 @@ class Roster extends Component {
 			playerValues: [],
 			value: '',
 			teams: [],
-			record: ''
+			record: '',
+			starters: []
 		}
 	}
 
@@ -63,14 +64,10 @@ class Roster extends Component {
 				if (rosters[i].owner_id === this.state.user_id && rosters[i].players !== null) {
 					let record = rosters[i].settings.wins + " - " + rosters[i].settings.losses
 					this.setState({
-						record: record
-					}) 
-					for (let j = 0; j < rosters[i].players.length; j++) {
-						let players = this.state.players.concat(rosters[i].players[j]);
-						this.setState({
-							players: players
-						})
-					}	
+						record: record,
+						players: rosters[i].players,
+						starters: rosters[i].starters
+					}) 	
 				}
 				else if (rosters[i].players !== null) {
 					axios.get(`https://api.sleeper.app/v1/user/${rosters[i].owner_id}`)
@@ -112,10 +109,17 @@ class Roster extends Component {
 		return <div>
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
-			<table style={{ height: "initial"}}>
+			<table style={{ height: "initial"}} className="heading-table">
 			<tr>
 				{this.state.teams.sort((a, b) => a.teamValue < b.teamValue ? 1 : -1).map(team =>
-					<td><img src={team.avatar} /><Link to={"/roster/" + this.state.league_id + "/" + team.name}>{team.name}</Link><br/>{team.record}<br/>{team.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</td>
+					<td>
+						<img src={team.avatar} />
+						<ul>
+							<li>{team.name}</li> 
+							<li>{team.record}</li>
+							<li>{team.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</li>
+						</ul>
+					</td>
 				)}
 			</tr>
 			</table>
@@ -146,7 +150,8 @@ class Roster extends Component {
 					</tr>
 				</thead>
 				<tbody>
-				{players.map(player => 
+				<tr><td>Starters</td></tr>
+				{players.filter(x => this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td>{allPlayers[player].position}</td>
 						<td>{allPlayers[player].number}</td>
@@ -158,6 +163,20 @@ class Roster extends Component {
 						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
+				<tr><td>Bench</td></tr>
+				{players.filter(x => !this.state.starters.includes(x)).map(player => 
+					<tr key={player} className="row">
+						<td>{allPlayers[player].position}</td>
+						<td>{allPlayers[player].number}</td>
+						<td>{allPlayers[player].first_name} {allPlayers[player].last_name}</td>
+						<td>{allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
+						<td>{allPlayers[player].college}</td>
+						<td>{allPlayers[player].age}</td>
+						<td>{allPlayers[player].years_exp}</td>
+						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
+					</tr>
+				)}
+
 				</tbody>
 			</table>
 		</div>
