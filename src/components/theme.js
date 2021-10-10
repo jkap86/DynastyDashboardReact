@@ -46,7 +46,7 @@ class Theme extends Component {
 			<option value='no'>NO</option>
 			<option value='nyg'>NYG</option>
 			<option value='nyj'>NYJ</option>
-			<option value='oak'>OAK</option>
+			<option value='lv'>LV</option>
 			<option value='phi'>PHI</option>
 			<option value='pit'>PIT</option>
 			<option value='sf'>SF</option>

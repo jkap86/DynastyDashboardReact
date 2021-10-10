@@ -18,43 +18,37 @@ class Matchups extends Component {
 			oppPlayersDict: [],
 			projections: [],
 			injuries: [],
-			avatar: ''
+			avatar: '',
+			espnPlayer: '',
+			weather: []
 		}
 	}
 
 	componentDidMount() {
-		fetch('/projectedpoints')
-		.then(res => res.json()).then(data => {
-			let players = data.points
-			for (let i = 0; i < players.length; i++) {
-				let playerx = this.state.projections.concat({
-					name: players[i].name,
-					searchName: players[i].searchName,
-					team: players[i].team,
-					projection: players[i].projection,
-					position: players[i].position,
-					opponent: players[i].opponent
-				})
-				this.setState({
-					projections: playerx
-				})
-			}
-		})
-
 		fetch('/injuries')
 		.then(res => res.json()).then(data => {
 			let players = data.player
-			for (let i = 0; i < players.length; i++) {
-				let playerx = this.state.injuries.concat({
-					name: players[i].name,
-					searchName: players[i].searchName,
-					status: players[i].status
-				})
-				this.setState({
-					injuries: playerx
-				})
-			}
+			this.setState({
+				injuries: players
+			})
 		})
+
+		fetch('/projectedpoints')
+		.then(res => res.json()).then(data => {
+			let players = data.points
+			this.setState({
+				projections: players
+			})
+		})
+
+		fetch('/weather')
+		.then(res => res.json()).then(data => {
+			let weather = data.weather
+			this.setState({
+				weather: weather
+			})
+		})
+
 
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
 		.then(res => {
@@ -112,9 +106,50 @@ class Matchups extends Component {
 	}
 
 	render() {
+		const teams = {
+			ARI: 'Cardinals',
+			ATL: 'Falcons',
+			BAL: 'Ravens',
+			BUF: 'Bills',
+			CAR: 'Panthers',
+			CHI: 'Bears',
+			CIN: 'Bengals',
+			CLE: 'Browns',
+			DAL: 'Cowboys',
+			DEN: 'Broncos',
+			DET: 'Lions',
+			GB: 'Packers',
+			HOU: 'Texans',
+			IND: 'Colts',
+			JAC: 'Jaguars',
+			JAX: 'Jaguars',
+			KC: 'Chiefs',
+			LAC: 'Chargers',
+			LAR: 'Rams',
+			MIA: 'Dolphins',
+			MIN: 'Vikings',
+			NE: 'Patriots',
+			NO: 'Saints',
+			NYG: 'Giants',
+			NYJ: 'Jets',
+			LV: 'Raiders',
+			PHI: 'Eagles',
+			PIT: 'Steelers',
+			SEA: 'Seahawks',
+			SF: '49ers',
+			TB: 'Buccaneers',
+			TEN: 'Titans',
+			WAS: 'Washington',
+			WSH: 'Washington'
+
+		}
+
 		for (let i = 0; i < this.state.playersDict.length; i++) {
 			let p = this.state.projections.find(x => allPlayers[this.state.playersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[this.state.playersDict[i].name].search_full_name)
 			let inj = this.state.injuries.find(x => allPlayers[this.state.playersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[this.state.playersDict[i].name].search_full_name)
+			let hteam = allPlayers[this.state.playersDict[i].name] === undefined ? null : allPlayers[this.state.playersDict[i].name].team
+			let forecast = this.state.weather.find(x => x.homeTeam === teams[hteam] || (p !== undefined && x.homeTeam === teams[p.opponent]))
+			this.state.playersDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
 			this.state.playersDict[i].status = inj === undefined ? null : inj.status 
 			this.state.playersDict[i].projection = p === undefined ? '0' : p.projection
 			this.state.playersDict[i].opponent = p === undefined ? '-' : p.opponent
@@ -127,6 +162,7 @@ class Matchups extends Component {
 			this.state.oppPlayersDict[i].projection = p === undefined ? '0' : p.projection
 			this.state.oppPlayersDict[i].opponent = p === undefined ? '-' : p.opponent
 		}
+
 		return <>
 				<Link to="/" className="link">Home</Link>
 				<Theme/>
@@ -145,6 +181,7 @@ class Matchups extends Component {
 									<th>Player</th>
 									<th>Projection</th>
 									<th>Opponent</th>
+									<th>Forecast</th>
 									<th>Starting</th>
 									<th>(Opposing)</th>
 								</tr>
@@ -156,6 +193,7 @@ class Matchups extends Component {
 										</td>
 										<td>{player.projection} points</td>
 										<td>{player.opponent}</td>
+										<td>{player.forecast}</td>
 										<td>{player.count}</td>
 										<td>({this.state.oppPlayersDict.find(x => x.name === player.name) === undefined ? 0 : this.state.oppPlayersDict.find(x => x.name === player.name).count})</td>
 									</tr>

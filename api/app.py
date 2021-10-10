@@ -89,3 +89,24 @@ def get_injuries():
 		playerInjuriesDict = list(executor.map(getInjuries, results))
 
 	return {'player': playerInjuriesDict}
+
+@app.route('/weather')
+def weather():	
+	source = requests.get('http://www.nflweather.com/').text
+	soup = BeautifulSoup(source, 'html.parser')
+	table = soup.find('tbody')
+	results = table.find_all('tr')
+	def getWeather(result):
+		forecast = result.find_all('td')[-4].text
+		wind = result.find_all('td')[-2].text
+		homeTeam = result.find_all('td')[-9].text
+		return({
+			'homeTeam': re.sub('[\n]', '', homeTeam),
+			'forecast': re.sub('[\n]' ,'' , forecast).strip(),
+			'wind': wind
+			})
+	with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+		forecastDict = list(executor.map(getWeather, results))
+
+	return {'weather': forecastDict}
+	

@@ -125,18 +125,9 @@ class PlayerShares extends Component {
 		fetch('/dynastyvalues')
 		.then(res => res.json()).then(data => {
 			let players = data.name
-			for (let i = 0; i < players.length; i++) {
-				let playerx = this.state.playerValues.concat({
-					name: players[i].name,
-					searchName: players[i].searchName,
-					team: players[i].team,
-					value: players[i].value,
-					position: players[i].position
-				})
-				this.setState({
-					playerValues: playerx
-				})
-			}
+			this.setState({
+				playerValues: players
+			})
 		})
 
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
@@ -242,7 +233,7 @@ class PlayerShares extends Component {
 						<td>{allPlayers[player.name].age}</td>
 						<td>{allPlayers[player.name].college}</td>
 						<td>{allPlayers[player.name].years_exp}</td>
-						<td>{player.value}</td>
+						<td>{Number(player.value).toLocaleString("en-US")}</td>
 						<td>{player.count}</td>
 						<td style={{ paddingBottom: '10px' }}><Link to={'/playersearch/' + this.state.username + '/' + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].position + " " + (allPlayers[player.name].team === null ? 'FA' : allPlayers[player.name].team)}><button><span className="front">Search Player</span></button></Link></td>
 					</tr>

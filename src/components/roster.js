@@ -28,18 +28,9 @@ class Roster extends Component {
 		fetch('/dynastyvalues')
 		.then(res => res.json()).then(data => {
 			let players = data.name
-			for (let i = 0; i < players.length; i++) {
-				let playerx = this.state.playerValues.concat({
-					name: players[i].name,
-					searchName: players[i].searchName,
-					team: players[i].team,
-					value: players[i].value,
-					position: players[i].position
-				})
-				this.setState({
-					playerValues: playerx
-				})
-			}
+			this.setState({
+				playerValues: players
+			})
 		})
 		
 
