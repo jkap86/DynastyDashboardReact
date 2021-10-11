@@ -24,7 +24,8 @@ class Homepage extends Component {
 			matchups: 'hidden',
 			week: '',
 			trendingAdds: [],
-			trendingDrops: []
+			trendingDrops: [],
+			allPlayersSIO: []
 		}
 		this.handleClick1 = this.handleClick1.bind(this);
 		this.handleClick2 = this.handleClick2.bind(this);
@@ -152,9 +153,30 @@ class Homepage extends Component {
 		this.setState({
 			keys: keys
 		});
+
+		axios.get(`https://api.sportsdata.io/v3/nfl/scores/json/Players?key=d5d541b8c8b14262b069837ff8110635`)
+		.then(res => {
+			this.setState({
+				allPlayersSIO: res.data
+			})
+		})
 	}
 
 	render() {
+		let allPlayersSIO = this.state.allPlayersSIO;
+		let trendingAdds = this.state.trendingAdds;
+		let trendingDrops = this.state.trendingDrops;
+
+		for (let i = 0; i < trendingAdds.length; i++) {
+			let a = allPlayersSIO.find(x => x.YahooPlayerID === allPlayers[trendingAdds[i].player_id].yahoo_id)
+			trendingAdds[i].picture = a === undefined ? null : a.PhotoUrl.replace('/', '')
+		}
+
+		for (let i = 0; i < trendingDrops.length; i++) {
+			let a = allPlayersSIO.find(x => x.YahooPlayerID === allPlayers[trendingDrops[i].player_id].yahoo_id)
+			trendingDrops[i].picture = a === undefined ? null : a.PhotoUrl.replace('/', '')
+		}
+
 		return <div>
 			<Theme/>
 			<h1>Dynasty Dashboard</h1>
@@ -304,11 +326,15 @@ class Homepage extends Component {
 			<td style={{  verticalAlign: 'top'  }}>
 				<table className="table">
 					<tr>
+						<td></td>
 						<td>Player</td>
 						<td>Adds</td>
 					</tr>
 					{this.state.trendingAdds.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player => 
 						<tr className="row">
+							<td>
+								<img src={player.picture} />
+							</td>
 							<td>
 								{allPlayers[player.player_id].position + " " + allPlayers[player.player_id].first_name + " " + allPlayers[player.player_id].last_name + " " + allPlayers[player.player_id].team}
 							</td>
@@ -322,11 +348,15 @@ class Homepage extends Component {
 			<td style={{  verticalAlign: 'top'  }}>
 				<table className="table">
 					<tr>
+						<td></td>
 						<td>Player</td>
 						<td>Drops</td>
 					</tr>
 					{this.state.trendingDrops.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player =>
 						<tr className="row">
+							<td>
+								<img src={player.picture}/>
+							</td>
 							<td>
 								{allPlayers[player.player_id].position + " " + allPlayers[player.player_id].first_name + " " + allPlayers[player.player_id].last_name + " " + allPlayers[player.player_id].team}
 							</td>

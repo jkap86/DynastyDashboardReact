@@ -20,7 +20,8 @@ class Roster extends Component {
 			value: '',
 			teams: [],
 			record: '',
-			starters: []
+			starters: [],
+			allPlayersSIO: []
 		}
 	}
 
@@ -30,6 +31,13 @@ class Roster extends Component {
 			let players = data.name
 			this.setState({
 				playerValues: players
+			})
+		})
+
+		axios.get(`https://api.sportsdata.io/v3/nfl/scores/json/Players?key=d5d541b8c8b14262b069837ff8110635`)
+		.then(res => {
+			this.setState({
+				allPlayersSIO: res.data
 			})
 		})
 		
@@ -94,9 +102,16 @@ class Roster extends Component {
 			this.state.teams[i].teamValue = teamValue
 		}
 
-
 		let value = this.state.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0)
 		let players = this.state.players.sort((a, b) => (allPlayers[a].position > allPlayers[b].position) ? 1 : (Number(allPlayers[a].value) < Number(allPlayers[b].value)) ? 1 : -1)
+
+		let allPlayersSIO = this.state.allPlayersSIO;
+		for (let i = 0; i < players.length; i++) {
+			let a = allPlayersSIO.find(x => x.YahooPlayerID === allPlayers[players[i]].yahoo_id)
+			allPlayers[players[i]].picture = a === undefined ? null : a.PhotoUrl.replace('/', '')
+		}
+
+
 		return <div>
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
@@ -130,10 +145,9 @@ class Roster extends Component {
 			<table className="table">
 				<thead>
 					<tr>
+						<th></th>
 						<th>Position</th>
-						<th>Number</th>
-						<th>Name</th>
-						<th>Team</th>
+						<th>Player</th>
 						<th>College</th>
 						<th>Age</th>
 						<th>Years Exp</th>
@@ -144,10 +158,9 @@ class Roster extends Component {
 				<tr><td>Starters</td></tr>
 				{players.filter(x => this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
+						<td><img src={allPlayers[player].picture}/></td>
 						<td>{allPlayers[player].position}</td>
-						<td>{allPlayers[player].number}</td>
-						<td>{allPlayers[player].first_name} {allPlayers[player].last_name}</td>
-						<td>{allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
+						<td>{allPlayers[player].number} {allPlayers[player].first_name} {allPlayers[player].last_name} {allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
 						<td>{allPlayers[player].college}</td>
 						<td>{allPlayers[player].age}</td>
 						<td>{allPlayers[player].years_exp}</td>
@@ -157,10 +170,9 @@ class Roster extends Component {
 				<tr><td>Bench</td></tr>
 				{players.filter(x => !this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
+						<td><img src={allPlayers[player].picture}/></td>
 						<td>{allPlayers[player].position}</td>
-						<td>{allPlayers[player].number}</td>
-						<td>{allPlayers[player].first_name} {allPlayers[player].last_name}</td>
-						<td>{allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
+						<td>{allPlayers[player].number} {allPlayers[player].first_name} {allPlayers[player].last_name} {allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
 						<td>{allPlayers[player].college}</td>
 						<td>{allPlayers[player].age}</td>
 						<td>{allPlayers[player].years_exp}</td>

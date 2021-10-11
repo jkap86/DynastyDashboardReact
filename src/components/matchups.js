@@ -149,25 +149,6 @@ class Matchups extends Component {
 		let oppPlayersDict = this.state.oppPlayersDict;
 		let playersDict = this.state.playersDict;
 
-
-		let test1 = [{name: '111', count: 5}, {name: '222', count: 1}]
-		let test2 = [{name: '222', count2: 6}, {name: '333', count2: 8}]
-		let allDicttest = []
-		for (let i = 0; i < test1.length; i++) {
-			let a = test2.find(x => x.name === test1[i].name)
-			let b = a === undefined ? null : a.count2
-			let c = b === null ? Object.assign({}, test1[i], {name: test1[i].name, count2: 0}) : Object.assign({}, test1[i], a)
-			allDicttest.push(c)
-		}
-		for (let i = 0; i < test2.length; i++) {
-			let a = test1.find(x => x.name === test2[i].name)
-			let b = a === undefined ? {name: test2[i].name, count: 0, count2: test2[i].count2} : null
-			if (b !== null) {
-				allDicttest.push(b)
-			}
-		}
-
-
 		let allDict = []
 		for (let i = 0; i < playersDict.length; i++) {
 			let a = oppPlayersDict.find(x => x.name === playersDict[i].name)
@@ -192,26 +173,6 @@ class Matchups extends Component {
 			allDict[i].status = inj === undefined ? null : inj.status 
 			allDict[i].projection = p === undefined ? '0' : p.projection
 			allDict[i].opponent = p === undefined ? '-' : p.opponent
-		}
-
-		for (let i = 0; i < playersDict.length; i++) {
-			let p = this.state.projections.find(x => allPlayers[playersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[playersDict[i].name].search_full_name)
-			let inj = this.state.injuries.find(x => allPlayers[playersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[playersDict[i].name].search_full_name)
-			let hteam = allPlayers[playersDict[i].name] === undefined ? null : allPlayers[playersDict[i].name].team
-			let forecast = this.state.weather.find(x => x.homeTeam === teams[hteam] || (p !== undefined && x.homeTeam === teams[p.opponent]))
-			playersDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
-			playersDict[i].status = inj === undefined ? null : inj.status 
-			playersDict[i].projection = p === undefined ? '0' : p.projection
-			playersDict[i].opponent = p === undefined ? '-' : p.opponent
-		}
-
-
-		for (let i = 0; i < this.state.oppPlayersDict.length; i++) {
-			let p = this.state.projections.find(x => allPlayers[this.state.oppPlayersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[this.state.oppPlayersDict[i].name].search_full_name)
-			let inj = this.state.injuries.find(x => allPlayers[this.state.oppPlayersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[this.state.oppPlayersDict[i].name].search_full_name)
-			this.state.oppPlayersDict[i].status = inj === undefined ? null : inj.status
-			this.state.oppPlayersDict[i].projection = p === undefined ? '0' : p.projection
-			this.state.oppPlayersDict[i].opponent = p === undefined ? '-' : p.opponent
 		}
 
 		return <>
