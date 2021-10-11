@@ -5,6 +5,44 @@ import Theme from './theme';
 import allPlayers from '../allplayers.json';
 import axios from 'axios';
 
+
+const teams = {
+			ARI: 'Cardinals',
+			ATL: 'Falcons',
+			BAL: 'Ravens',
+			BUF: 'Bills',
+			CAR: 'Panthers',
+			CHI: 'Bears',
+			CIN: 'Bengals',
+			CLE: 'Browns',
+			DAL: 'Cowboys',
+			DEN: 'Broncos',
+			DET: 'Lions',
+			GB: 'Packers',
+			HOU: 'Texans',
+			IND: 'Colts',
+			JAC: 'Jaguars',
+			JAX: 'Jaguars',
+			KC: 'Chiefs',
+			LAC: 'Chargers',
+			LAR: 'Rams',
+			MIA: 'Dolphins',
+			MIN: 'Vikings',
+			NE: 'Patriots',
+			NO: 'Saints',
+			NYG: 'Giants',
+			NYJ: 'Jets',
+			LV: 'Raiders',
+			PHI: 'Eagles',
+			PIT: 'Steelers',
+			SEA: 'Seahawks',
+			SF: '49ers',
+			TB: 'Buccaneers',
+			TEN: 'Titans',
+			WAS: 'Washington',
+			WSH: 'Washington'
+		}
+
 class Matchups extends Component {
 	constructor(props) {
 		super(props);
@@ -71,7 +109,7 @@ class Matchups extends Component {
 							let starters = this.state.players.concat(matchup === undefined ? null : matchup.starters.filter(x => x !== '0'))
 							let opponent = res.data.find(x => x !== undefined && matchup !== undefined && x.matchup_id === matchup.matchup_id && x.roster_id !== rid)
 							let oppStarters = this.state.oppPlayers.concat(opponent === undefined ? null : opponent.starters.filter(x => x !== '0'))
-							const findOccurences = (players = []) => {
+							const findOccurences = (players = [], type) => {
 									const res = [];
 									players.forEach(el => {
 										const index = res.findIndex(obj => {
@@ -80,12 +118,13 @@ class Matchups extends Component {
 										if (index === -1) {
 											res.push({
 												"name": el,
-												"count": 1,
-												"projection": '0'
+												[type]: 1
+												
  											})
 										}
+										
 										else {
-											res[index]["count"]++;
+											res[index][type]++;
 										};
 									});
 									return res;
@@ -93,8 +132,8 @@ class Matchups extends Component {
 							this.setState({
 								players: starters,
 								oppPlayers: oppStarters,
-								playersDict: findOccurences(starters),
-								oppPlayersDict: findOccurences(oppStarters)
+								playersDict: findOccurences(starters, 'count'),
+								oppPlayersDict: findOccurences(oppStarters, 'count2')
 							})
 
 						})
@@ -106,54 +145,66 @@ class Matchups extends Component {
 	}
 
 	render() {
-		const teams = {
-			ARI: 'Cardinals',
-			ATL: 'Falcons',
-			BAL: 'Ravens',
-			BUF: 'Bills',
-			CAR: 'Panthers',
-			CHI: 'Bears',
-			CIN: 'Bengals',
-			CLE: 'Browns',
-			DAL: 'Cowboys',
-			DEN: 'Broncos',
-			DET: 'Lions',
-			GB: 'Packers',
-			HOU: 'Texans',
-			IND: 'Colts',
-			JAC: 'Jaguars',
-			JAX: 'Jaguars',
-			KC: 'Chiefs',
-			LAC: 'Chargers',
-			LAR: 'Rams',
-			MIA: 'Dolphins',
-			MIN: 'Vikings',
-			NE: 'Patriots',
-			NO: 'Saints',
-			NYG: 'Giants',
-			NYJ: 'Jets',
-			LV: 'Raiders',
-			PHI: 'Eagles',
-			PIT: 'Steelers',
-			SEA: 'Seahawks',
-			SF: '49ers',
-			TB: 'Buccaneers',
-			TEN: 'Titans',
-			WAS: 'Washington',
-			WSH: 'Washington'
+		
+		let oppPlayersDict = this.state.oppPlayersDict;
+		let playersDict = this.state.playersDict;
 
+
+		let test1 = [{name: '111', count: 5}, {name: '222', count: 1}]
+		let test2 = [{name: '222', count2: 6}, {name: '333', count2: 8}]
+		let allDicttest = []
+		for (let i = 0; i < test1.length; i++) {
+			let a = test2.find(x => x.name === test1[i].name)
+			let b = a === undefined ? null : a.count2
+			let c = b === null ? Object.assign({}, test1[i], {name: test1[i].name, count2: 0}) : Object.assign({}, test1[i], a)
+			allDicttest.push(c)
+		}
+		for (let i = 0; i < test2.length; i++) {
+			let a = test1.find(x => x.name === test2[i].name)
+			let b = a === undefined ? {name: test2[i].name, count: 0, count2: test2[i].count2} : null
+			if (b !== null) {
+				allDicttest.push(b)
+			}
 		}
 
-		for (let i = 0; i < this.state.playersDict.length; i++) {
-			let p = this.state.projections.find(x => allPlayers[this.state.playersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[this.state.playersDict[i].name].search_full_name)
-			let inj = this.state.injuries.find(x => allPlayers[this.state.playersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[this.state.playersDict[i].name].search_full_name)
-			let hteam = allPlayers[this.state.playersDict[i].name] === undefined ? null : allPlayers[this.state.playersDict[i].name].team
+
+		let allDict = []
+		for (let i = 0; i < playersDict.length; i++) {
+			let a = oppPlayersDict.find(x => x.name === playersDict[i].name)
+			let b = a === undefined ? null : a.count2
+			let c = b === null ? Object.assign({}, playersDict[i], {name: playersDict[i].name, count2: 0}) : Object.assign({}, playersDict[i], a)
+			allDict.push(c)
+		}
+		for (let i = 0; i < oppPlayersDict.length; i++) {
+			let a = playersDict.find(x => x.name === oppPlayersDict[i].name)
+			let b = a === undefined ? {name: oppPlayersDict[i].name, count: 0, count2: oppPlayersDict[i].count2} : null
+			if(b !== null) {
+				allDict.push(b)
+			}
+		}
+		
+		for (let i = 0; i < allDict.length; i++) {
+			let p = this.state.projections.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name)
+			let inj = this.state.injuries.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name)
+			let hteam = allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].team
 			let forecast = this.state.weather.find(x => x.homeTeam === teams[hteam] || (p !== undefined && x.homeTeam === teams[p.opponent]))
-			this.state.playersDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
-			this.state.playersDict[i].status = inj === undefined ? null : inj.status 
-			this.state.playersDict[i].projection = p === undefined ? '0' : p.projection
-			this.state.playersDict[i].opponent = p === undefined ? '-' : p.opponent
+			allDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
+			allDict[i].status = inj === undefined ? null : inj.status 
+			allDict[i].projection = p === undefined ? '0' : p.projection
+			allDict[i].opponent = p === undefined ? '-' : p.opponent
 		}
+
+		for (let i = 0; i < playersDict.length; i++) {
+			let p = this.state.projections.find(x => allPlayers[playersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[playersDict[i].name].search_full_name)
+			let inj = this.state.injuries.find(x => allPlayers[playersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[playersDict[i].name].search_full_name)
+			let hteam = allPlayers[playersDict[i].name] === undefined ? null : allPlayers[playersDict[i].name].team
+			let forecast = this.state.weather.find(x => x.homeTeam === teams[hteam] || (p !== undefined && x.homeTeam === teams[p.opponent]))
+			playersDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
+			playersDict[i].status = inj === undefined ? null : inj.status 
+			playersDict[i].projection = p === undefined ? '0' : p.projection
+			playersDict[i].opponent = p === undefined ? '-' : p.opponent
+		}
+
 
 		for (let i = 0; i < this.state.oppPlayersDict.length; i++) {
 			let p = this.state.projections.find(x => allPlayers[this.state.oppPlayersDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[this.state.oppPlayersDict[i].name].search_full_name)
@@ -171,8 +222,11 @@ class Matchups extends Component {
 				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
 				<table style={{  margin: 'auto', width: '75%'}}>
 					<tr>
-						<th style={{ textAlign: 'center'}}>Starters: {this.state.playersDict.reduce((accumulator, current) => accumulator + (current.projection * current.count), 0).toLocaleString("en-US")} points - {this.state.playersDict.reduce((accumulator, current) => accumulator + current.count, 0).toLocaleString("en-US")} players</th>
-						<th style={{ textAlign: 'center'}}>Opponent Starters: {this.state.oppPlayersDict.reduce((accumulator, current) => accumulator + (current.projection * current.count), 0).toLocaleString("en-US")} points - {this.state.oppPlayersDict.reduce((accumulator, current) => accumulator + current.count, 0).toLocaleString("en-US")} players</th>
+						<th style={{ textAlign: 'center'}}>
+							Starters: {allDict.reduce((accumulator, current) => accumulator + (current.projection * current.count), 0).toLocaleString("en-US")} points - {allDict.reduce((accumulator, current) => accumulator + current.count, 0).toLocaleString("en-US")} players
+							<br/>
+							Opponent Starters: {allDict.reduce((accumulator, current) => accumulator + (current.projection * current.count2), 0).toLocaleString("en-US")} points - {allDict.reduce((accumulator, current) => accumulator + current.count2, 0).toLocaleString("en-US")} players
+						</th>
 					</tr>
 					<tr style={{ verticalAlign: 'top'}}>
 						<td>
@@ -183,47 +237,25 @@ class Matchups extends Component {
 									<th>Opponent</th>
 									<th>Forecast</th>
 									<th>Starting</th>
-									<th>(Opposing)</th>
+									<th>Opposing</th>
 								</tr>
-								{this.state.playersDict.sort((a, b) => (a.count < b.count) ? 1 : ((a.projection < b.projection) ? 1 : -1)).map(player => 
-									<tr className="row">
-										<td>
-											{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
-											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
-										</td>
-										<td>{player.projection} points</td>
-										<td>{player.opponent}</td>
-										<td>{player.forecast}</td>
-										<td>{player.count}</td>
-										<td>({this.state.oppPlayersDict.find(x => x.name === player.name) === undefined ? 0 : this.state.oppPlayersDict.find(x => x.name === player.name).count})</td>
-									</tr>
-									)}
-							</table>
-						</td>
-						<td>
-							<table className="table">
-								<tr>
-									<th>Player</th>
-									<th>Projection</th>
-									<th>Opponent</th>
-									<th>Starting</th>
-									<th></th>
-								</tr>
-								{this.state.oppPlayersDict.sort((a, b) => (a.count < b.count) ? 1 : ((a.projection < b.projection) ? 1 : -1)).map(player =>
+								{allDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
 									<tr className="row">
 										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
 											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
 										</td>
 										<td>{player.projection} points</td>
 										<td>{player.opponent}</td>
+										<td>{player.forecast}</td>
 										<td>{player.count}</td>
-										<td>({this.state.playersDict.find(x => x.name === player.name) === undefined ? 0 : this.state.playersDict.find(x => x.name === player.name).count})</td>
+										<td>({player.count2})</td>
 									</tr>
 									)}
 							</table>
 						</td>
 					</tr>
 				</table>
+
 			</>
 	}
 }
