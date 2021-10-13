@@ -58,6 +58,7 @@ class Transactions extends Component {
 								}
 								let transactionsAll = this.state.transactionsAll.concat({
 									status_updated: transactions[j].status_updated,
+									status: transactions[j].status,
 									id: transactions[j].transaction_id,
 									type: transactions[j].type.replace("_", " "),
 									league: this.state.leagues[i].name,
@@ -105,9 +106,8 @@ class Transactions extends Component {
 			 {this.state.transactionsAll.sort((a,b) => a.status_updated < b.status_updated ? 1 : -1).map(transaction =>
 				<tr key={transaction.id} className="row">
 					<td>{new Date(transaction.status_updated).toLocaleString("en-US")}</td>
-					<td>{transaction.type.replace("_", " ")}</td>
+					<td>{transaction.type.replace("_", " ")} {transaction.type === 'waiver' ? "(" + transaction.status + ")" : null}</td>
 					<td>{transaction.league}</td>
-					<td>{transaction.status}</td>
 					<td>
 						{transaction.adds.map(player => <p><span style={{  fontSize: '36px' }}>+</span> {allPlayers[player].position + ' ' + allPlayers[player].first_name + ' ' + allPlayers[player].last_name + ' ' + (allPlayers[player].team === null ? 'FA' : allPlayers[player].team)} {transaction.type === 'waiver' ? '$' + transaction.bid : null}</p>)}
 						{transaction.draft_picks.filter(x => x.owner_id === transaction.roster_id).map(pick => <p><span style={{  fontSize: '36px' }}>+</span> {pick.season + ' Round ' + pick.round}</p>)}

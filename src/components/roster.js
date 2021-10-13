@@ -10,6 +10,9 @@ class Roster extends Component {
 		super(props);
 		this.state = {
 			league_id: this.props.match.params.league_id,
+			previous_league_id: '',
+			previous_league_id2: '',
+			previous_league_id3: '',
 			league_name: '',
 			username: this.props.match.params.username,
 			user_id: '',
@@ -21,7 +24,10 @@ class Roster extends Component {
 			teams: [],
 			record: '',
 			starters: [],
-			allPlayersSIO: []
+			allPlayersSIO: [],
+			roster_id: '',
+			picks: [],
+			rounds: ''
 		}
 	}
 
@@ -53,7 +59,8 @@ class Roster extends Component {
 		.then(res => {
 			this.setState({
 				league_name: res.data.name,
-				league_avatar: res.data.avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`
+				league_avatar: res.data.avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`,
+				rounds: res.data.settings.type === 2 ? res.data.settings.draft_rounds : 0
 			})
 		})
 		axios.get(`https://api.sleeper.app/v1/league/${this.state.league_id}/rosters`)
@@ -65,7 +72,8 @@ class Roster extends Component {
 					this.setState({
 						record: record,
 						players: rosters[i].players,
-						starters: rosters[i].starters
+						starters: rosters[i].starters,
+						roster_id: rosters[i].roster_id
 					}) 	
 				}
 				else if (rosters[i].players !== null) {
@@ -75,7 +83,8 @@ class Roster extends Component {
 							name: res.data.display_name,
 							avatar: `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`,
 							players: rosters[i].players,
-							record: rosters[i].settings.wins + " - " + rosters[i].settings.losses
+							record: rosters[i].settings.wins + " - " + rosters[i].settings.losses,
+							roster_id: rosters[i].roster_id
 						})
 						this.setState({
 							teams: teams
@@ -83,9 +92,59 @@ class Roster extends Component {
 					})
 				}
 			}
-		})
-		
+			axios.get(`https://api.sleeper.app/v1/league/${this.state.league_id}/traded_picks`)
+			.then(res => {
+				let picksFor = res.data.filter(x => x.owner_id === this.state.roster_id && x.season === '2022')
+				let picksAway = res.data.filter(x => x.owner_id !== this.state.roster_id && x.season === '2022')
+				
+				let i = 0;
+				while (i < 1) {
+					axios.get(`https://api.sleeper.app/v1/league/${this.state.league_id}`)
+					.then(res => {
+						this.setState({
+							previous_league_id: res.data.previous_league_id
+						})
+					})
+					if (this.state.previous_league_id.length > 1) {
+						axios.get(`https://api.sleeper.app/v1/league/${this.state.previous_league_id}/traded_picks`)
+						.then(res => {
+							picksFor = picksFor.concat(res.data.filter(x => x.owner_id === this.state.roster_id && x.season === '2022'))
+							picksAway = picksAway.concat(res.data.filter(x => x.previous_owner_id === this.state.roster_id && x.season === '2022'))
+						})
+					}
+					else {
+						i = i + 1
+					}
+				}
+				
+					
+				let allPicks = []
+				let allPicks2 = []
+				for (let i = 1; i <= this.state.rounds; i++) {
+					allPicks.push({
+						season: '2022',
+						round: i,
+						roster_id: this.state.roster_id,
+						owner_id: this.state.roster_id,
+						previous_owner_id: this.state.roster_id
+					})
+				}
+				for (let i = 0; i < picksFor.length; i++) {
+					allPicks.push(picksFor[i])
+				}
+				for (let i = 0; i < allPicks.length; i++) {
+					let a = picksAway.find(x => x.round === allPicks[i].round && x.roster_id === allPicks[i].roster_id)
+					if (a === undefined) {
+						allPicks2.push(allPicks[i])
+					}
+				}
 
+				this.setState({
+					picks: allPicks2
+				})
+
+			})
+		})
 	}
 
 	render() {
@@ -179,8 +238,15 @@ class Roster extends Component {
 						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
-
+				<tr><td>Picks</td></tr>
+				{this.state.picks.sort((a, b) => a.round > b.round ? 1 : -1).map(pick => 
+					<tr className="row"><td></td><td></td><td>{pick.season} Round {pick.round} {this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? null : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")"}</td></tr>
+				)}
 				</tbody>
+			</table>
+			
+			<table>
+				
 			</table>
 		</div>
 	}
