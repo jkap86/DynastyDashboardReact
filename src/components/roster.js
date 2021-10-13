@@ -94,8 +94,8 @@ class Roster extends Component {
 			}
 			axios.get(`https://api.sleeper.app/v1/league/${this.state.league_id}/traded_picks`)
 			.then(res => {
-				let picksFor = res.data.filter(x => x.owner_id === this.state.roster_id && x.season === '2022')
-				let picksAway = res.data.filter(x => x.owner_id !== this.state.roster_id && x.season === '2022')
+				let picksFor = res.data.filter(x => x.owner_id === this.state.roster_id && ["2022", "2023", "2024"].includes(x.season))
+				let picksAway = res.data.filter(x => x.owner_id !== this.state.roster_id && ["2022", "2023", "2024"].includes(x.season))
 				
 				let i = 0;
 				while (i < 1) {
@@ -108,8 +108,8 @@ class Roster extends Component {
 					if (this.state.previous_league_id.length > 1) {
 						axios.get(`https://api.sleeper.app/v1/league/${this.state.previous_league_id}/traded_picks`)
 						.then(res => {
-							picksFor = picksFor.concat(res.data.filter(x => x.owner_id === this.state.roster_id && x.season === '2022'))
-							picksAway = picksAway.concat(res.data.filter(x => x.previous_owner_id === this.state.roster_id && x.season === '2022'))
+							picksFor = picksFor.concat(res.data.filter(x => x.owner_id === this.state.roster_id && ["2022", "2023", "2024"].includes(x.season)))
+							picksAway = picksAway.concat(res.data.filter(x => x.previous_owner_id === this.state.roster_id && ["2022", "2023", "2024"].includes(x.season)))
 						})
 					}
 					else {
@@ -128,12 +128,26 @@ class Roster extends Component {
 						owner_id: this.state.roster_id,
 						previous_owner_id: this.state.roster_id
 					})
+					allPicks.push({
+						season: '2023',
+						round: i,
+						roster_id: this.state.roster_id,
+						owner_id: this.state.roster_id,
+						previous_owner_id: this.state.roster_id
+					})
+					allPicks.push({
+						season: '2024',
+						round: i,
+						roster_id: this.state.roster_id,
+						owner_id: this.state.roster_id,
+						previous_owner_id: this.state.roster_id
+					})
 				}
 				for (let i = 0; i < picksFor.length; i++) {
 					allPicks.push(picksFor[i])
 				}
 				for (let i = 0; i < allPicks.length; i++) {
-					let a = picksAway.find(x => x.round === allPicks[i].round && x.roster_id === allPicks[i].roster_id)
+					let a = picksAway.find(x => x.round === allPicks[i].round && x.roster_id === allPicks[i].roster_id && x.season === allPicks[i].season)
 					if (a === undefined) {
 						allPicks2.push(allPicks[i])
 					}
@@ -214,7 +228,7 @@ class Roster extends Component {
 					</tr>
 				</thead>
 				<tbody>
-				<tr><td>Starters</td></tr>
+				<tr><th colspan="7">Starters</th></tr>
 				{players.filter(x => this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td><img src={allPlayers[player].picture}/></td>
@@ -226,7 +240,7 @@ class Roster extends Component {
 						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
-				<tr><td>Bench</td></tr>
+				<tr><th colspan="7">Bench</th></tr>
 				{players.filter(x => !this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td><img src={allPlayers[player].picture}/></td>
@@ -238,10 +252,32 @@ class Roster extends Component {
 						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
-				<tr><td>Picks</td></tr>
-				{this.state.picks.sort((a, b) => a.round > b.round ? 1 : -1).map(pick => 
-					<tr className="row"><td></td><td></td><td>{pick.season} Round {pick.round} {this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? null : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")"}</td></tr>
-				)}
+				<tr><th colspan="7" style={{  textAlign: 'center'  }}>Picks</th></tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td style={{ verticalAlign: 'top'}}>
+						<ol style={{ display: 'grid' }}>
+							{this.state.picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2022").map(pick => 
+								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td></tr>
+							)}
+						</ol>
+					</td>
+					<td style={{ verticalAlign: 'top'}}>
+						<ol style={{ display: 'grid' }}>
+							{this.state.picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2023").map(pick => 
+								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td></tr>
+							)}
+						</ol>
+					</td>
+					<td style={{ verticalAlign: 'top'}}>
+						<ol style={{ display: 'grid'  }}>
+							{this.state.picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2024").map(pick => 
+								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td></tr>
+							)}
+						</ol>
+					</td>
+				</tr>	
 				</tbody>
 			</table>
 			
