@@ -27,7 +27,10 @@ class Roster extends Component {
 			allPlayersSIO: [],
 			roster_id: '',
 			picks: [],
-			rounds: ''
+			rounds: '',
+			picksAway: [],
+			picksFor: []
+
 		}
 	}
 
@@ -60,7 +63,8 @@ class Roster extends Component {
 			this.setState({
 				league_name: res.data.name,
 				league_avatar: res.data.avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`,
-				rounds: res.data.settings.type === 2 ? res.data.settings.draft_rounds : 0
+				rounds: res.data.settings.type === 2 ? res.data.settings.draft_rounds : 0,
+				previous_league_id: res.data.previous_league_id
 			})
 		})
 		axios.get(`https://api.sleeper.app/v1/league/${this.state.league_id}/rosters`)
@@ -96,24 +100,33 @@ class Roster extends Component {
 			.then(res => {
 				let picksFor = res.data.filter(x => x.owner_id === this.state.roster_id && ["2022", "2023", "2024"].includes(x.season))
 				let picksAway = res.data.filter(x => x.owner_id !== this.state.roster_id && ["2022", "2023", "2024"].includes(x.season))
-				
+				this.setState({
+					picksAway: picksAway,
+					picksFor: picksFor
+				})
+
 				let i = 0;
+				let leagueID = this.state. previous_league_id
 				while (i < 1) {
-					axios.get(`https://api.sleeper.app/v1/league/${this.state.league_id}`)
-					.then(res => {
-						this.setState({
-							previous_league_id: res.data.previous_league_id
-						})
-					})
-					if (this.state.previous_league_id.length > 1) {
-						axios.get(`https://api.sleeper.app/v1/league/${this.state.previous_league_id}/traded_picks`)
+					if (leagueID.length > 1) {
+						axios.get(`https://api.sleeper.app/v1/league/${leagueID}/traded_picks`)
 						.then(res => {
-							picksFor = picksFor.concat(res.data.filter(x => x.owner_id === this.state.roster_id && ["2022", "2023", "2024"].includes(x.season)))
-							picksAway = picksAway.concat(res.data.filter(x => x.previous_owner_id === this.state.roster_id && ["2022", "2023", "2024"].includes(x.season)))
+							let pfp = this.state.picksFor.concat(res.data.filter(x => x.owner_id === this.state.roster_id))
+							let pap = this.state.picksAway.concat(res.data.filter(x => x.previous_owner_id === this.state.roster_id && x.roster_id === this.state.roster_id))
+							this.setState({
+								picksFor: pfp,
+								picksAway: pap.filter(x => ["2022", "2023", "2024"].includes(x.season))
+							})
 						})
+						axios.get(`https://api.sleeper.app/v1/league/${leagueID}`)
+						.then(res => {
+							leagueID = this.state.previous_league_id
+						})
+						i = leagueID.length > 1 ? 1 : 0
+						
 					}
 					else {
-						i = i + 1
+						i = 1
 					}
 				}
 				
@@ -148,7 +161,8 @@ class Roster extends Component {
 				}
 				for (let i = 0; i < allPicks.length; i++) {
 					let a = picksAway.find(x => x.round === allPicks[i].round && x.roster_id === allPicks[i].roster_id && x.season === allPicks[i].season)
-					if (a === undefined) {
+					let b = allPicks2.find(x => x.round === allPicks[i].round && x.roster_id === allPicks[i].roster_id && x.season === allPicks[i].season)
+					if (a === undefined && b === undefined) {
 						allPicks2.push(allPicks[i])
 					}
 				}
