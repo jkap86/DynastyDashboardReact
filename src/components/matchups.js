@@ -191,7 +191,7 @@ class Matchups extends Component {
 		}
 		for (let i = 0; i < oppPlayersDict.length; i++) {
 			let a = playersDict.find(x => x.name === oppPlayersDict[i].name)
-			let b = a === undefined ? {name: oppPlayersDict[i].name, count: 0, count2: oppPlayersDict[i].count2} : null
+			let b = a === undefined ? {name: oppPlayersDict[i].name, count: 0, count2: oppPlayersDict[i].count2, leaguesAgainst: oppPlayersDict[i].leaguesAgainst} : null
 			if(b !== null) {
 				allDict.push(b)
 			}
