@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import "./homepage.css";
+import "./matchups.css";
 import Theme from './theme';
 import allPlayers from '../allplayers.json';
 import axios from 'axios';
@@ -58,9 +58,24 @@ class Matchups extends Component {
 			injuries: [],
 			avatar: '',
 			espnPlayer: '',
-			weather: []
+			weather: [],
+			test: ''
 		}
+		this.expandPlayer = this.expandPlayer.bind(this)
 	}
+
+ 	expandPlayer(e) {
+ 		let players = document.getElementsByClassName(e.target.value)
+ 		for (let i = 0; i < players.length; i++) {
+ 			if (players[i].style.display === "none") {
+ 				players[i].style.display = "table-row"
+ 			}
+ 			else {
+ 				players[i].style.display = "none"
+ 			}
+ 			
+ 		}
+ 	}
 
 	componentDidMount() {
 		fetch('/injuries')
@@ -106,25 +121,43 @@ class Matchups extends Component {
 						axios.get(`https://api.sleeper.app/v1/league/${leagues[i].league_id}/matchups/${this.state.week}`)
 						.then(res => {
 							let matchup = res.data.find(x => x.roster_id === rid || (x.co_owners !== undefined && x.co_owners.includes(x.roster_id)))
-							let starters = this.state.players.concat(matchup === undefined ? null : matchup.starters.filter(x => x !== '0'))
+							
+							let starters = this.state.players.concat(matchup === undefined ? null : matchup.starters.filter(x => x !== '0').map(x => { return {id: x, league: leagues[i].name}}))
+
+
 							let opponent = res.data.find(x => x !== undefined && matchup !== undefined && x.matchup_id === matchup.matchup_id && x.roster_id !== rid)
-							let oppStarters = this.state.oppPlayers.concat(opponent === undefined ? null : opponent.starters.filter(x => x !== '0'))
-							const findOccurences = (players = [], type) => {
+							let oppStarters = this.state.oppPlayers.concat(opponent === undefined ? null : opponent.starters.filter(x => x !== '0').map(x => { return {id: x, league: leagues[i].name}}))
+							const findOccurences = (players = [], type, type2) => {
 									const res = [];
 									players.forEach(el => {
 										const index = res.findIndex(obj => {
-											return obj['name'] === el;
+											if (el !== null) {
+												return obj['name'] === el.id
+											}
+											else {
+												return obj['name'] === null
+											}
+											
 										});
-										if (index === -1) {
+										if (index === -1 && el !== null) {
 											res.push({
-												"name": el,
+												"name": el.id,
+												[type2]: [el.league],
 												[type]: 1
-												
  											})
+										}
+										else if (index === -1 && el === null) {
+											res.push({
+												"name": null,
+												[type2]: [],
+												[type]: 1
+											})
 										}
 										
 										else {
 											res[index][type]++;
+											res[index][type2].push(el.league)
+											
 										};
 									});
 									return res;
@@ -132,8 +165,8 @@ class Matchups extends Component {
 							this.setState({
 								players: starters,
 								oppPlayers: oppStarters,
-								playersDict: findOccurences(starters, 'count'),
-								oppPlayersDict: findOccurences(oppStarters, 'count2')
+								playersDict: findOccurences(starters, 'count', 'leagues'),
+								oppPlayersDict: findOccurences(oppStarters, 'count2', 'leaguesAgainst')
 							})
 
 						})
@@ -178,7 +211,7 @@ class Matchups extends Component {
 		return <>
 				<Link to="/" className="link">Home</Link>
 				<Theme/>
-				<h1>Matchups</h1>
+				<h1>Matchups {this.state.test}</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
 				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
 				<table style={{  margin: 'auto', width: '75%'}}>
@@ -201,16 +234,39 @@ class Matchups extends Component {
 									<th>Opposing</th>
 								</tr>
 								{allDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
+									<>
 									<tr className="row">
 										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
 											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
+											<button value={player.name} onClick={this.expandPlayer}>+</button>
 										</td>
-										<td>{player.projection} points</td>
-										<td>{player.opponent}</td>
-										<td>{player.forecast}</td>
-										<td>{player.count}</td>
-										<td>({player.count2})</td>
+										<td style={{ verticalAlign: 'top' }}>{player.projection} points</td>
+										<td style={{ verticalAlign: 'top' }}>{player.opponent}</td>
+										<td style={{ verticalAlign: 'top' }}>{player.forecast}</td>
+										<td style={{ verticalAlign: 'top' }}>{player.count}</td>
+										<td style={{ verticalAlign: 'top' }}>({player.count2})</td>
 									</tr>
+									<tr className={player.name} style={{ display: 'none'}}>
+										<td colSpan="6">
+											<table>
+												<tr>
+													<td style={{ verticalAlign: 'top' }}>
+														<table>
+															<tr><th>For</th></tr>
+															{player.leagues === undefined ? 0 : player.leagues.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="row">{l}</tr>)}
+														</table>
+													</td>
+													<td style={{ verticalAlign: 'top' }}>
+														<table>
+															<tr><th>Against</th></tr>
+															{player.leaguesAgainst === undefined ? 0 : player.leaguesAgainst.sort((a, b) => a > b).map(l => <tr className="row">{l}</tr>)}
+														</table>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									</>
 									)}
 							</table>
 						</td>
