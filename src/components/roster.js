@@ -30,8 +30,15 @@ class Roster extends Component {
 			rounds: '',
 			picksAway: [],
 			picksFor: []
-
 		}
+
+	}
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (nextProps.match.params.username !== prevState.username) {
+			const currentUsername = nextProps.match.params.username
+			window.location.reload();
+		}
+
 	}
 
 	componentDidMount() {
@@ -212,7 +219,9 @@ class Roster extends Component {
 			<tr>
 				{this.state.teams.sort((a, b) => a.teamValue < b.teamValue ? 1 : -1).map(team =>
 					<td>
-						<img src={team.avatar} />
+						<Link to={"/roster/" + this.state.league_id + "/" + team.name}>
+							<img src={team.avatar} />
+						</Link>
 						<ul>
 							<li>{team.name}</li> 
 							<li>{team.record}</li>

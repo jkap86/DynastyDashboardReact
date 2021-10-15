@@ -259,7 +259,7 @@ class Matchups extends Component {
 													<td style={{ verticalAlign: 'top' }}>
 														<table>
 															<tr><th>Against</th></tr>
-															{player.leaguesAgainst === undefined ? 0 : player.leaguesAgainst.sort((a, b) => a > b).map(l => <tr className="row">{l}</tr>)}
+															{player.leaguesAgainst === undefined ? 0 : player.leaguesAgainst.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="row">{l}</tr>)}
 														</table>
 													</td>
 												</tr>
