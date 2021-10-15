@@ -108,7 +108,7 @@ class Roster extends Component {
 				let i = 0;
 				let leagueID = this.state. previous_league_id
 				while (i < 1) {
-					if (leagueID.length > 1) {
+					if (leagueID !== null && leagueID.length > 1) {
 						axios.get(`https://api.sleeper.app/v1/league/${leagueID}/traded_picks`)
 						.then(res => {
 							let pfp = this.state.picksFor.concat(res.data.filter(x => x.owner_id === this.state.roster_id))
@@ -180,6 +180,12 @@ class Roster extends Component {
 			let p = this.state.playerValues.find(x => x.searchName === allPlayers[this.state.players[i]].search_full_name)
 			allPlayers[this.state.players[i]].value = p === undefined ? '0' : p.value
 		}
+		let picks =  this.state.picks
+		for (let i = 0; i < picks.length; i++) {
+			let p = this.state.playerValues.find(x => x.name.includes(picks[i].season + " Mid " + picks[i].round))
+			picks[i].value = p === undefined ? '0' : p.value
+		}
+
 		for (let i = 0; i < this.state.teams.length; i ++) {
 			for (let j = 0; j < this.state.teams[i].players.length; j++) {
 				let p = this.state.playerValues.find(x => x.searchName === allPlayers[this.state.teams[i].players[j]].search_full_name)
@@ -242,7 +248,7 @@ class Roster extends Component {
 					</tr>
 				</thead>
 				<tbody>
-				<tr><th colspan="7">Starters</th></tr>
+				<tr><th colspan="7" style={{ textAlign: 'center' }}>Starters - {players.filter(x => this.state.starters.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
 				{players.filter(x => this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td><img src={allPlayers[player].picture}/></td>
@@ -254,7 +260,7 @@ class Roster extends Component {
 						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
-				<tr><th colspan="7">Bench</th></tr>
+				<tr><th colspan="7" style={{ textAlign: 'center' }}>Bench - {players.filter(x => !this.state.starters.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
 				{players.filter(x => !this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td><img src={allPlayers[player].picture}/></td>
@@ -266,30 +272,30 @@ class Roster extends Component {
 						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
-				<tr><th colspan="7" style={{  textAlign: 'center'  }}>Picks</th></tr>
+				<tr><th colspan="7" style={{  textAlign: 'center'  }}>Picks - {picks.reduce((accumulator, current) => accumulator + Number(current.value), 0).toLocaleString("en-US")}</th></tr>
 				<tr>
 					<td></td>
 					<td></td>
 					<td style={{ verticalAlign: 'top'}}>
-						<ol style={{ display: 'grid' }}>
-							{this.state.picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2022").map(pick => 
-								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td></tr>
+						<table>
+							{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2022").map(pick => 
+								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
 							)}
-						</ol>
+						</table>
 					</td>
 					<td style={{ verticalAlign: 'top'}}>
-						<ol style={{ display: 'grid' }}>
-							{this.state.picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2023").map(pick => 
-								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td></tr>
+						<table>
+							{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2023").map(pick => 
+								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
 							)}
-						</ol>
+						</table>
 					</td>
 					<td style={{ verticalAlign: 'top'}}>
-						<ol style={{ display: 'grid'  }}>
-							{this.state.picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2024").map(pick => 
-								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td></tr>
+						<table style={{ display: 'grid'  }}>
+							{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2024").map(pick => 
+								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
 							)}
-						</ol>
+						</table>
 					</td>
 				</tr>	
 				</tbody>
