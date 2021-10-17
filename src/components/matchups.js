@@ -102,6 +102,12 @@ class Matchups extends Component {
 			})
 		})
 
+		axios.get(`https://api.sportsdata.io/v3/nfl/scores/json/Players?key=d5d541b8c8b14262b069837ff8110635`)
+		.then(res => {
+			this.setState({
+				allPlayersSIO: res.data
+			})
+		})
 
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
 		.then(res => {
@@ -202,11 +208,14 @@ class Matchups extends Component {
 			let inj = this.state.injuries.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name)
 			let hteam = allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].team
 			let forecast = this.state.weather.find(x => x.homeTeam === teams[hteam] || (p !== undefined && x.homeTeam === teams[p.opponent]))
+			let photo = this.state.allPlayersSIO.find(x => allPlayers[allDict[i].name] !== undefined && x.YahooPlayerID === allPlayers[allDict[i].name].yahoo_id)
 			allDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
 			allDict[i].status = inj === undefined ? null : inj.status 
 			allDict[i].projection = p === undefined ? '0' : p.projection
 			allDict[i].opponent = p === undefined ? '-' : p.opponent
+			allDict[i].photo = photo === undefined ? null : photo.PhotoUrl.replace('/', '')
 		}
+
 
 		return <>
 				<Link to="/" className="link">Home</Link>
@@ -226,6 +235,7 @@ class Matchups extends Component {
 						<td>
 							<table className="table">
 								<tr>
+									<th></th>
 									<th>Player</th>
 									<th>Projection</th>
 									<th>Opponent</th>
@@ -235,19 +245,21 @@ class Matchups extends Component {
 								</tr>
 								{allDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
 									<>
-									<tr className="row">
+									<tr className="row" style={{  borderSpacing: '4em' }}>
+										<td><img src={player.photo} /></td>
 										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
 											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
-											<button value={player.name} onClick={this.expandPlayer}>+</button>
+											<button style={{ fontSize: '32px', backgroundColor: 'inherit', border: 'none', color: 'var(--primary-color)' }} onClick={this.expandPlayer} value={player.name}>+</button>
 										</td>
-										<td style={{ verticalAlign: 'top' }}>{player.projection} points</td>
-										<td style={{ verticalAlign: 'top' }}>{player.opponent}</td>
-										<td style={{ verticalAlign: 'top' }}>{player.forecast}</td>
-										<td style={{ verticalAlign: 'top' }}>{player.count}</td>
-										<td style={{ verticalAlign: 'top' }}>({player.count2})</td>
+										<td>{player.projection} points</td>
+										<td>{player.opponent}</td>
+										<td>{player.forecast}</td>
+										<td>{player.count}</td>
+										<td>({player.count2})</td>
 									</tr>
 									<tr className={player.name} style={{ display: 'none'}}>
-										<td colSpan="6">
+										<td></td>
+										<td colSpan="7">
 											<table>
 												<tr>
 													<td style={{ verticalAlign: 'top' }}>

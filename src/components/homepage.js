@@ -321,7 +321,7 @@ class Homepage extends Component {
 			
 			</div>
 			<h3>Trending Players</h3>
-			<table style={{  margin: 'auto'  }}>
+			<table style={{  margin: 'auto', borderSpacing: '4em'  }}>
 			<tr>
 			<td style={{  verticalAlign: 'top'  }}>
 				<table className="table">

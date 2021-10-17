@@ -1,7 +1,7 @@
 :root {
 	--primary-color: darkblue;
 	--secondary-color: #69BE28;
-	--third-color: #FC4C02;
+	--third-color: #FFEFD5;
 }
 
 [data-theme="ari"] {
@@ -17,8 +17,8 @@
 }
 
 [data-theme="light"] {
-	--primary-color: white;
-	--secondary-color: grey;
+	--primary-color: lightgrey;
+	--secondary-color: gray;
 	--third-color: black;
 }
 

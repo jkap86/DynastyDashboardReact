@@ -29,6 +29,7 @@ table.table {
 	color: var(--primary-color);
 	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05px 0 var(--secondary-color);
 	box-shadow: 1px 1px 15px 20px var(--secondary-color);
+	border-collapse: collapse;
 }
 
 table tr.row:hover {
@@ -72,7 +73,7 @@ table tr.row:hover img {
 }
 
 td {
-	padding: 1em;
+	padding: 0 .5em 0 0.5em;
 	text-align: left;
 	white-space: nowrap;
 }

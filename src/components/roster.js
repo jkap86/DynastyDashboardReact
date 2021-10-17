@@ -84,7 +84,10 @@ class Roster extends Component {
 						record: record,
 						players: rosters[i].players,
 						starters: rosters[i].starters,
-						roster_id: rosters[i].roster_id
+						roster_id: rosters[i].roster_id,
+						reserve: rosters[i].reserve,
+						taxi: rosters[i].taxi
+
 					}) 	
 				}
 				else if (rosters[i].players !== null) {
@@ -231,16 +234,24 @@ class Roster extends Component {
 				)}
 			</tr>
 			</table>
-			<h1><img src={this.state.avatar}/>{this.state.username}</h1>
-			<h2>{this.state.league_name}<img src={this.state.league_avatar}/></h2>
-			<h2>{this.state.record}</h2>
-			<h2>{value.toLocaleString("en-US")}</h2>
+			<h2><img src={this.state.league_avatar}/></h2>
+			<h1>{this.state.league_name}</h1>
+			<h2><img src={this.state.avatar}/></h2>
+			<h1>{this.state.username}</h1>
+			<h2>Record: {this.state.record}</h2>
+			<h3>
+				<ol>
+					<li>Players: {value.toLocaleString("en-US")}</li>&nbsp;&nbsp;
+					<li>Draft Capital: {picks.reduce((accumulator, current) => accumulator + Number(current.value), 0).toLocaleString("en-US")}</li>&nbsp;&nbsp;
+					<li>Total Dynasty Value: {(value + picks.reduce((accumulator, current) => accumulator + Number(current.value), 0)).toLocaleString("en-US")}</li>&nbsp;&nbsp;
+				</ol>
+			</h3>
 			<h3>
 				Weighted Ages
-				<ol style={{ display: 'grid'}}>
-					<li>QB: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'QB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'QB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>
-					<li>RB: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'RB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'RB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>
-					<li>WR: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'WR').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'WR').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>
+				<ol>
+					<li>QB: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'QB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'QB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>&nbsp;&nbsp;&nbsp;&nbsp;
+					<li>RB: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'RB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'RB').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>&nbsp;&nbsp;&nbsp;&nbsp;
+					<li>WR: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'WR').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'WR').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>&nbsp;&nbsp;&nbsp;&nbsp;
 					<li>TE: {Math.round((this.state.players.filter(x => allPlayers[x].position === 'TE').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].age) * Number(allPlayers[current].value)), 0)) / (this.state.players.filter(x => allPlayers[x].position === 'TE').reduce((accumulator, current) => accumulator + (Number(allPlayers[current].value)), 0)) * 100) / 100} yrs</li>
 				</ol>
 			</h3>
@@ -252,15 +263,15 @@ class Roster extends Component {
 						<th>Player</th>
 						<th>College</th>
 						<th>Age</th>
-						<th>Years Exp</th>
-						<th>Dynasty Value</th>
+						<th>Years<br/>Exp</th>
+						<th>Dynasty<br/>Value</th>
 					</tr>
 				</thead>
 				<tbody>
 				<tr><th colspan="7" style={{ textAlign: 'center' }}>Starters - {players.filter(x => this.state.starters.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
 				{players.filter(x => this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
-						<td><img src={allPlayers[player].picture}/></td>
+						<td><img style={{ width: '2em'}} src={allPlayers[player].picture}/></td>
 						<td>{allPlayers[player].position}</td>
 						<td>{allPlayers[player].number} {allPlayers[player].first_name} {allPlayers[player].last_name} {allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
 						<td>{allPlayers[player].college}</td>
@@ -269,10 +280,34 @@ class Roster extends Component {
 						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
-				<tr><th colspan="7" style={{ textAlign: 'center' }}>Bench - {players.filter(x => !this.state.starters.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
+				<tr><th colspan="7" style={{ textAlign: 'center' }}>Bench - {players.filter(x => !this.state.starters.includes(x) && !this.state.reserve.includes(x) && !this.state.taxi.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
 				{players.filter(x => !this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
-						<td><img src={allPlayers[player].picture}/></td>
+						<td><img style={{ width: '2em'}} src={allPlayers[player].picture}/></td>
+						<td>{allPlayers[player].position}</td>
+						<td>{allPlayers[player].number} {allPlayers[player].first_name} {allPlayers[player].last_name} {allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
+						<td>{allPlayers[player].college}</td>
+						<td>{allPlayers[player].age}</td>
+						<td>{allPlayers[player].years_exp}</td>
+						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
+					</tr>
+				)}
+				<tr><th colspan="7" style={{ textAlign: 'center' }}>IR - {players.filter(x => this.state.reserve.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
+				{players.filter(x => this.state.reserve.includes(x)).map(player => 
+					<tr key={player} className="row">
+						<td><img style={{ width: '2em'}} src={allPlayers[player].picture}/></td>
+						<td>{allPlayers[player].position}</td>
+						<td>{allPlayers[player].number} {allPlayers[player].first_name} {allPlayers[player].last_name} {allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
+						<td>{allPlayers[player].college}</td>
+						<td>{allPlayers[player].age}</td>
+						<td>{allPlayers[player].years_exp}</td>
+						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
+					</tr>
+				)}
+				<tr><th colspan="7" style={{ textAlign: 'center' }}>Taxi - {players.filter(x => this.state.taxi.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
+				{players.filter(x => this.state.taxi.includes(x)).map(player => 
+					<tr key={player} className="row">
+						<td><img style={{ width: '2em'}} src={allPlayers[player].picture}/></td>
 						<td>{allPlayers[player].position}</td>
 						<td>{allPlayers[player].number} {allPlayers[player].first_name} {allPlayers[player].last_name} {allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
 						<td>{allPlayers[player].college}</td>
@@ -283,35 +318,35 @@ class Roster extends Component {
 				)}
 				<tr><th colspan="7" style={{  textAlign: 'center'  }}>Picks - {picks.reduce((accumulator, current) => accumulator + Number(current.value), 0).toLocaleString("en-US")}</th></tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td style={{ verticalAlign: 'top'}}>
+					<td colspan="7">
 						<table>
-							{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2022").map(pick => 
-								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
-							)}
+							<tr>
+								<td style={{ verticalAlign: 'top'}}>
+									<table style={{ borderCollapse: 'collapse'}}>
+										{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2022").map(pick => 
+											<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
+										)}
+									</table>
+								</td>
+								<td style={{ verticalAlign: 'top'}}>
+									<table style={{ borderCollapse: 'collapse'}}>
+										{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2023").map(pick => 
+											<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
+										)}
+									</table>
+								</td>
+								<td style={{ verticalAlign: 'top'}}>
+									<table style={{ borderCollapse: 'collapse'}}>
+										{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2024").map(pick => 
+											<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
+										)}
+									</table>
+								</td>
+							</tr>
 						</table>
-					</td>
-					<td style={{ verticalAlign: 'top'}}>
-						<table>
-							{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2023").map(pick => 
-								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
-							)}
-						</table>
-					</td>
-					<td style={{ verticalAlign: 'top'}}>
-						<table style={{ display: 'grid'  }}>
-							{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2024").map(pick => 
-								<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
-							)}
-						</table>
-					</td>
+					</td>	
 				</tr>	
 				</tbody>
-			</table>
-			
-			<table>
-				
 			</table>
 		</div>
 	}
