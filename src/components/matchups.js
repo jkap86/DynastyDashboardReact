@@ -237,8 +237,8 @@ class Matchups extends Component {
 								<tr>
 									<th></th>
 									<th>Player</th>
-									<th>Projection</th>
 									<th>Opponent</th>
+									<th>Projection</th>
 									<th>Forecast</th>
 									<th>Starting</th>
 									<th>Opposing</th>
@@ -246,13 +246,13 @@ class Matchups extends Component {
 								{allDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
 									<>
 									<tr className="row" style={{  borderSpacing: '4em' }}>
-										<td><img src={player.photo} /></td>
+										<td><img style={{ width: '2.5em' }} src={player.photo} /></td>
 										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
 											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
 											<button style={{ fontSize: '32px', backgroundColor: 'inherit', border: 'none', color: 'var(--primary-color)' }} onClick={this.expandPlayer} value={player.name}>+</button>
 										</td>
-										<td>{player.projection} points</td>
 										<td>{player.opponent}</td>
+										<td>{player.projection} points</td>
 										<td>{player.forecast}</td>
 										<td>{player.count}</td>
 										<td>({player.count2})</td>
