@@ -11,8 +11,6 @@ class Roster extends Component {
 		this.state = {
 			league_id: this.props.match.params.league_id,
 			previous_league_id: '',
-			previous_league_id2: '',
-			previous_league_id3: '',
 			league_name: '',
 			username: this.props.match.params.username,
 			user_id: '',
@@ -281,7 +279,7 @@ class Roster extends Component {
 					</tr>
 				)}
 				<tr><th colspan="7" style={{ textAlign: 'center' }}>Bench - {players.filter(x => !this.state.starters.includes(x) && !this.state.reserve.includes(x) && !this.state.taxi.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
-				{players.filter(x => !this.state.starters.includes(x)).map(player => 
+				{players.filter(x => !this.state.starters.includes(x) && !this.state.reserve.includes(x) && !this.state.taxi.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td><img src={allPlayers[player].picture}/></td>
 						<td>{allPlayers[player].position}</td>
