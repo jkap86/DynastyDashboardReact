@@ -59,7 +59,8 @@ class Matchups extends Component {
 			avatar: '',
 			espnPlayer: '',
 			weather: [],
-			test: ''
+			playerStats: [],
+			allPlayersSIO: []
 		}
 		this.expandPlayer = this.expandPlayer.bind(this)
 	}
@@ -78,6 +79,14 @@ class Matchups extends Component {
  	}
 
 	componentDidMount() {
+		fetch(`/stats/${this.state.week}`)
+		.then(res => res.json()).then(data => {
+			let players = data.stats
+			this.setState({
+				playerStats: players
+			})
+		})
+
 		fetch('/injuries')
 		.then(res => res.json()).then(data => {
 			let players = data.player
@@ -209,18 +218,31 @@ class Matchups extends Component {
 			let hteam = allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].team
 			let forecast = this.state.weather.find(x => x.homeTeam === teams[hteam] || (p !== undefined && x.homeTeam === teams[p.opponent]))
 			let photo = this.state.allPlayersSIO.find(x => allPlayers[allDict[i].name] !== undefined && x.YahooPlayerID === allPlayers[allDict[i].name].yahoo_id)
+			let stats = this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && Number(x.id) === allPlayers[allDict[i].name].fantasy_data_id)
+			stats = stats !== undefined ? stats : this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName === allPlayers[allDict[i].name].search_full_name)
 			allDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
 			allDict[i].status = inj === undefined ? null : inj.status 
 			allDict[i].projection = p === undefined ? '0' : p.projection
 			allDict[i].opponent = p === undefined ? '-' : p.opponent
 			allDict[i].photo = photo === undefined ? null : photo.PhotoUrl.replace('/', '')
+			allDict[i].c_a = stats === undefined ? null : (stats.c_a === '0/0' ? null : stats.c_a)
+			allDict[i].passYds = stats === undefined ? null : (stats.passYds === '0' ? null : stats.passYds)
+			allDict[i].passTD = stats === undefined ? null : (stats.passTD === '0' ? null : stats.passTD)
+			allDict[i].passInt = stats === undefined ? null : (stats.passInt === '0' ? null : stats.passInt)
+			allDict[i].rushes = stats === undefined ? null : (stats.rushes === '0' ? null : stats.rushes)
+			allDict[i].rushYds = stats === undefined ? null : (stats.rushYds === '0' ? null : stats.rushYds)
+			allDict[i].rushTD = stats === undefined ? null : (stats.rushTD === '0' ? null : stats.rushTD)
+			allDict[i].rec = stats === undefined ? null : (stats.rec === '0' ? null : stats.rec)
+			allDict[i].targets = stats === undefined ? null : (stats.targets === '0' ? null : stats.targets)
+			allDict[i].recYds = stats === undefined ? null : (stats.recYds === '0' ? null : stats.recYds)
+			allDict[i].recTD = stats === undefined ? null : (stats.recTD === '0' ? null : stats.recTD)
 		}
 
 
 		return <>
 				<Link to="/" className="link">Home</Link>
 				<Theme/>
-				<h1>Matchups {this.state.test}</h1>
+				<h1>Matchups</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
 				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
 				<table style={{  margin: 'auto', width: '75%'}}>
@@ -250,6 +272,20 @@ class Matchups extends Component {
 										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
 											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
 											<button style={{ fontSize: '32px', backgroundColor: 'inherit', border: 'none', color: 'var(--primary-color)' }} onClick={this.expandPlayer} value={player.name}>+</button>
+											<br/>
+											<em style={{ fontSize: '14px' }}>
+												{player.c_a}&nbsp;
+												{player.passYds === null ? null : player.passYds + ' Yds'}&nbsp;
+												{player.passTD === null ? null : player.passTD + ' TD'}&nbsp;
+												{player.passInt === null ? null : player.passInt + ' Int'}&nbsp;
+												{player.rushes === null ? null : player.rushes + ' Car'}&nbsp;
+												{player.rushYds === null ? null : player.rushYds + ' Yds'}&nbsp;
+												{player.rushTD === null ? null : player.rushTD + ' TD'}&nbsp;
+												{player.rec === null ? null : player.rec + ' Rec'}&nbsp;
+												{player.targets === null ? null : player.targets + ' Tgt'}&nbsp;
+												{player.recYds === null ? null : player.recYds + ' Yds'}&nbsp;
+												{player.recTD === null ? null : player.recTD + ' TD'}&nbsp;
+											</em>
 										</td>
 										<td>{player.opponent}</td>
 										<td>{player.projection} points</td>

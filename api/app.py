@@ -110,3 +110,43 @@ def weather():
 
 	return {'weather': forecastDict}
 	
+@app.route('/stats/<week>')
+def stats(week):
+	source = requests.get('https://www.rotoballer.com/nfl-game-center-live-scores-fantasy-football-scoreboard?week=' + str(week)).text
+	soup = BeautifulSoup(source, 'html.parser')
+	results = soup.select("table[id=player_stats] > tbody[id=fbody] > tr[id=zebra]")
+	def getStats(result):
+		completions = result.find_all('td')[8].text
+		link = result.select("td > a")[0]['href']
+		searchName = result.select("td > a")[0].text
+		passYds = result.find_all('td')[10].text
+		passTD = result.find_all('td')[11].text
+		passInt = result.find_all('td')[12].text
+		rushes = result.find_all('td')[14].text
+		rushYds = result.find_all('td')[15].text
+		rushTD = result.find_all('td')[17].text
+		rec = result.find_all('td')[19].text
+		targets = result.find_all('td')[20].text
+		recYds = result.find_all('td')[21].text
+		recTD = result.find_all('td')[23].text
+		return({
+			'id': link.split('/')[3],
+			'searchName': re.sub('[^A-Za-z]', '', searchName).lower(),
+			'c_a': completions,
+			'passYds': passYds,
+			'passTD': passTD,
+			'passInt': passInt,
+			'rushes': rushes,
+			'rushYds': rushYds,
+			'rushTD': rushTD,
+			'rec': rec,
+			'targets': targets,
+			'recYds': recYds,
+			'recTD': recTD
+			})
+	with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+		statsDict = list(executor.map(getStats, results))
+
+	return {'stats': statsDict}
+
+
