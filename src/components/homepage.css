@@ -31,9 +31,9 @@ button {
 	font-size: 1.75em;
 	color: var(--primary-color);
 	text-shadow: -.025em .025em 0 var(--secondary-color), .025em .025em 0 var(--secondary-color), .025em -.025em 0 var(--secondary-color), -.025em -.025em 0 var(--secondary-color);
-	font-weight: 900;
+	font-weight: 400;
 	padding: 0.25em;
-	font-family: Courier New;
+	font-family: Optima;
 }
 
 button:active .front {

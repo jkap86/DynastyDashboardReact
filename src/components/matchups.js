@@ -24,6 +24,7 @@ const teams = {
 			JAC: 'Jaguars',
 			JAX: 'Jaguars',
 			KC: 'Chiefs',
+			LA: 'Rams',
 			LAC: 'Chargers',
 			LAR: 'Rams',
 			MIA: 'Dolphins',
@@ -103,7 +104,7 @@ class Matchups extends Component {
 			})
 		})
 
-		fetch('/weather')
+		fetch(`/weather/${this.state.week}`)
 		.then(res => res.json()).then(data => {
 			let weather = data.weather
 			this.setState({
@@ -223,6 +224,7 @@ class Matchups extends Component {
 			allDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
 			allDict[i].status = inj === undefined ? null : inj.status 
 			allDict[i].projection = p === undefined ? '0' : p.projection
+			allDict[i].rank = p === undefined ? null : allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].position + p.rank
 			allDict[i].opponent = p === undefined ? '-' : p.opponent
 			allDict[i].photo = photo === undefined ? null : photo.PhotoUrl.replace('/', '')
 			allDict[i].c_a = stats === undefined ? null : (stats.c_a === '0/0' ? null : stats.c_a)
@@ -261,6 +263,7 @@ class Matchups extends Component {
 									<th>Player</th>
 									<th>Opponent</th>
 									<th>Projection</th>
+									<th>Rank</th>
 									<th>Forecast</th>
 									<th>Starting</th>
 									<th>Opposing</th>
@@ -289,6 +292,7 @@ class Matchups extends Component {
 										</td>
 										<td>{player.opponent}</td>
 										<td>{player.projection} points</td>
+										<td>{player.rank}</td>
 										<td>{player.forecast}</td>
 										<td>{player.count}</td>
 										<td>({player.count2})</td>

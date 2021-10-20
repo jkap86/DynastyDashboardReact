@@ -58,11 +58,12 @@ def get_projected_points():
 		playerInfo = next(item for item in projections if item['data-row-index'] == player['data-row-index'])
 		projection = playerInfo.find_all('td')[0].text
 		opponent = playerInfo.find_all('td')[1].text
+		rank = playerInfo.find_all('td')[4].text
 		position = player.find('td').text
 		return({
 			'name': playerName,
 			'searchName': re.sub('[^A-Za-z]', '', playerName).lower(),
-			'rank': player['data-row-index'],
+			'rank': re.sub('[^0-9.]', '', rank),
 			'opponent': re.sub('[^A-Z]', '', opponent),
 			'projection': re.sub('[^0-9.]', '', projection)
 			})
@@ -90,16 +91,16 @@ def get_injuries():
 
 	return {'player': playerInjuriesDict}
 
-@app.route('/weather')
-def weather():	
-	source = requests.get('http://www.nflweather.com/').text
+@app.route('/weather/<week>')
+def weather(week):	
+	source = requests.get('https://nflweather.com/en/week/2021/week-' + str(week)).text
 	soup = BeautifulSoup(source, 'html.parser')
 	table = soup.find('tbody')
 	results = table.find_all('tr')
 	def getWeather(result):
 		forecast = result.find_all('td')[-4].text
 		wind = result.find_all('td')[-2].text
-		homeTeam = result.find_all('td')[-9].text
+		homeTeam = result.find_all('td')[-8].text
 		return({
 			'homeTeam': re.sub('[\n]', '', homeTeam),
 			'forecast': re.sub('[\n]' ,'' , forecast).strip(),
