@@ -124,6 +124,7 @@ class PlayerSearch extends Component {
 					.then(res => {
 						let rosters = res.data;
 						let owner = rosters.find(x => x.players !== null && x.players.includes(this.state.player_id))
+						let user = rosters.find(x => x.owner_id === this.state.user_id)
 						let ownerID = owner === undefined ? 'available' : owner.owner_id
 						let wins = owner === undefined ? 0 : owner.settings.wins
 						let losses = owner === undefined ? 0 : owner.settings.losses
@@ -141,7 +142,11 @@ class PlayerSearch extends Component {
 								status: status,
 								pwins: owner === undefined || owner.metadata === null || owner.metadata.record === undefined ? 0 : (owner.metadata.record.match(/W/g) || []).length,
 								plosses: owner === undefined || owner.metadata === null || owner.metadata.record === undefined ? 0 : (owner.metadata.record.match(/L/g) || []).length,
-								bestball: this.state.leagues[i].settings.best_ball
+								bestball: this.state.leagues[i].settings.best_ball,
+								budget: this.state.leagues[i].settings.waiver_budget,
+								budget_used_owner: owner === undefined ? 0 : owner.settings.waiver_budget_used,
+								budget_used_user: user === undefined ? 0 : user.settings.waiver_budget_used,
+								trade_deadline: this.state.leagues[i].settings.trade_deadline
 							})
 							this.setState({
 								rosters: rosters,
@@ -177,10 +182,11 @@ class PlayerSearch extends Component {
 					<tr>
 						<th></th>
 						<th>League</th>
-						<th></th>
+						<th>Trade<br/>Deadline</th>
 						<th>Owner</th>
 						<th>Status</th>
-						<th>Current Record</th>
+						<th>Waiver Budget<br/>Used</th>
+						<th>Current<br/>Record</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -188,10 +194,11 @@ class PlayerSearch extends Component {
 				{this.state.info.filter(x => x.bestball === 1).sort((a, b) => (a.name > b.name) ? 1 : -1).map(league => 
 					<tr key={league.league_id} className={league.owner === this.state.username ? 'bestball owned row' : (league.owner === 'available' ? 'bestball available row' : 'bestball not_owned row')}>
 						<td><img src={league.avatar}/></td>
-						<td>{league.name}</td>
-						<td>{league.bestball !== 1 ? null : '(bestball)'}</td>
+						<td>{league.name} {league.bestball !== 1 ? null : '(bestball)'}</td>
+						<td>{league.trade_deadline < 99 ? 'Week ' + league.trade_deadline : null}</td>
 						<td>{league.owner}</td>
 						<td>{league.status}</td>
+						<td>{league.owner === 'available' ? `$${league.budget_used_user}/$${league.budget}` : null}</td>
 						<td>{league.wins + " - " + league.losses}</td>
 						<td><Link to={'/roster/' + league.league_id + '/' + (league.owner === 'available' ? this.state.username : league.owner)}><button><span className="front">View {league.owner === 'available' ? this.state.username : league.owner} Roster</span></button></Link></td>
 					</tr>
@@ -203,6 +210,7 @@ class PlayerSearch extends Component {
 						<td>{league.bestball !== 1 ? null : '(bestball)'}</td>
 						<td>{league.owner}</td>
 						<td>{league.status}</td>
+						<td>{league.owner === 'available' ? `$${league.budget_used_user}/$${league.budget}` : null}</td>
 						<td>{league.wins + " - " + league.losses}</td>
 						<td><Link to={'/roster/' + league.league_id + '/' + (league.owner === 'available' ? this.state.username : league.owner)}><button><span className="front">View {league.owner === 'available' ? this.state.username : league.owner} Roster</span></button></Link></td>
 					</tr>

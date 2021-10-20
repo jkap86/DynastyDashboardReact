@@ -62,7 +62,9 @@ class Leagues extends Component {
 									winner: winner,
 									second: second,
 									spots: leagues[i].roster_positions.filter(x => x !== 'BN').length,
-									starters: roster === undefined ? 0 : roster.starters.filter(x => x !== '0').length
+									starters: roster === undefined ? 0 : roster.starters.filter(x => x !== '0').length,
+									trade_deadline: leagues[i].settings.trade_deadline
+
 
 								})
 								this.setState({
@@ -88,7 +90,8 @@ class Leagues extends Component {
 										winner: null,
 										second: null,
 										spots: leagues[i].roster_positions === null ? null : leagues[i].roster_positions.filter(x => x !== 'BN').length,
-										starters: roster === undefined ? 0 : roster.starters.filter(x => x !== '0').length
+										starters: roster === undefined ? 0 : roster.starters.filter(x => x !== '0').length,
+										trade_deadline: leagues[i].settings.trade_deadline
 									})
 									this.setState({
 										leagues: leagues2
@@ -150,6 +153,7 @@ class Leagues extends Component {
 						<th>Record</th>
 						<th>FP</th>
 						<th>FPA</th>
+						<th>Trade<br/>Deadline</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -173,6 +177,9 @@ class Leagues extends Component {
 							{league.fpts_against}
 						</td>
 						<td>
+							{league.trade_deadline < 99 ? 'Week ' + league.trade_deadline : null}
+						</td>
+						<td>
 							<Link to={"/roster/" + league.league_id + "/" + this.state.username}><button><span className="front">View Roster</span></button></Link>
 						</td>
 					</tr>
@@ -194,6 +201,9 @@ class Leagues extends Component {
 						</td>
 						<td>
 							{league.fpts_against}
+						</td>
+						<td>
+							{league.trade_deadline < 19 ? 'Week ' + league.trade_deadline : null}
 						</td>
 						<td>
 							<Link to={"/roster/" + league.league_id + "/" + this.state.username}><button><span className="front">View Roster</span></button></Link>

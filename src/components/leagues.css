@@ -74,12 +74,11 @@ table tr.row:hover img {
 
 td {
 	padding: 0 .5em 0 0.5em;
-	text-align: left;
+	text-align: center;
 	white-space: nowrap;
 }
 
 th {
-	font-size: 22px;
-	text-align: left;
+	text-align: center;
 	padding: 0.5em;
 }
