@@ -75,20 +75,20 @@ class Roster extends Component {
 		axios.get(`https://api.sleeper.app/v1/league/${this.state.league_id}/rosters`)
 		.then(res => {
 			let rosters = res.data === null ? [] : res.data;
-			for (let i = 0; i < rosters.length; i++) {
-				if (rosters[i].owner_id === this.state.user_id && rosters[i].players !== null) {
-					let record = rosters[i].settings.wins + " - " + rosters[i].settings.losses
-					this.setState({
-						record: record,
-						players: rosters[i].players,
-						starters: rosters[i].starters,
-						roster_id: rosters[i].roster_id,
-						reserve: rosters[i].reserve === null ? [] : rosters[i].reserve,
-						taxi: rosters[i].taxi === null ? [] : rosters[i].taxi
+			let roster = rosters.find(x => x.owner_id === this.state.user_id && x.players !== null)
+			let record = (roster === undefined ? 0 : roster.settings.wins) + " - " + (roster === undefined ? 0 : roster.settings.losses)
+			this.setState({
+				record: record,
+				players: roster === undefined ? [] : roster.players,
+				starters: roster === undefined ? [] : roster.starters,
+				roster_id: roster === undefined ? [] : roster.roster_id,
+				reserve: roster === undefined || roster.reserve === null ? [] : roster.reserve,
+				taxi: roster === undefined || roster.taxi === null ? [] : roster.taxi
+			})
 
-					}) 	
-				}
-				else if (rosters[i].players !== null) {
+
+			for (let i = 0; i < rosters.length; i++) {
+				if (rosters[i].players !== null && rosters[i].owner_id !== this.state.user_id) {
 					axios.get(`https://api.sleeper.app/v1/user/${rosters[i].owner_id}`)
 					.then(res => {
 						let teams = this.state.teams.concat({
@@ -184,6 +184,7 @@ class Roster extends Component {
 	}
 
 	render() {
+
 		for (let i = 0; i < this.state.players.length; i++) {
 			let p = this.state.playerValues.find(x => x.searchName === allPlayers[this.state.players[i]].search_full_name)
 			allPlayers[this.state.players[i]].value = p === undefined ? '0' : p.value
@@ -204,14 +205,7 @@ class Roster extends Component {
 		}
 
 		let value = this.state.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0)
-		let players = this.state.players.sort((a, b) => (allPlayers[a].position > allPlayers[b].position) ? 1 : (Number(allPlayers[a].value) < Number(allPlayers[b].value)) ? 1 : -1)
-
-		let allPlayersSIO = this.state.allPlayersSIO;
-		for (let i = 0; i < players.length; i++) {
-			let a = allPlayersSIO.find(x => x.YahooPlayerID === allPlayers[players[i]].yahoo_id)
-			allPlayers[players[i]].picture = a === undefined ? null : a.PhotoUrl.replace('/', '')
-		}
-
+	
 
 		return <div>
 			<Link to="/" className="link">Home</Link>
@@ -266,8 +260,8 @@ class Roster extends Component {
 					</tr>
 				</thead>
 				<tbody>
-				<tr><th colspan="7" style={{ textAlign: 'center' }}>Starters - {players.filter(x => this.state.starters.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
-				{players.filter(x => this.state.starters.includes(x)).map(player => 
+				<tr><th colspan="7" style={{ textAlign: 'center' }}>Starters - {this.state.players.filter(x => this.state.starters.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
+				{this.state.players.filter(x => this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player].swish_id === null ? allPlayers[player].stats_id : allPlayers[player].swish_id}.png`}/></td>
 						<td>{allPlayers[player].position}</td>
@@ -278,8 +272,8 @@ class Roster extends Component {
 						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
-				<tr><th colspan="7" style={{ textAlign: 'center' }}>Bench - {players.filter(x => !this.state.starters.includes(x) && !this.state.reserve.includes(x) && !this.state.taxi.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
-				{players.filter(x => !this.state.starters.includes(x) && !this.state.reserve.includes(x) && !this.state.taxi.includes(x)).map(player => 
+				<tr><th colspan="7" style={{ textAlign: 'center' }}>Bench - {this.state.players.filter(x => !this.state.starters.includes(x) && !this.state.reserve.includes(x) && !this.state.taxi.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
+				{this.state.players.filter(x => !this.state.starters.includes(x) && !this.state.reserve.includes(x) && !this.state.taxi.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player].swish_id === null ? allPlayers[player].stats_id : allPlayers[player].swish_id}.png`}/></td>
 						<td>{allPlayers[player].position}</td>
@@ -290,8 +284,8 @@ class Roster extends Component {
 						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
-				<tr><th colspan="7" style={{ textAlign: 'center' }}>IR - {players.filter(x => this.state.reserve.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
-				{players.filter(x => this.state.reserve.includes(x)).map(player => 
+				<tr><th colspan="7" style={{ textAlign: 'center' }}>IR - {this.state.players.filter(x => this.state.reserve.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
+				{this.state.players.filter(x => this.state.reserve.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player].swish_id === null ? allPlayers[player].stats_id : allPlayers[player].swish_id}.png`}/></td>
 						<td>{allPlayers[player].position}</td>
@@ -302,8 +296,8 @@ class Roster extends Component {
 						<td>{Number(allPlayers[player].value).toLocaleString("en-US")}</td>
 					</tr>
 				)}
-				<tr><th colspan="7" style={{ textAlign: 'center' }}>Taxi - {players.filter(x => this.state.taxi.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
-				{players.filter(x => this.state.taxi.includes(x)).map(player => 
+				<tr><th colspan="7" style={{ textAlign: 'center' }}>Taxi - {this.state.players.filter(x => this.state.taxi.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
+				{this.state.players.filter(x => this.state.taxi.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player].swish_id === null ? allPlayers[player].stats_id : allPlayers[player].swish_id}.png`}/></td>
 						<td>{allPlayers[player].position}</td>
@@ -322,21 +316,21 @@ class Roster extends Component {
 								<td style={{ verticalAlign: 'top'}}>
 									<table style={{ borderCollapse: 'collapse'}}>
 										{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2022").map(pick => 
-											<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
+											<tr className="row"><td style={{ textAlign: 'left' }}>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{Number(pick.value).toLocaleString("en-US")}</td></tr>
 										)}
 									</table>
 								</td>
 								<td style={{ verticalAlign: 'top'}}>
 									<table style={{ borderCollapse: 'collapse'}}>
 										{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2023").map(pick => 
-											<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
+											<tr className="row"><td style={{ textAlign: 'left' }}>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{Number(pick.value).toLocaleString("en-US")}</td></tr>
 										)}
 									</table>
 								</td>
 								<td style={{ verticalAlign: 'top'}}>
 									<table style={{ borderCollapse: 'collapse'}}>
 										{picks.sort((a, b) => a.round < b.round ? 1 : -1).sort((a, b) => a.season > b.season ? 1 : -1).filter(x => x.season === "2024").map(pick => 
-											<tr className="row"><td>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === pick.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{pick.value}</td></tr>
+											<tr className="row"><td style={{ textAlign: 'left' }}>{pick.season + " Round " + pick.round + " " + (this.state.teams.find(x => x.roster_id === picks.roster_id) === undefined ? '' : "(" + this.state.teams.find(x => x.roster_id === pick.roster_id).name + ")")}</td><td>{Number(pick.value).toLocaleString("en-US")}</td></tr>
 										)}
 									</table>
 								</td>
