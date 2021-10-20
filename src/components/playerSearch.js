@@ -206,8 +206,8 @@ class PlayerSearch extends Component {
 				{this.state.info.filter(x => x.bestball !== 1).sort((a, b) => (a.name > b.name) ? 1 : -1).map(league => 
 					<tr key={league.league_id} className={league.owner === this.state.username ? 'standard owned row' : (league.owner === 'available' ? 'standard available row' : 'standard not_owned row')}>
 						<td><img src={league.avatar}/></td>
-						<td>{league.name}</td>
-						<td>{league.bestball !== 1 ? null : '(bestball)'}</td>
+						<td>{league.name} {league.bestball !== 1 ? null : '(bestball)'}</td>
+						<td>{league.trade_deadline < 99 ? 'Week ' + league.trade_deadline : null}</td>
 						<td>{league.owner}</td>
 						<td>{league.status}</td>
 						<td>{league.owner === 'available' ? `$${league.budget_used_user}/$${league.budget}` : null}</td>
