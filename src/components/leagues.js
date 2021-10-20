@@ -203,7 +203,7 @@ class Leagues extends Component {
 							{league.fpts_against}
 						</td>
 						<td>
-							{league.trade_deadline < 19 ? 'Week ' + league.trade_deadline : null}
+							{league.trade_deadline < 99 ? 'Week ' + league.trade_deadline : null}
 						</td>
 						<td>
 							<Link to={"/roster/" + league.league_id + "/" + this.state.username}><button><span className="front">View Roster</span></button></Link>
