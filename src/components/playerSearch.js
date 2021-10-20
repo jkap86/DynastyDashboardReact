@@ -157,11 +157,13 @@ class PlayerSearch extends Component {
 	}	
 
 	render() {
+		let headshot = allPlayers[this.state.player_id] === undefined ? blankplayer : (allPlayers[this.state.player_id].swish_id !== undefined ? allPlayers[this.state.player_id].swish_id : (allPlayers[this.state.player_id].stats_id !== undefined ? allPlayers[this.state.player_id].stats_id : blankplayer))
 		return <div>
 			<Link className="link" to="/">Home</Link>
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username}</h1>
 			<h2>{this.state.player}</h2>
+			<h2><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${headshot}.png`} /></h2>
 			<h3>{this.state.info.filter(x => x.owner === this.state.username).length} Shares ({this.state.leagues.length} Leagues)</h3>
 			<h3>2021 Record: {this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.wins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.losses, 0)}</h3>
 			<h3><button onClick={this.toggleOwned}><span className="front">Toggle Owned</span></button>&nbsp;

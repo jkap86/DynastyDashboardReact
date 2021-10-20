@@ -269,7 +269,7 @@ class Roster extends Component {
 				<tr><th colspan="7" style={{ textAlign: 'center' }}>Starters - {players.filter(x => this.state.starters.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
 				{players.filter(x => this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
-						<td><img src={allPlayers[player].picture}/></td>
+						<td><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player].swish_id === null ? allPlayers[player].stats_id : allPlayers[player].swish_id}.png`}/></td>
 						<td>{allPlayers[player].position}</td>
 						<td>{allPlayers[player].number} {allPlayers[player].first_name} {allPlayers[player].last_name} {allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
 						<td>{allPlayers[player].college}</td>
@@ -281,7 +281,7 @@ class Roster extends Component {
 				<tr><th colspan="7" style={{ textAlign: 'center' }}>Bench - {players.filter(x => !this.state.starters.includes(x) && !this.state.reserve.includes(x) && !this.state.taxi.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
 				{players.filter(x => !this.state.starters.includes(x) && !this.state.reserve.includes(x) && !this.state.taxi.includes(x)).map(player => 
 					<tr key={player} className="row">
-						<td><img src={allPlayers[player].picture}/></td>
+						<td><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player].swish_id === null ? allPlayers[player].stats_id : allPlayers[player].swish_id}.png`}/></td>
 						<td>{allPlayers[player].position}</td>
 						<td>{allPlayers[player].number} {allPlayers[player].first_name} {allPlayers[player].last_name} {allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
 						<td>{allPlayers[player].college}</td>
@@ -293,7 +293,7 @@ class Roster extends Component {
 				<tr><th colspan="7" style={{ textAlign: 'center' }}>IR - {players.filter(x => this.state.reserve.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
 				{players.filter(x => this.state.reserve.includes(x)).map(player => 
 					<tr key={player} className="row">
-						<td><img src={allPlayers[player].picture}/></td>
+						<td><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player].swish_id === null ? allPlayers[player].stats_id : allPlayers[player].swish_id}.png`}/></td>
 						<td>{allPlayers[player].position}</td>
 						<td>{allPlayers[player].number} {allPlayers[player].first_name} {allPlayers[player].last_name} {allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
 						<td>{allPlayers[player].college}</td>
@@ -305,7 +305,7 @@ class Roster extends Component {
 				<tr><th colspan="7" style={{ textAlign: 'center' }}>Taxi - {players.filter(x => this.state.taxi.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
 				{players.filter(x => this.state.taxi.includes(x)).map(player => 
 					<tr key={player} className="row">
-						<td><img src={allPlayers[player].picture}/></td>
+						<td><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player].swish_id === null ? allPlayers[player].stats_id : allPlayers[player].swish_id}.png`}/></td>
 						<td>{allPlayers[player].position}</td>
 						<td>{allPlayers[player].number} {allPlayers[player].first_name} {allPlayers[player].last_name} {allPlayers[player].team === null ? 'FA' : allPlayers[player].team}</td>
 						<td>{allPlayers[player].college}</td>

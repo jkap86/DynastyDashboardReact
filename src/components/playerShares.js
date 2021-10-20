@@ -218,6 +218,7 @@ class PlayerShares extends Component {
 			<table className="table">
 				<thead>
 					<tr>
+						<th></th>
 						<th>Player</th>
 						<th>Age</th>
 						<th>College</th>
@@ -229,6 +230,7 @@ class PlayerShares extends Component {
 				<tbody>
 				{this.state.playersDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player => 
 					<tr key={player.name} className={`row player ${allPlayers[player.name].position} ${allPlayers[player.name].years_exp === 0 ? 'rookie' : allPlayers[player.name].years_exp === 1 ? 'one' : allPlayers[player.name].years_exp === 2 ? 'two' : allPlayers[player.name].years_exp === 3 ? 'three' : allPlayers[player.name].years_exp === 4 ? 'four' : allPlayers[player.name].years_exp === 5 ? 'five' : allPlayers[player.name].years_exp === 6 ? 'six' : allPlayers[player.name].years_exp === 7 ? 'seven' : allPlayers[player.name].years_exp === 8 ? 'eight' : 'nine'}`}>
+						<td><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player.name].swish_id === null ? allPlayers[player.name].stats_id : allPlayers[player.name].swish_id}.png`} /></td>
 						<td>{allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team}</td>
 						<td>{allPlayers[player.name].age}</td>
 						<td>{allPlayers[player.name].college}</td>

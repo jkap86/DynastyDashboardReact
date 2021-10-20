@@ -333,7 +333,7 @@ class Homepage extends Component {
 					{this.state.trendingAdds.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player => 
 						<tr className="row">
 							<td>
-								<img src={player.picture} />
+								<img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player.player_id].swish_id}.png`} />
 							</td>
 							<td>
 								{allPlayers[player.player_id].position + " " + allPlayers[player.player_id].first_name + " " + allPlayers[player.player_id].last_name + " " + allPlayers[player.player_id].team}
@@ -355,7 +355,7 @@ class Homepage extends Component {
 					{this.state.trendingDrops.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player =>
 						<tr className="row">
 							<td>
-								<img src={player.picture}/>
+								<img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player.player_id].swish_id === null ? allPlayers[player.player_id].stats_id : allPlayers[player.player_id].swish_id}.png`}/>
 							</td>
 							<td>
 								{allPlayers[player.player_id].position + " " + allPlayers[player.player_id].first_name + " " + allPlayers[player.player_id].last_name + " " + allPlayers[player.player_id].team}

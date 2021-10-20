@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import "./matchups.css";
 import Theme from './theme';
 import allPlayers from '../allplayers.json';
+import blankplayer from '../blankplayer.jpeg';
 import axios from 'axios';
 
 
@@ -218,7 +219,7 @@ class Matchups extends Component {
 			let inj = this.state.injuries.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name)
 			let hteam = allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].team
 			let forecast = this.state.weather.find(x => x.homeTeam === teams[hteam] || (p !== undefined && x.homeTeam === teams[p.opponent]))
-			let photo = this.state.allPlayersSIO.find(x => allPlayers[allDict[i].name] !== undefined && x.YahooPlayerID === allPlayers[allDict[i].name].yahoo_id)
+			let photo = allPlayers[allDict[i].name] === undefined ? blankplayer : allPlayers[allDict[i].name].swish_id === null ? (allPlayers[allDict[i].name].stats_id === null ? blankplayer : allPlayers[allDict[i].name].stats_id) : allPlayers[allDict[i].name].swish_id
 			let stats = this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && Number(x.id) === allPlayers[allDict[i].name].fantasy_data_id)
 			stats = stats !== undefined ? stats : this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName === allPlayers[allDict[i].name].search_full_name)
 			allDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
@@ -226,7 +227,7 @@ class Matchups extends Component {
 			allDict[i].projection = p === undefined ? '0' : p.projection
 			allDict[i].rank = p === undefined ? null : allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].position + p.rank
 			allDict[i].opponent = p === undefined ? '-' : p.opponent
-			allDict[i].photo = photo === undefined ? null : photo.PhotoUrl.replace('/', '')
+			allDict[i].photo = photo === blankplayer ? blankplayer : `https://assets1.sportsnet.ca/wp-content/uploads/players/280/${photo}.png`
 			allDict[i].c_a = stats === undefined ? null : (stats.c_a === '0/0' ? null : stats.c_a)
 			allDict[i].passYds = stats === undefined ? null : (stats.passYds === '0' ? null : stats.passYds)
 			allDict[i].passTD = stats === undefined ? null : (stats.passTD === '0' ? null : stats.passTD)
