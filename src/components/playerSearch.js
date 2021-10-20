@@ -158,6 +158,9 @@ class PlayerSearch extends Component {
 
 	render() {
 		let headshot = allPlayers[this.state.player_id] === undefined ? blankplayer : (allPlayers[this.state.player_id].swish_id !== undefined ? allPlayers[this.state.player_id].swish_id : (allPlayers[this.state.player_id].stats_id !== undefined ? allPlayers[this.state.player_id].stats_id : blankplayer))
+		let wins = this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.wins, 0) 
+		let losses = this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.losses, 0)	
+
 		return <div>
 			<Link className="link" to="/">Home</Link>
 			<Theme/>
@@ -165,7 +168,7 @@ class PlayerSearch extends Component {
 			<h2>{this.state.player}</h2>
 			<h2><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${headshot}.png`} /></h2>
 			<h3>{this.state.info.filter(x => x.owner === this.state.username).length} Shares ({this.state.leagues.length} Leagues)</h3>
-			<h3>2021 Record: {this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.wins, 0) + " - " + this.state.info.filter(x => x.owner === this.state.username).reduce((accumlator, current) => accumlator + current.losses, 0)}</h3>
+			<h3>2021 Record: {wins} - {losses} <br/> {(wins/(wins + losses)).toFixed(4)}</h3>
 			<h3><button onClick={this.toggleOwned}><span className="front">Toggle Owned</span></button>&nbsp;
 			<button onClick={this.toggleAvailable}><span className="front">Toggle Available</span></button></h3>
 			<h3><input id="bestball" onChange={this.showBestBall} type="checkbox"/>BestBall <input id="standard" onChange={this.showStandard} type="checkbox" />Standard</h3>

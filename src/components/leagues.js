@@ -52,6 +52,7 @@ class Leagues extends Component {
 									best_ball: leagues[i].settings.best_ball,
 									wins: roster === undefined || roster.settings === undefined ? 0 : roster.settings.wins,
 									losses: roster === undefined || roster.settings === undefined ? 0 : roster.settings.losses,
+									total_moves: roster === undefined || roster.settings === undefined ? 0 : roster.settings.total_moves,
 									league_id: leagues[i].league_id,
 									fpts: roster === undefined || roster.settings === undefined ? 0 : roster.settings.fpts,
 									fpts_decimal: roster === undefined || roster.settings === undefined ? 0 : roster.settings.fpts_decimal,
@@ -78,6 +79,7 @@ class Leagues extends Component {
 										best_ball: leagues[i].settings.best_ball,
 										wins: roster === undefined || roster.settings === undefined ? 0 : roster.settings.wins,
 										losses: roster === undefined || roster.settings === undefined ? 0 : roster.settings.losses,
+										total_moves: roster === undefined || roster.settings === undefined ? 0 : roster.settings.total_moves,
 										league_id: leagues[i].league_id,
 										fpts: roster === undefined || roster.settings === undefined ? 0 : roster.settings.fpts,
 										fpts_against: roster === undefined || roster.settings === undefined || roster.settings.fpts_against === undefined ? 0 : roster.settings.fpts_against,
@@ -100,8 +102,10 @@ class Leagues extends Component {
 	}
 
 	render() {
-		let record = this.state.leagues.reduce((accumulator, current) => accumulator + current.wins, 0) + "-" + this.state.leagues.reduce((accumulator, current) => accumulator + current.losses, 0);
-		let bbRecord = this.state.leagues.filter(x => x.best_ball === 1).reduce((accumulator, current) => accumulator + current.wins, 0) + "-" + this.state.leagues.filter(x => x.best_ball === 1).reduce((accumulator, current) => accumulator + current.losses, 0)
+		let wins = this.state.leagues.reduce((accumulator, current) => accumulator + current.wins, 0) 
+		let losses = this.state.leagues.reduce((accumulator, current) => accumulator + current.losses, 0);
+		let bbwins = this.state.leagues.filter(x => x.best_ball === 1).reduce((accumulator, current) => accumulator + current.wins, 0) 
+		let bblosses = this.state.leagues.filter(x => x.best_ball === 1).reduce((accumulator, current) => accumulator + current.losses, 0)
 		let pRecord = this.state.leagues.reduce((accumulator, current) => accumulator + current.pwins, 0) + "-" + this.state.leagues.reduce((accumulator, current) => accumulator + current.plosses, 0);
 		return <div>
 			<Link to="/" className="link">Home</Link>
@@ -111,8 +115,8 @@ class Leagues extends Component {
 			<table className="heading-table">
 			<tr className="row">
 				<td>2021 Record:</td>
-				<td>{record}</td>
-				<td>({bbRecord} BestBall)</td>
+				<td>{wins}-{losses}  {(wins/(wins + losses)).toFixed(4)}</td>
+				<td>({bbwins}-{bblosses}  {(bbwins/(bbwins + bblosses)).toFixed(4)}  BestBall)</td>
 			</tr>
 			<tr className="row">
 				<td>2021 PF-PA:</td>
@@ -143,10 +147,9 @@ class Leagues extends Component {
 					<tr>
 						<th></th>
 						<th>League</th>
-						<th></th>
 						<th>Record</th>
-						<th>Fantasy Points</th>
-						<th>Fantasy Points Against</th>
+						<th>FP</th>
+						<th>FPA</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -157,11 +160,8 @@ class Leagues extends Component {
 							<img src={league.avatar === null ? blankplayer : "https://sleepercdn.com/avatars/thumbs/" + league.avatar} />
 						</td>
 						<td>
-							{league.name}
+							{league.name} <em>{league.roster_id === league.winner ? '2020 1st' : (league.roster_id === league.second ? '2020 2nd' : null)}</em>
 							<div>{league.spots !== league.starters && (league.best_ball !== 1) ? 'INVALID' : null}</div>
-						</td>
-						<td>
-							{league.roster_id === league.winner ? ' 2020 Champ' : (league.roster_id === league.second ? 'Runner Up' : null)}
 						</td>
 						<td>
 							{league.wins} - {league.losses}
@@ -183,11 +183,8 @@ class Leagues extends Component {
 							<img src={league.avatar === null ? blankplayer : "https://sleepercdn.com/avatars/thumbs/" + league.avatar} />
 						</td>
 						<td>
-							{league.name}
+							{league.name}<br/><em>{league.roster_id === league.winner ? '2020 1st' : (league.roster_id === league.second ? '2020 2nd' : null)}</em>
 							<div>{league.spots !== league.starters && (league.best_ball !== 1) ? 'INVALID' : null}</div>
-						</td>
-						<td>
-							{league.roster_id === league.winner ? ' 2020 Champ' : (league.roster_id === league.second ? 'Runner Up' : null)}
 						</td>
 						<td>
 							{league.wins} - {league.losses}

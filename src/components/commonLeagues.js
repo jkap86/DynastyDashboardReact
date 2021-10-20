@@ -117,6 +117,10 @@ class CommonLeagues extends Component {
 	}
 
 	render() {
+		let wins1 = this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.wins1, 0)  
+		let losses1 = this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.losses1, 0)
+		let wins2 = this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.wins2, 0) 
+		let losses2 = this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.losses2, 0)
 		return <>
 			<Link to="/" className="link">Home</Link>
 			<Theme/>
@@ -131,8 +135,8 @@ class CommonLeagues extends Component {
 				</tr>	
 				<tr className="row">
 					<td>2021 Record:</td>
-					<td>{this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.wins1, 0)} - {this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.losses1, 0)}</td>
-					<td>{this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.wins2, 0)} - {this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.losses2, 0)}</td>
+					<td>{wins1} - {losses1}  {(wins1/(wins1 + losses1)).toFixed(4)}</td>
+					<td>{wins2} - {losses2}  {(wins2/(wins2 + losses2)).toFixed(4)}</td>
 				</tr>
 				<tr className="row">
 					<td>2021 PF - PA</td>

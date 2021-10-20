@@ -147,21 +147,26 @@ class PlayerShares extends Component {
 						let rosters = res.data;
 						for (let j = 0; j < rosters.length; j++) {
 							if (rosters[j].owner_id === this.state.user_id) {
-								let players = this.state.players.concat(rosters[j].players === null ? [] : rosters[j].players)
+								let players = this.state.players.concat(rosters[j].players === null ? [] : rosters[j].players.map(x => {return {id: x, wins: rosters[j].settings.wins, losses: rosters[j].settings.losses}}))
+									
 								const findOccurences = (players = []) => {
 									const res = [];
 									players.forEach(el => {
 										const index = res.findIndex(obj => {
-											return obj['name'] === el;
+											return obj['name'] === el.id;
 										});
-										if (index === -1) {
+										if (index === -1 && el !== null) {
 											res.push({
-												"name": el,
-												"count": 1
+												"name": el.id,
+												"count": 1,
+												"wins": el.wins,
+												"losses": el.losses
 											})
 										}
 										else {
 											res[index]["count"]++;
+											res[index]["wins"] = res[index]["wins"] + el.wins;
+											res[index]["losses"] = res[index]["losses"] + el.losses
 										};
 									});
 									return res;
@@ -222,8 +227,9 @@ class PlayerShares extends Component {
 						<th>Player</th>
 						<th>Age</th>
 						<th>College</th>
-						<th>Exp(Years)</th>
+						<th>Yrs<br/>Exp</th>
 						<th>Value</th>
+						<th>Record</th>
 						<th>Shares</th>
 					</tr>
 				</thead>
@@ -236,6 +242,7 @@ class PlayerShares extends Component {
 						<td>{allPlayers[player.name].college}</td>
 						<td>{allPlayers[player.name].years_exp}</td>
 						<td>{Number(player.value).toLocaleString("en-US")}</td>
+						<td>{player.wins} - {player.losses} <br/> {(Number(player.wins) / (Number(player.wins) + Number(player.losses))).toFixed(4)}</td>
 						<td>{player.count}</td>
 						<td style={{ paddingBottom: '10px' }}><Link to={'/playersearch/' + this.state.username + '/' + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].position + " " + (allPlayers[player.name].team === null ? 'FA' : allPlayers[player.name].team)}><button><span className="front">Search Player</span></button></Link></td>
 					</tr>
