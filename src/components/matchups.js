@@ -216,7 +216,7 @@ class Matchups extends Component {
 		
 		for (let i = 0; i < allDict.length; i++) {
 			let p = this.state.projections.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name)
-			let inj = this.state.injuries.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name)
+			let inj = this.state.injuries.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name && x.position === allPlayers[allDict[i].name].position)
 			let hteam = allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].team
 			let forecast = this.state.weather.find(x => x.homeTeam === teams[hteam] || (p !== undefined && x.homeTeam === teams[p.opponent]))
 			let photo = allPlayers[allDict[i].name] === undefined ? blankplayer : allPlayers[allDict[i].name].swish_id === null ? (allPlayers[allDict[i].name].stats_id === null ? blankplayer : allPlayers[allDict[i].name].stats_id) : allPlayers[allDict[i].name].swish_id

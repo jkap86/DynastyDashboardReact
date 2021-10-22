@@ -81,9 +81,11 @@ def get_injuries():
 	def getInjuries(result):
 		playerName = result.find('a', class_='AnchorLink').text
 		status = result.find('td', class_="col-stat Table__TD").find('span', class_='TextStatus').text
+		position = result.find('td', class_="col-pos Table__TD").text
 		return({
 			'name': playerName,
 			'searchName': re.sub('[^A-Za-z]', '', playerName).lower(),
+			'position': position,
 			'status': status
 			})
 	with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
