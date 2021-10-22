@@ -171,10 +171,10 @@ class Leagues extends Component {
 							{league.wins} - {league.losses}
 						</td>
 						<td>
-							{league.fpts} 
+							{league.fpts.toLocaleString("en-US")} 
 						</td>
 						<td>
-							{league.fpts_against}
+							{league.fpts_against.toLocaleString("en-US")}
 						</td>
 						<td>
 							{league.trade_deadline < 99 ? 'Week ' + league.trade_deadline : null}
@@ -197,10 +197,10 @@ class Leagues extends Component {
 							{league.wins} - {league.losses}
 						</td>
 						<td>
-							{league.fpts} 
+							{league.fpts.toLocaleString("en-US")} 
 						</td>
 						<td>
-							{league.fpts_against}
+							{league.fpts_against.toLocaleString("en-US")}
 						</td>
 						<td>
 							{league.trade_deadline < 19 ? 'Week ' + league.trade_deadline : null}
