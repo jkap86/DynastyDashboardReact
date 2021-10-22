@@ -68,15 +68,18 @@ class Matchups extends Component {
 	}
 
  	expandPlayer(e) {
- 		let players = document.getElementsByClassName(e.target.value)
+ 		let players = document.getElementsByClassName("row")
  		for (let i = 0; i < players.length; i++) {
- 			if (players[i].style.display === "none") {
- 				players[i].style.display = "table-row"
- 			}
- 			else {
- 				players[i].style.display = "none"
- 			}
- 			
+ 			players[i].addEventListener("click", function() {
+ 				this.classList.toggle("active");
+ 				let panel = this.nextSibling;
+ 				if (panel.style.display !== 'none') {
+ 					panel.style.display = 'none'
+ 				}
+ 				else {
+ 					panel.style.display = 'table-row'
+ 				}
+ 			})
  		}
  	}
 
@@ -271,11 +274,10 @@ class Matchups extends Component {
 								</tr>
 								{allDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
 									<>
-									<tr className="row" style={{  borderSpacing: '4em' }}>
+									<tr className="row" id={player.name} style={{  borderSpacing: '4em' }}>
 										<td><img style={{ width: '2.5em' }} src={player.photo} /></td>
-										<td>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
+										<td className="name" onClick={this.expandPlayer} value={player.name}>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
 											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
-											<button style={{ fontSize: '32px', backgroundColor: 'inherit', border: 'none', color: 'var(--primary-color)' }} onClick={this.expandPlayer} value={player.name}>+</button>
 											<br/>
 											<em style={{ fontSize: '14px' }}>
 												{player.c_a}&nbsp;
@@ -298,7 +300,7 @@ class Matchups extends Component {
 										<td>{player.count}</td>
 										<td>({player.count2})</td>
 									</tr>
-									<tr className={player.name} style={{ display: 'none'}}>
+									<tr className={player.name + " panel"} style={{ display: 'none'}}>
 										<td></td>
 										<td colSpan="7">
 											<table>
@@ -306,13 +308,13 @@ class Matchups extends Component {
 													<td style={{ verticalAlign: 'top' }}>
 														<table>
 															<tr><th>For</th></tr>
-															{player.leagues === undefined ? 0 : player.leagues.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="row">{l}</tr>)}
+															{player.leagues === undefined ? 0 : player.leagues.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="league">{l}</tr>)}
 														</table>
 													</td>
 													<td style={{ verticalAlign: 'top' }}>
 														<table>
 															<tr><th>Against</th></tr>
-															{player.leaguesAgainst === undefined ? 0 : player.leaguesAgainst.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="row">{l}</tr>)}
+															{player.leaguesAgainst === undefined ? 0 : player.leaguesAgainst.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="league">{l}</tr>)}
 														</table>
 													</td>
 												</tr>

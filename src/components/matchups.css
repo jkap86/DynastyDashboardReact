@@ -1,0 +1,34 @@
+.panel {
+	background-color: var(--secondary-color);
+	color: var(--third-color);
+	text-shadow: -.05em .05em 0 var(--primary-color), .05em .05em 0 var(--primary-color), .05em -.05em 0 var(--primary-color), -.05em -.05em 0 var(--primary-color);
+}
+
+.name:after {
+	float: right;
+	content: '\02795';
+}
+
+.name {
+	cursor: pointer;
+}
+
+.active {
+	background-color: var(--secondary-color);
+	color: var(--third-color);
+	text-shadow: -.05em .05em 0 var(--primary-color), .05em .05em 0 var(--primary-color), .05em -.05em 0 var(--primary-color), -.05em -.05em 0 var(--primary-color);
+}
+
+.active .name:after {
+	content: "\2796";
+}
+
+.active img {
+	border: .15em solid var(--primary-color);
+}
+
+.league:hover {
+	background-color: var(--primary-color);
+	color: var(--secondary-color);
+	text-shadow: -.05em .05em 0 var(--third-color), .05em .05em 0 var(--third-color), .05em -.05em 0 var(--third-color), -.05em -.05em 0 var(--third-color);
+}
