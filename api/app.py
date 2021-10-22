@@ -86,7 +86,7 @@ def get_injuries():
 			'name': playerName,
 			'searchName': re.sub('[^A-Za-z]', '', playerName).lower(),
 			'position': position,
-			'status': status
+			'status': status.trim()
 			})
 	with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
 		playerInjuriesDict = list(executor.map(getInjuries, results))

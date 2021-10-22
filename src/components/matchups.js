@@ -251,6 +251,7 @@ class Matchups extends Component {
 				<h1>Matchups</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
 				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
+				<h3>{allDict.filter(x => x.status === 'Out'&& Number(x.count) > 0).length} Inactives</h3>
 				<table style={{  margin: 'auto', width: '75%'}}>
 					<tr>
 						<th style={{ textAlign: 'center'}}>

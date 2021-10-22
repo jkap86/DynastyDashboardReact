@@ -2,6 +2,8 @@
 	background-color: var(--secondary-color);
 	color: var(--third-color);
 	text-shadow: -.05em .05em 0 var(--primary-color), .05em .05em 0 var(--primary-color), .05em -.05em 0 var(--primary-color), -.05em -.05em 0 var(--primary-color);
+	font-weight: 600;
+
 }
 
 .name:after {
