@@ -19,11 +19,17 @@
 }
 
 .active {
-	background-color: var(--secondary-color);
+	background-color: var(--primary-color);
 	color: var(--third-color);
-	text-shadow: -.05em .05em 0 var(--primary-color), .05em .05em 0 var(--primary-color), .05em -.05em 0 var(--primary-color), -.05em -.05em 0 var(--primary-color);
+	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
 	border: 0.25em solid var(--primary-color);
 	border-bottom: 0;
+}
+
+.player-row:hover {
+	background-color: var(--primary-color);
+	color: var(--third-color);
+	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
 }
 
 .active .name:after {
@@ -31,11 +37,22 @@
 }
 
 .active img {
-	border: .15em solid var(--primary-color);
+	border: .15em solid var(--third-color);
 }
 
 .league:hover {
-	background-color: var(--primary-color);
+	background-color: var(--third-color);
 	color: var(--secondary-color);
-	text-shadow: -.05em .05em 0 var(--third-color), .05em .05em 0 var(--third-color), .05em -.05em 0 var(--third-color), -.05em -.05em 0 var(--third-color);
+	text-shadow: -.05em .05em 0 var(--primary-color), .05em .05em 0 var(--primary-color), .05em -.05em 0 var(--primary-color), -.05em -.05em 0 var(--primary-color);
+}
+
+table.leagues {
+	background-color: var(--primary-color);
+	border-radius: 5%;
+	box-shadow: .1em .1em .5em 1em var(--third-color);
+	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
+}
+
+table.leagues td {
+	padding: 0 0.5em 0.5em 0.5em
 }

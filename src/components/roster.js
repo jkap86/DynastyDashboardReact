@@ -205,7 +205,9 @@ class Roster extends Component {
 		}
 
 		let value = this.state.players.reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0)
-	
+		
+		let map = {"QB": 1, "RB": 2, "WR": 3, "TE": 4}
+		let players = this.state.players.sort((a, b) => map[allPlayers[a].position] > map[allPlayers[b].position] ? 1 : -1)
 
 		return <div>
 			<Link to="/" className="link">Home</Link>
@@ -261,7 +263,7 @@ class Roster extends Component {
 				</thead>
 				<tbody>
 				<tr><th colspan="7" style={{ textAlign: 'center' }}>Starters - {this.state.players.filter(x => this.state.starters.includes(x)).reduce((accumulator, current) => accumulator + Number(allPlayers[current].value), 0).toLocaleString("en-US")}</th></tr>
-				{this.state.players.filter(x => this.state.starters.includes(x)).map(player => 
+				{players.filter(x => this.state.starters.includes(x)).map(player => 
 					<tr key={player} className="row">
 						<td><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${allPlayers[player].swish_id === null ? allPlayers[player].stats_id : allPlayers[player].swish_id}.png`}/></td>
 						<td>{allPlayers[player].position}</td>

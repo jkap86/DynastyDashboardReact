@@ -68,7 +68,7 @@ class Matchups extends Component {
 	}
 
  	expandPlayer(e) {
- 		let players = document.getElementsByClassName("row")
+ 		let players = document.getElementsByClassName("player-row")
  		for (let i = 0; i < players.length; i++) {
  			players[i].addEventListener("click", function() {
  				this.classList.toggle("active");
@@ -244,6 +244,7 @@ class Matchups extends Component {
 			allDict[i].recTD = stats === undefined ? null : (stats.recTD === '0' ? null : stats.recTD)
 		}
 
+		allDict.filter(x => x !== undefined && typeof x.name === 'string')
 
 		return <>
 				<Link to="/" className="link">Home</Link>
@@ -275,8 +276,8 @@ class Matchups extends Component {
 								</tr>
 								{allDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
 									<>
-									<tr className="row" id={player.name} style={{  borderSpacing: '4em' }}>
-										<td><img style={{ width: '2.5em' }} src={player.photo} /></td>
+									<tr className="player-row" id={player.name} style={{  borderSpacing: '4em' }}>
+										<td style={{ paddingLeft: '1em' }}><img style={{ width: '2.5em' }} src={player.photo} /></td>
 										<td className="name" onClick={this.expandPlayer} value={player.name}>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
 											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
 											<br/>
@@ -304,18 +305,18 @@ class Matchups extends Component {
 									<tr className={player.name + " panel"} style={{ display: 'none'}}>
 										<td></td>
 										<td colSpan="7">
-											<table>
+											<table style={{ borderSpacing: '4em'}}>
 												<tr>
 													<td style={{ verticalAlign: 'top' }}>
-														<table>
+														<table className="leagues">
 															<tr><th>For</th></tr>
-															{player.leagues === undefined ? 0 : player.leagues.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="league">{l}</tr>)}
+															{player.leagues === undefined ? 0 : player.leagues.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="league"><td>{l}</td></tr>)}
 														</table>
 													</td>
 													<td style={{ verticalAlign: 'top' }}>
-														<table>
+														<table className="leagues">
 															<tr><th>Against</th></tr>
-															{player.leaguesAgainst === undefined ? 0 : player.leaguesAgainst.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="league">{l}</tr>)}
+															{player.leaguesAgainst === undefined ? 0 : player.leaguesAgainst.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="league"><td>{l}</td></tr>)}
 														</table>
 													</td>
 												</tr>
