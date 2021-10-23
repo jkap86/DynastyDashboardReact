@@ -220,8 +220,8 @@ class Matchups extends Component {
 		for (let i = 0; i < allDict.length; i++) {
 			let p = this.state.projections.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name)
 			let inj = this.state.injuries.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name && x.position === allPlayers[allDict[i].name].position)
-			let hteam = allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].team
-			let forecast = this.state.weather.find(x => x.homeTeam === teams[hteam] || (p !== undefined && x.homeTeam === teams[p.opponent]))
+			let team = allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].team
+			let forecast = this.state.weather.find(x => x.homeTeam === teams[team] || (p !== undefined && x.homeTeam === teams[p.opponent]))
 			let photo = allPlayers[allDict[i].name] === undefined ? blankplayer : allPlayers[allDict[i].name].swish_id === null ? (allPlayers[allDict[i].name].stats_id === null ? blankplayer : allPlayers[allDict[i].name].stats_id) : allPlayers[allDict[i].name].swish_id
 			let stats = this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && Number(x.id) === allPlayers[allDict[i].name].fantasy_data_id)
 			stats = stats !== undefined ? stats : this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName === allPlayers[allDict[i].name].search_full_name)
@@ -229,7 +229,7 @@ class Matchups extends Component {
 			allDict[i].status = inj === undefined ? null : inj.status 
 			allDict[i].projection = p === undefined ? '0' : p.projection
 			allDict[i].rank = p === undefined ? null : allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].position + p.rank
-			allDict[i].opponent = p === undefined ? '-' : p.opponent
+			allDict[i].opponent = p === undefined ? '-' : (forecast !== undefined && teams[p.opponent] === forecast.homeTeam ? `@${p.opponent}` : p.opponent)
 			allDict[i].photo = photo === blankplayer ? blankplayer : `https://assets1.sportsnet.ca/wp-content/uploads/players/280/${photo}.png`
 			allDict[i].c_a = stats === undefined ? null : (stats.c_a === '0/0' ? null : stats.c_a)
 			allDict[i].passYds = stats === undefined ? null : (stats.passYds === '0' ? null : stats.passYds)
