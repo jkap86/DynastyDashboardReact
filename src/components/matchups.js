@@ -59,10 +59,8 @@ class Matchups extends Component {
 			projections: [],
 			injuries: [],
 			avatar: '',
-			espnPlayer: '',
 			weather: [],
 			playerStats: [],
-			allPlayersSIO: [],
 			sortBy: 'count'
 		}
 		this.expandPlayer = this.expandPlayer.bind(this)
@@ -276,7 +274,7 @@ class Matchups extends Component {
 		return <>
 				<Link to="/" className="link">Home</Link>
 				<Theme/>
-				<h1>Matchups {this.state.sortBy}</h1>
+				<h1>Matchups</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
 				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
 				<h3>{allDict.filter(x => (x.status === 'Out' || x.status === 'Injured Reserve') && Number(x.count) > 0).length} Inactives</h3>
