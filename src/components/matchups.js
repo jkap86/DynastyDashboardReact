@@ -62,9 +62,38 @@ class Matchups extends Component {
 			espnPlayer: '',
 			weather: [],
 			playerStats: [],
-			allPlayersSIO: []
+			allPlayersSIO: [],
+			sortBy: 'count'
 		}
 		this.expandPlayer = this.expandPlayer.bind(this)
+		this.sortByOpposing = this.sortByOpposing.bind(this)
+		this.sortByStarting = this.sortByStarting.bind(this)
+		this.sortByProjection = this.sortByProjection.bind(this)
+		this.sortByOpponent = this.sortByOpponent.bind(this)
+	}
+
+	sortByOpposing() {
+		this.setState({
+			sortBy: 'count2'
+		})
+	}
+
+	sortByStarting() {
+		this.setState({
+			sortBy: 'count'
+		})
+	}
+
+	sortByProjection() {
+		this.setState({
+			sortBy: 'projection'
+		})
+	}
+
+	sortByOpponent() {
+		this.setState({
+			sortBy: 'opponent'
+		})
 	}
 
  	expandPlayer(e) {
@@ -227,7 +256,7 @@ class Matchups extends Component {
 			stats = stats !== undefined ? stats : this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName === allPlayers[allDict[i].name].search_full_name)
 			allDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
 			allDict[i].status = inj === undefined ? null : inj.status 
-			allDict[i].projection = p === undefined ? '0' : p.projection
+			allDict[i].projection = p === undefined ? '0' : Number(p.projection)
 			allDict[i].rank = p === undefined ? null : allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].position + p.rank
 			allDict[i].opponent = p === undefined ? '-' : (forecast !== undefined && teams[p.opponent] === forecast.homeTeam ? `@${p.opponent}` : p.opponent)
 			allDict[i].photo = photo === blankplayer ? blankplayer : `https://assets1.sportsnet.ca/wp-content/uploads/players/280/${photo}.png`
@@ -244,12 +273,10 @@ class Matchups extends Component {
 			allDict[i].recTD = stats === undefined ? null : (stats.recTD === '0' ? null : stats.recTD)
 		}
 
-		allDict.filter(x => x !== undefined && typeof x.name === 'string')
-
 		return <>
 				<Link to="/" className="link">Home</Link>
 				<Theme/>
-				<h1>Matchups</h1>
+				<h1>Matchups {this.state.sortBy}</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
 				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
 				<h3>{allDict.filter(x => (x.status === 'Out' || x.status === 'Injured Reserve') && Number(x.count) > 0).length} Inactives</h3>
@@ -267,16 +294,16 @@ class Matchups extends Component {
 								<tr>
 									<th></th>
 									<th>Player</th>
-									<th>Opponent</th>
-									<th>Projection</th>
+									<th style={{ cursor: 'pointer' }} name='opponent' onClick={this.sortByOpponent}>Opponent</th>
+									<th style={{ cursor: 'pointer' }} name='projection' onClick={this.sortByProjection}>Projection</th>
 									<th>Rank</th>
 									<th>Forecast</th>
-									<th>Starting</th>
-									<th>Opposing</th>
+									<th style={{ cursor: 'pointer' }} name='count' onClick={this.sortByStarting}>Starting</th>
+									<th style={{ cursor: 'pointer' }} name='count2' onClick={this.sortByOpposing}>Opposing</th>
 								</tr>
-								{allDict.sort((a, b) => (a.count < b.count) ? 1 : -1).map(player =>
+								{allDict.sort((a, b) => a[this.state.sortBy] < b[this.state.sortBy] ? 1 : -1).map(player =>
 									<>
-									<tr className="player-row" id={player.name} style={{  borderSpacing: '4em' }}>
+									<tr className={"player-row " + player.status} id={player.name} style={{  borderSpacing: '4em' }}>
 										<td style={{ paddingLeft: '1em' }}><img style={{ width: '2.5em' }} src={player.photo} /></td>
 										<td className="name" onClick={this.expandPlayer} value={player.name}>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
 											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
