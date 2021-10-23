@@ -61,13 +61,31 @@ class Matchups extends Component {
 			avatar: '',
 			weather: [],
 			playerStats: [],
-			sortBy: 'count'
+			sortBy: 'count',
+			Questionable: true,
+			Doubtful: true,
+			Out: true,
+			Healthy: true,
+			InjuredReserve: true
+
 		}
 		this.expandPlayer = this.expandPlayer.bind(this)
 		this.sortByOpposing = this.sortByOpposing.bind(this)
 		this.sortByStarting = this.sortByStarting.bind(this)
 		this.sortByProjection = this.sortByProjection.bind(this)
 		this.sortByOpponent = this.sortByOpponent.bind(this)
+		this.filterByInjuryStatus = this.filterByInjuryStatus.bind(this)
+	}
+
+	filterByInjuryStatus(e) {
+		let injuryStatus = e.target.value
+		let injured = document.getElementsByClassName(e.target.name)
+		for (let i = 0; i < injured.length; i++) {
+			injured[i].style.display = this.state[e.target.name] ? 'none' : 'table-row'
+		}
+		this.setState({
+			[e.target.name]: !this.state[e.target.name]
+		})
 	}
 
 	sortByOpposing() {
@@ -253,7 +271,7 @@ class Matchups extends Component {
 			let stats = this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && Number(x.id) === allPlayers[allDict[i].name].fantasy_data_id)
 			stats = stats !== undefined ? stats : this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName === allPlayers[allDict[i].name].search_full_name)
 			allDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
-			allDict[i].status = inj === undefined ? null : inj.status 
+			allDict[i].status = inj === undefined ? 'Healthy' : inj.status 
 			allDict[i].projection = p === undefined ? '0' : Number(p.projection)
 			allDict[i].rank = p === undefined ? null : allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].position + p.rank
 			allDict[i].opponent = p === undefined ? '-' : (forecast !== undefined && teams[p.opponent] === forecast.homeTeam ? `@${p.opponent}` : p.opponent)
@@ -274,7 +292,7 @@ class Matchups extends Component {
 		return <>
 				<Link to="/" className="link">Home</Link>
 				<Theme/>
-				<h1>Matchups</h1>
+				<h1>Matchups {this.state.Questionable}</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
 				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
 				<h3>{allDict.filter(x => (x.status === 'Out' || x.status === 'Injured Reserve') && Number(x.count) > 0).length} Inactives</h3>
@@ -285,6 +303,15 @@ class Matchups extends Component {
 							<br/>
 							Opponent Starters: {allDict.reduce((accumulator, current) => accumulator + (current.projection * current.count2), 0).toLocaleString("en-US")} points - {allDict.reduce((accumulator, current) => accumulator + current.count2, 0).toLocaleString("en-US")} players
 						</th>
+					</tr>
+					<tr>
+						<td colSpan="8">
+						<input name="Questionable" value="questionable" type="checkbox" onClick={this.filterByInjuryStatus} checked={this.state.Questionable}/><label for="Questionable">Questionable</label>
+						<input name="Doubtful" value="doubtful" type="checkbox" onClick={this.filterByInjuryStatus} checked={this.state.Doubtful}/><label for="Doubtful">Doubtful</label>
+						<input name="Out" value="out" type="checkbox" onClick={this.filterByInjuryStatus} checked={this.state.Out}/><label for="Out">Out</label>
+						<input name="Healthy" value="healthy" type="checkbox" onClick={this.filterByInjuryStatus} checked={this.state.Healthy}/><label for="Healthy">Healthy</label>
+						<input name="InjuredReserve" value="injuredreserve" type="checkbox" onClick={this.filterByInjuryStatus} checked={this.state.InjuredReserve}/><label for="injuredreserve">Injured Reserve</label>
+						</td>
 					</tr>
 					<tr style={{ verticalAlign: 'top'}}>
 						<td>
@@ -301,10 +328,10 @@ class Matchups extends Component {
 								</tr>
 								{allDict.sort((a, b) => a[this.state.sortBy] < b[this.state.sortBy] ? 1 : -1).map(player =>
 									<>
-									<tr className={"player-row " + player.status} id={player.name} style={{  borderSpacing: '4em' }}>
+									<tr className={"player-row " + player.status.replace(/ +/g, "")} id={player.name} style={{  borderSpacing: '4em' }}>
 										<td style={{ paddingLeft: '1em' }}><img style={{ width: '2.5em' }} src={player.photo} /></td>
 										<td className="name" onClick={this.expandPlayer} value={player.name}>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
-											&nbsp;{player.status === null ? null : '(' + player.status + ')'}
+											&nbsp;{player.status === 'Healthy' ? null : '(' + player.status + ')'}
 											<br/>
 											<em style={{ fontSize: '14px' }}>
 												{player.c_a}&nbsp;
@@ -327,7 +354,7 @@ class Matchups extends Component {
 										<td>{player.count}</td>
 										<td>({player.count2})</td>
 									</tr>
-									<tr className={player.name + " panel"} style={{ display: 'none'}}>
+									<tr className={player.name + " panel " + (player.status === null ? null : player.status.toLowerCase())} style={{ display: 'none'}}>
 										<td></td>
 										<td colSpan="7">
 											<table style={{ borderSpacing: '4em'}}>
