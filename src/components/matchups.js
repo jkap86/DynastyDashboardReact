@@ -66,7 +66,12 @@ class Matchups extends Component {
 			Doubtful: true,
 			Out: true,
 			Healthy: true,
-			InjuredReserve: true
+			InjuredReserve: true,
+			QB: true,
+			RB: true,
+			WR: true,
+			TE: true
+
 
 		}
 		this.expandPlayer = this.expandPlayer.bind(this)
@@ -75,6 +80,18 @@ class Matchups extends Component {
 		this.sortByProjection = this.sortByProjection.bind(this)
 		this.sortByOpponent = this.sortByOpponent.bind(this)
 		this.filterByInjuryStatus = this.filterByInjuryStatus.bind(this)
+		this.filterByPosition = this.filterByPosition.bind(this)
+	}
+
+	filterByPosition(e) {
+		let position = e.target.name
+		let players = document.getElementsByClassName(position)
+		for (let i = 0; i < players.length; i++) {
+			players[i].style.display = this.state[position] ? 'none' : 'table-row'
+		}
+		this.setState({
+			[position]: !this.state[position]
+		})
 	}
 
 	filterByInjuryStatus(e) {
@@ -251,12 +268,12 @@ class Matchups extends Component {
 		for (let i = 0; i < playersDict.length; i++) {
 			let a = oppPlayersDict.find(x => x.name === playersDict[i].name)
 			let b = a === undefined ? null : a.count2
-			let c = b === null ? Object.assign({}, playersDict[i], {name: playersDict[i].name, count2: 0}) : Object.assign({}, playersDict[i], a)
+			let c = b === null ? Object.assign({}, playersDict[i], {name: playersDict[i].name, count2: 0, id: i}) : Object.assign({}, playersDict[i], a)
 			allDict.push(c)
 		}
 		for (let i = 0; i < oppPlayersDict.length; i++) {
 			let a = playersDict.find(x => x.name === oppPlayersDict[i].name)
-			let b = a === undefined ? {name: oppPlayersDict[i].name, count: 0, count2: oppPlayersDict[i].count2, leaguesAgainst: oppPlayersDict[i].leaguesAgainst} : null
+			let b = a === undefined ? {name: oppPlayersDict[i].name, count: 0, count2: oppPlayersDict[i].count2, leaguesAgainst: oppPlayersDict[i].leaguesAgainst, id: i} : null
 			if(b !== null) {
 				allDict.push(b)
 			}
@@ -287,12 +304,14 @@ class Matchups extends Component {
 			allDict[i].targets = stats === undefined ? null : (stats.targets === '0' ? null : stats.targets)
 			allDict[i].recYds = stats === undefined ? null : (stats.recYds === '0' ? null : stats.recYds)
 			allDict[i].recTD = stats === undefined ? null : (stats.recTD === '0' ? null : stats.recTD)
+			allDict[i].position = allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].position
+			
 		}
 
 		return <>
 				<Link to="/" className="link">Home</Link>
 				<Theme/>
-				<h1>Matchups {this.state.Questionable}</h1>
+				<h1>Matchups {this.state.position}</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
 				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
 				<h3>{allDict.filter(x => (x.status === 'Out' || x.status === 'Injured Reserve') && Number(x.count) > 0).length} Inactives</h3>
@@ -306,11 +325,19 @@ class Matchups extends Component {
 					</tr>
 					<tr>
 						<td colSpan="8">
-						<input name="Questionable" value="questionable" type="checkbox" onClick={this.filterByInjuryStatus} checked={this.state.Questionable}/><label for="Questionable">Questionable</label>
-						<input name="Doubtful" value="doubtful" type="checkbox" onClick={this.filterByInjuryStatus} checked={this.state.Doubtful}/><label for="Doubtful">Doubtful</label>
-						<input name="Out" value="out" type="checkbox" onClick={this.filterByInjuryStatus} checked={this.state.Out}/><label for="Out">Out</label>
-						<input name="Healthy" value="healthy" type="checkbox" onClick={this.filterByInjuryStatus} checked={this.state.Healthy}/><label for="Healthy">Healthy</label>
-						<input name="InjuredReserve" value="injuredreserve" type="checkbox" onClick={this.filterByInjuryStatus} checked={this.state.InjuredReserve}/><label for="injuredreserve">Injured Reserve</label>
+							<input onChange={this.filterByPosition} checked={this.state.QB} name="QB" type="checkbox"/><label for="QB">QB</label>
+							<input onChange={this.filterByPosition} checked={this.state.RB} name="RB" type="checkbox"/><label for="RB">RB</label>
+							<input onChange={this.filterByPosition} checked={this.state.WR} name="WR" type="checkbox"/><label for="WR">WR</label>
+							<input onChange={this.filterByPosition} checked={this.state.TE} name="TE" type="checkbox"/><label for="TE">TE</label>
+						</td>
+					</tr>
+					<tr>
+						<td colSpan="8">
+							<input name="Questionable" value="questionable" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Questionable}/><label for="Questionable">Questionable</label>
+							<input name="Doubtful" value="doubtful" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Doubtful}/><label for="Doubtful">Doubtful</label>
+							<input name="Out" value="out" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Out}/><label for="Out">Out</label>
+							<input name="Healthy" value="healthy" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Healthy}/><label for="Healthy">Healthy</label>
+							<input name="InjuredReserve" value="injuredreserve" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.InjuredReserve}/><label for="injuredreserve">Injured Reserve</label>
 						</td>
 					</tr>
 					<tr style={{ verticalAlign: 'top'}}>
@@ -326,9 +353,9 @@ class Matchups extends Component {
 									<th style={{ cursor: 'pointer' }} name='count' onClick={this.sortByStarting}>Starting</th>
 									<th style={{ cursor: 'pointer' }} name='count2' onClick={this.sortByOpposing}>Opposing</th>
 								</tr>
-								{allDict.sort((a, b) => a[this.state.sortBy] < b[this.state.sortBy] ? 1 : -1).map(player =>
+								{allDict.sort((a, b) => a[this.state.sortBy] < b[this.state.sortBy] ? 1 : -1).filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).map(player =>
 									<>
-									<tr className={"player-row " + player.status.replace(/ +/g, "")} id={player.name} style={{  borderSpacing: '4em' }}>
+									<tr className={player.position + " player-row " + player.status.replace(/ +/g, "") + " " + player.position} id={player.name} style={{  borderSpacing: '4em' }}>
 										<td style={{ paddingLeft: '1em' }}><img style={{ width: '2.5em' }} src={player.photo} /></td>
 										<td className="name" onClick={this.expandPlayer} value={player.name}>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
 											&nbsp;{player.status === 'Healthy' ? null : '(' + player.status + ')'}
@@ -354,7 +381,7 @@ class Matchups extends Component {
 										<td>{player.count}</td>
 										<td>({player.count2})</td>
 									</tr>
-									<tr className={player.name + " panel " + (player.status === null ? null : player.status.toLowerCase())} style={{ display: 'none'}}>
+									<tr className={player.name + " panel " + (player.status === null ? null : player.status.toLowerCase())}>
 										<td></td>
 										<td colSpan="7">
 											<table style={{ borderSpacing: '4em'}}>
