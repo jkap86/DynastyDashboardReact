@@ -381,7 +381,7 @@ class Matchups extends Component {
 										<td>{player.count}</td>
 										<td>({player.count2})</td>
 									</tr>
-									<tr className={player.name + " panel " + (player.status === null ? null : player.status.toLowerCase())}>
+									<tr className={player.name + " panel " + (player.status === null ? null : player.status.toLowerCase())} style={{ display: 'none' }}>
 										<td></td>
 										<td colSpan="7">
 											<table style={{ borderSpacing: '4em'}}>
