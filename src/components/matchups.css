@@ -50,6 +50,7 @@ table.leagues {
 	border-radius: 5%;
 	box-shadow: .1em .1em .5em 1em var(--third-color);
 	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
+	border-collapse: collapse;
 }
 
 table.leagues td {

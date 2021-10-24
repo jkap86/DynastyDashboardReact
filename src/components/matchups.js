@@ -203,12 +203,9 @@ class Matchups extends Component {
 						axios.get(`https://api.sleeper.app/v1/league/${leagues[i].league_id}/matchups/${this.state.week}`)
 						.then(res => {
 							let matchup = res.data.find(x => x.roster_id === rid || (x.co_owners !== undefined && x.co_owners.includes(x.roster_id)))
-							
-							let starters = this.state.players.concat(matchup === undefined ? null : matchup.starters.filter(x => x !== '0').map(x => { return {id: x, league: leagues[i].name}}))
-
-
 							let opponent = res.data.find(x => x !== undefined && matchup !== undefined && x.matchup_id === matchup.matchup_id && x.roster_id !== rid)
-							let oppStarters = this.state.oppPlayers.concat(opponent === undefined ? null : opponent.starters.filter(x => x !== '0').map(x => { return {id: x, league: leagues[i].name}}))
+							let starters = this.state.players.concat(matchup === undefined ? null : matchup.starters.filter(x => x !== '0').map(x => { return {id: x, league: leagues[i].name, avatar: leagues[i].avatar, points: matchup.points, pointsOpp: opponent.points}}))
+							let oppStarters = this.state.oppPlayers.concat(opponent === undefined ? null : opponent.starters.filter(x => x !== '0').map(x => { return {id: x, league: leagues[i].name, avatar: leagues[i].avatar, points: matchup.points, pointsOpp: opponent.points}}))
 							const findOccurences = (players = [], type, type2) => {
 									const res = [];
 									players.forEach(el => {
@@ -224,7 +221,7 @@ class Matchups extends Component {
 										if (index === -1 && el !== null) {
 											res.push({
 												"name": el.id,
-												[type2]: [el.league],
+												[type2]: [{name: el.league, points: el.points, pointsOpp: el.pointsOpp}],
 												[type]: 1
  											})
 										}
@@ -238,7 +235,7 @@ class Matchups extends Component {
 										
 										else {
 											res[index][type]++;
-											res[index][type2].push(el === null ? null : el.league)
+											res[index][type2].push(el === null ? null : {name: el.league, points: el.points, pointsOpp: el.pointsOpp})
 											
 										};
 									});
@@ -389,13 +386,13 @@ class Matchups extends Component {
 													<td style={{ verticalAlign: 'top' }}>
 														<table className="leagues">
 															<tr><th>For</th></tr>
-															{player.leagues === undefined ? 0 : player.leagues.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="league"><td>{l}</td></tr>)}
+															{player.leagues === undefined ? 0 : player.leagues.sort((a, b) => a.name > b.name ? 1 : -1).map(l => <tr className="league"><td>{l.name}</td><td>{l.points}</td><td>{l.pointsOpp}</td></tr>)}
 														</table>
 													</td>
 													<td style={{ verticalAlign: 'top' }}>
 														<table className="leagues">
 															<tr><th>Against</th></tr>
-															{player.leaguesAgainst === undefined ? 0 : player.leaguesAgainst.sort((a, b) => a > b ? 1 : -1).map(l => <tr className="league"><td>{l}</td></tr>)}
+															{player.leaguesAgainst === undefined ? 0 : player.leaguesAgainst.sort((a, b) => a.name > b.name ? 1 : -1).map(l => <tr className="league"><td>{l.name}</td><td>{l.points}</td><td>{l.pointsOpp}</td></tr>)}
 														</table>
 													</td>
 												</tr>

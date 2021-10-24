@@ -8,11 +8,11 @@
 
 .ticker-wrap {
 	width: 100%;
-	padding-left: 100%;
+	padding-left: 0 0 0 100%;
 	background-color: var(--secondary-color);
 	color: var(--primary-color);
 	text-shadow: -1px 1px 0 var(--third-color), 1px 1px 0 var(--third-color), 1px -1px 0 var(--third-color), -1px -1px 0 var(--third-color);
-	font-size: 24px;
+	font-size: 1em;
 }
 
 .ticker-move {
@@ -27,7 +27,7 @@
 
 .ticker-item {
 	display: inline-block;
-	padding: 2rem 2rem;
+	padding: 0.5rem 2rem 0.5rem 2rem;
 }
 
 @keyframes ticker {
