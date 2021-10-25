@@ -81,6 +81,7 @@ class Matchups extends Component {
 		this.sortByOpponent = this.sortByOpponent.bind(this)
 		this.filterByInjuryStatus = this.filterByInjuryStatus.bind(this)
 		this.filterByPosition = this.filterByPosition.bind(this)
+		this.getStats = this.getStats.bind(this)
 	}
 
 	filterByPosition(e) {
@@ -145,14 +146,20 @@ class Matchups extends Component {
  		}
  	}
 
-	componentDidMount() {
-		fetch(`/stats/${this.state.week}`)
+ 	getStats() {
+ 		fetch(`/stats/${this.state.week}`)
 		.then(res => res.json()).then(data => {
 			let players = data.stats
 			this.setState({
 				playerStats: players
 			})
 		})
+ 	}
+
+	componentDidMount() {
+		this.getStats();	
+		this.interval = setInterval(this.getStats, 1000);
+		
 
 		fetch('/injuries')
 		.then(res => res.json()).then(data => {
@@ -254,6 +261,10 @@ class Matchups extends Component {
 			})
 		})
 
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.interval);
 	}
 
 	render() {
