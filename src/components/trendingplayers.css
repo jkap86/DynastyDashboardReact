@@ -13,6 +13,9 @@
 	color: var(--primary-color);
 	text-shadow: -1px 1px 0 var(--third-color), 1px 1px 0 var(--third-color), 1px -1px 0 var(--third-color), -1px -1px 0 var(--third-color);
 	font-size: 1em;
+	font-weight: 600;
+	border-top: 0.25em solid var(--primary-color);
+	border-bottom: 0.25em solid var(--primary-color);
 }
 
 .ticker-move {
