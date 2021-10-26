@@ -185,13 +185,6 @@ class Matchups extends Component {
 			})
 		})
 
-		axios.get(`https://api.sportsdata.io/v3/nfl/scores/json/Players?key=d5d541b8c8b14262b069837ff8110635`)
-		.then(res => {
-			this.setState({
-				allPlayersSIO: res.data
-			})
-		})
-
 		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
 		.then(res => {
 			const userID = res.data.user_id
