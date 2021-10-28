@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import concurrent.futures
 import re
+from itertools import zip_longest
 
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
@@ -152,4 +153,84 @@ def stats(week):
 
 	return {'stats': statsDict}
 
+@app.route('/matchupsdata/<week>/<userid>')
+def matchups(week, userid):
+	leagues = requests.get('https://api.sleeper.app/v1/user/' + userid + '/leagues/nfl/2021').json()
+	leagues = list(filter(lambda x: 'best_ball' not in x['settings'] or x['settings']['best_ball'] != 1, leagues))
+	def getPlayers(league):
+		rosters = requests.get('https://api.sleeper.app/v1/league/' + league['league_id'] + '/rosters').json()
+		matchups = requests.get('https://api.sleeper.app/v1/league/' + league['league_id'] + '/matchups/' + week).json()
+		roster = [r for r in rosters if r['owner_id'] == userid or (r['co_owners'] != None and userid in r['co_owners'])]
+		rosterID = roster[0]['roster_id'] if roster != [] else 0
+		team = [m for m in matchups if m['roster_id'] == rosterID]
+		opponent = [m for m in matchups if m['roster_id'] != rosterID and len(team) > 0 and m['matchup_id'] == team[0]['matchup_id']]
+
+		starters = team[0]['starters'] if roster != [] else None
+		if starters != None:
+			starters = list(map(lambda x: {'id': x, 'league': {'name': league['name'], 'lineup': team[0]['starters'], 'points': team[0]['players_points']}}, starters))
+		
+		startersOpp = opponent[0]['starters'] if opponent != [] else None
+		if startersOpp != None:
+			startersOpp = list(map(lambda x: {'id': x, 'league': {'name': league['name'], 'lineup': opponent[0]['starters'], 'points': opponent[0]['players_points'] }}, startersOpp))
+
+		return {'starters': starters, 'startersOpp': startersOpp}
+
+	with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+		playersDict = list(executor.map(getPlayers, leagues))
+	
+	starters = list(filter(lambda x: x['starters'] != None, playersDict))	
+	starters = [x['starters'] for x in starters]
+	starters = [x for y in starters for x in y]
+
+	startersOpp = list(filter(lambda x: x['startersOpp'] != None, playersDict))
+	startersOpp = [x['startersOpp'] for x in startersOpp]
+	startersOpp = [x for y in startersOpp for x in y]
+	def getCount(players, type):
+		res = []
+		for player in players:
+			index = next((index for (index, d) in enumerate(res) if d['id'] == player['id']), None)
+			if type == 1:	
+				if index != None:
+					res[index]['countFor'] += 1
+					res[index]['leaguesFor'].append({'league': player['league']})
+
+				else:
+					res.append({
+						'id': player['id'],
+						'countFor': 1,
+						'leaguesFor': [{'league': player['league']}]
+					})
+			else:
+				if index != None:
+					res[index]['countAgainst'] += 1
+					res[index]['leaguesAgainst'].append({'league': player['league']})
+
+				else:
+					res.append({
+						'id': player['id'],
+						'countAgainst': 1,
+						'leaguesAgainst': [{'league': player['league']}]
+						
+
+					})
+
+		return res  
+				
+	starters = getCount(starters, 1)
+	startersOpp = getCount(startersOpp, 2)
+	starterKeys = [x['id'] for x in starters]
+	oppKeys = [x['id'] for x in startersOpp]
+	allKeys = starterKeys + list(set(oppKeys) - set(starterKeys))
+	allStarters = []
+	for key in allKeys:
+		allStarters.append({
+			'id': key,
+			'countFor': [x['countFor'] for x in starters if x['id'] == key],
+			'countAgainst': [x['countAgainst'] for x in startersOpp if x['id'] == key],
+			'leaguesFor': [x['leaguesFor'] for x in starters if x['id'] == key],
+			'leaguesAgainst': [x['leaguesAgainst'] for x in startersOpp if x['id'] == key]
+
+		})
+
+	return {'data': allStarters }
 
