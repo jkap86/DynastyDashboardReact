@@ -171,7 +171,13 @@ class Matchups extends Component {
 			this.setState({
 				playerStats: players
 			})
-
+		})
+		fetch(`/matchupsdata/${this.state.week}/${this.state.user_id}`)
+		.then(res => res.json()).then(data => {
+			let allDict = data.data
+			this.setState({
+				allDict: allDict
+			})
 		})
  	}
 
@@ -353,15 +359,25 @@ class Matchups extends Component {
 																			<tr>
 																				<td>
 																					<table className="lineup-table">
+																						<tr><th colSpan="2">Starters</th></tr>
 																						{l.league.lineupFor.map(lp => 
 																							<tr><td>{allPlayers[lp] === undefined ? lp : allPlayers[lp].first_name + " " + allPlayers[lp].last_name}</td><td>{l.league.player_pointsFor[lp]}</td></tr>
+																						)}
+																						<tr><th colSpan="2">Bench</th></tr>
+																						{Object.keys(l.league.player_pointsFor).filter(x => !l.league.lineupFor.includes(x)).map(bp => 
+																							<tr><td>{allPlayers[bp] === undefined ? bp : allPlayers[bp].first_name + " " + allPlayers[bp].last_name}</td><td>{l.league.player_pointsFor[bp]}</td></tr>
 																						)}
 																					</table>
 																				</td>
 																				<td>
 																					<table className="lineup-table">
+																						<tr><th colSpan="2">Starters</th></tr>
 																						{l.league.lineupAgainst.map(lp => 
 																							<tr><td>{allPlayers[lp] === undefined ? lp : allPlayers[lp].first_name + " " + allPlayers[lp].last_name}</td><td>{l.league.player_pointsAgainst[lp]}</td></tr>
+																						)}
+																						<tr><th colSpan="2">Bench</th></tr>
+																						{Object.keys(l.league.player_pointsAgainst).filter(x => !l.league.lineupAgainst.includes(x)).map(bp =>
+																							<tr><td>{allPlayers[bp] === undefined ? bp : allPlayers[bp].first_name + " " + allPlayers[bp].last_name}</td><td>{l.league.player_pointsAgainst[bp]}</td></tr>
 																						)}
 																					</table>
 																				</td>
@@ -386,15 +402,25 @@ class Matchups extends Component {
 																			<tr>
 																				<td>
 																					<table className="lineup-table">
+																						<tr><th colSpan="2">Starters</th></tr>
 																						{l.league.lineupFor.map(lp => 
 																							<tr><td>{allPlayers[lp] === undefined ? lp : allPlayers[lp].first_name + " " + allPlayers[lp].last_name}</td><td>{l.league.player_pointsFor[lp]}</td></tr>
+																						)}
+																						<tr><th colSpan="2">Bench</th></tr>
+																						{Object.keys(l.league.player_pointsFor).filter(x => !l.league.lineupFor.includes(x)).map(bp => 
+																							<tr><td>{allPlayers[bp] === undefined ? bp : allPlayers[bp].first_name + " " + allPlayers[bp].last_name}</td><td>{l.league.player_pointsFor[bp]}</td></tr>
 																						)}
 																					</table>
 																				</td>
 																				<td>
 																					<table className="lineup-table">
+																						<tr><th colSpan="2">Starters</th></tr>
 																						{l.league.lineupAgainst.map(lp => 
 																							<tr><td>{allPlayers[lp] === undefined ? lp : allPlayers[lp].first_name + " " + allPlayers[lp].last_name}</td><td>{l.league.player_pointsAgainst[lp]}</td></tr>
+																						)}
+																						<tr><th colSpan="2">Bench</th></tr>
+																						{Object.keys(l.league.player_pointsAgainst).filter(x => !l.league.lineupAgainst.includes(x)).map(bp => 
+																							<tr><td>{allPlayers[bp] === undefined ? bp : allPlayers[bp].first_name + " " + allPlayers[bp].last_name}</td><td>{l.league.player_pointsAgainst[bp]}</td></tr>
 																						)}
 																					</table>
 																				</td>
