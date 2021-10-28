@@ -61,7 +61,7 @@ class Matchups extends Component {
 			avatar: '',
 			weather: [],
 			playerStats: [],
-			sortBy: 'count',
+			sortBy: 'countFor',
 			Questionable: true,
 			Doubtful: true,
 			Out: true,
@@ -70,10 +70,12 @@ class Matchups extends Component {
 			QB: true,
 			RB: true,
 			WR: true,
-			TE: true
+			TE: true,
+			allDict: []
 
 
 		}
+		this.expandLeague = this.expandLeague.bind(this)
 		this.expandPlayer = this.expandPlayer.bind(this)
 		this.sortByOpposing = this.sortByOpposing.bind(this)
 		this.sortByStarting = this.sortByStarting.bind(this)
@@ -108,13 +110,13 @@ class Matchups extends Component {
 
 	sortByOpposing() {
 		this.setState({
-			sortBy: 'count2'
+			sortBy: 'countAgainst'
 		})
 	}
 
 	sortByStarting() {
 		this.setState({
-			sortBy: 'count'
+			sortBy: 'countFor'
 		})
 	}
 
@@ -128,6 +130,22 @@ class Matchups extends Component {
 		this.setState({
 			sortBy: 'opponent'
 		})
+	}
+
+	expandLeague(e) {
+		let leagues = document.getElementsByClassName("league")
+		for (let i = 0; i < leagues.length; i++) {
+			leagues[i].addEventListener("click", function() {
+				this.classList.toggle("active")
+				let lineup = this.nextSibling;
+				if(lineup.style.display !== 'none') {
+					lineup.style.display = 'none'
+				}
+				else {
+					lineup.style.display = 'table-row'
+				}
+			})
+		}
 	}
 
  	expandPlayer(e) {
@@ -153,12 +171,29 @@ class Matchups extends Component {
 			this.setState({
 				playerStats: players
 			})
+
 		})
  	}
 
 	componentDidMount() {
+		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
+		.then(res => {
+			this.setState({
+				user_id: res.data.user_id,
+				avatar: `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`
+			})
+			fetch(`/matchupsdata/${this.state.week}/${this.state.user_id}`)
+			.then(res => res.json()).then(data => {
+				let allDict = data.data
+				this.setState({
+					allDict: allDict
+				})
+			})
+		})
+
+
 		this.getStats();	
-		this.interval = setInterval(this.getStats, 1000);
+		this.interval = setInterval(this.getStats, 10000);
 		
 
 		fetch('/injuries')
@@ -185,75 +220,9 @@ class Matchups extends Component {
 			})
 		})
 
-		axios.get(`https://api.sleeper.app/v1/user/${this.state.username}`)
-		.then(res => {
-			const userID = res.data.user_id
-			this.setState({
-				user_id: userID,
-				avatar: `https://sleepercdn.com/avatars/thumbs/${res.data.avatar}`
+		
 
-			})
-			axios.get(`https://api.sleeper.app/v1/user/${this.state.user_id}/leagues/nfl/2021`)
-			.then(res => {
-				let leagues = res.data.filter(x => x.settings.best_ball !== 1)
-				for (let i = 0; i < leagues.length; i++) {
-					axios.get(`https://api.sleeper.app/v1/league/${leagues[i].league_id}/rosters`)
-					.then(res => {
-						let rid = res.data.find(x => x.owner_id === this.state.user_id) === undefined ? null : res.data.find(x => x.owner_id === this.state.user_id).roster_id
-						axios.get(`https://api.sleeper.app/v1/league/${leagues[i].league_id}/matchups/${this.state.week}`)
-						.then(res => {
-							let matchup = res.data.find(x => x.roster_id === rid || (x.co_owners !== undefined && x.co_owners.includes(x.roster_id)))
-							let opponent = res.data.find(x => x !== undefined && matchup !== undefined && x.matchup_id === matchup.matchup_id && x.roster_id !== rid)
-							let starters = this.state.players.concat(matchup === undefined ? null : matchup.starters.filter(x => x !== '0').map(x => { return {id: x, league: leagues[i].name, avatar: leagues[i].avatar, points: matchup.points, pointsOpp: opponent.points}}))
-							let oppStarters = this.state.oppPlayers.concat(opponent === undefined ? null : opponent.starters.filter(x => x !== '0').map(x => { return {id: x, league: leagues[i].name, avatar: leagues[i].avatar, points: matchup.points, pointsOpp: opponent.points}}))
-							const findOccurences = (players = [], type, type2) => {
-									const res = [];
-									players.forEach(el => {
-										const index = res.findIndex(obj => {
-											if (el !== null) {
-												return obj['name'] === el.id
-											}
-											else {
-												return obj['name'] === null
-											}
-											
-										});
-										if (index === -1 && el !== null) {
-											res.push({
-												"name": el.id,
-												[type2]: [{name: el.league, points: el.points, pointsOpp: el.pointsOpp}],
-												[type]: 1
- 											})
-										}
-										else if (index === -1 && el === null) {
-											res.push({
-												"name": null,
-												[type2]: [],
-												[type]: 1
-											})
-										}
-										
-										else {
-											res[index][type]++;
-											res[index][type2].push(el === null ? null : {name: el.league, points: el.points, pointsOpp: el.pointsOpp})
-											
-										};
-									});
-									return res;
-								};
-							this.setState({
-								players: starters,
-								oppPlayers: oppStarters,
-								playersDict: findOccurences(starters, 'count', 'leagues'),
-								oppPlayersDict: findOccurences(oppStarters, 'count2', 'leaguesAgainst')
-							})
-
-						})
-					})
-				}
-			})
-		})
-
+		
 	}
 
 	componentWillUnmount() {
@@ -262,36 +231,21 @@ class Matchups extends Component {
 
 	render() {
 		
-		let oppPlayersDict = this.state.oppPlayersDict;
-		let playersDict = this.state.playersDict;
-
-		let allDict = []
-		for (let i = 0; i < playersDict.length; i++) {
-			let a = oppPlayersDict.find(x => x.name === playersDict[i].name)
-			let b = a === undefined ? null : a.count2
-			let c = b === null ? Object.assign({}, playersDict[i], {name: playersDict[i].name, count2: 0, id: i}) : Object.assign({}, playersDict[i], a)
-			allDict.push(c)
-		}
-		for (let i = 0; i < oppPlayersDict.length; i++) {
-			let a = playersDict.find(x => x.name === oppPlayersDict[i].name)
-			let b = a === undefined ? {name: oppPlayersDict[i].name, count: 0, count2: oppPlayersDict[i].count2, leaguesAgainst: oppPlayersDict[i].leaguesAgainst, id: i} : null
-			if(b !== null) {
-				allDict.push(b)
-			}
-		}
+		let allDict = this.state.allDict.sort((a, b) => a.countFor < b.countFor ? 1 : -1)
+		
 		
 		for (let i = 0; i < allDict.length; i++) {
-			let p = this.state.projections.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name)
-			let inj = this.state.injuries.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].name].search_full_name && x.position === allPlayers[allDict[i].name].position)
-			let team = allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].team
+			let p = this.state.projections.find(x => allPlayers[allDict[i].id] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].id].search_full_name)
+			let inj = this.state.injuries.find(x => allPlayers[allDict[i].id] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].id].search_full_name && x.position === allPlayers[allDict[i].id].position)
+			let team = allPlayers[allDict[i].id] === undefined ? null : allPlayers[allDict[i].id].team
 			let forecast = this.state.weather.find(x => x.homeTeam === teams[team] || (p !== undefined && x.homeTeam === teams[p.opponent]))
-			let photo = allPlayers[allDict[i].name] === undefined ? blankplayer : allPlayers[allDict[i].name].swish_id === null ? (allPlayers[allDict[i].name].stats_id === null ? blankplayer : allPlayers[allDict[i].name].stats_id) : allPlayers[allDict[i].name].swish_id
-			let stats = this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && Number(x.id) === allPlayers[allDict[i].name].fantasy_data_id)
-			stats = stats !== undefined ? stats : this.state.playerStats.find(x => allPlayers[allDict[i].name] !== undefined && x.searchName === allPlayers[allDict[i].name].search_full_name)
+			let photo = allPlayers[allDict[i].id] === undefined ? blankplayer : allPlayers[allDict[i].id].swish_id === null ? (allPlayers[allDict[i].id].stats_id === null ? blankplayer : allPlayers[allDict[i].id].stats_id) : allPlayers[allDict[i].id].swish_id
+			let stats = this.state.playerStats.find(x => allPlayers[allDict[i].id] !== undefined && Number(x.id) === allPlayers[allDict[i].id].fantasy_data_id)
+			stats = stats !== undefined ? stats : this.state.playerStats.find(x => allPlayers[allDict[i].id] !== undefined && x.searchName === allPlayers[allDict[i].id].search_full_name)
 			allDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
 			allDict[i].status = inj === undefined ? 'Healthy' : inj.status 
 			allDict[i].projection = p === undefined ? '0' : Number(p.projection)
-			allDict[i].rank = p === undefined ? null : allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].position + p.rank
+			allDict[i].rank = p === undefined ? null : allPlayers[allDict[i].id] === undefined ? null : allPlayers[allDict[i].id].position + p.rank
 			allDict[i].opponent = p === undefined ? '-' : (forecast !== undefined && teams[p.opponent] === forecast.homeTeam ? `@${p.opponent}` : p.opponent)
 			allDict[i].photo = photo === blankplayer ? blankplayer : `https://assets1.sportsnet.ca/wp-content/uploads/players/280/${photo}.png`
 			allDict[i].c_a = stats === undefined ? null : (stats.c_a === '0/0' ? null : stats.c_a)
@@ -305,7 +259,7 @@ class Matchups extends Component {
 			allDict[i].targets = stats === undefined ? null : (stats.targets === '0' ? null : stats.targets)
 			allDict[i].recYds = stats === undefined ? null : (stats.recYds === '0' ? null : stats.recYds)
 			allDict[i].recTD = stats === undefined ? null : (stats.recTD === '0' ? null : stats.recTD)
-			allDict[i].position = allPlayers[allDict[i].name] === undefined ? null : allPlayers[allDict[i].name].position
+			allDict[i].position = allPlayers[allDict[i].id] === undefined ? null : allPlayers[allDict[i].id].position
 			
 		}
 
@@ -315,13 +269,13 @@ class Matchups extends Component {
 				<h1>Matchups {this.state.position}</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
 				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
-				<h3>{allDict.filter(x => (x.status === 'Out' || x.status === 'Injured Reserve') && Number(x.count) > 0).length} Inactives</h3>
+				<h3>{this.state.allDict.filter(x => (x.status === 'Out' || x.status === 'Injured Reserve') && Number(x.countFor) > 0).length} Inactives</h3>
 				<table style={{  margin: 'auto', width: '75%'}}>
 					<tr>
 						<th style={{ textAlign: 'center'}}>
-							Starters: {allDict.reduce((accumulator, current) => accumulator + (current.projection * current.count), 0).toLocaleString("en-US")} points - {allDict.reduce((accumulator, current) => accumulator + current.count, 0).toLocaleString("en-US")} players
+							Starters: {allDict.filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).reduce((accumulator, current) => accumulator + (current.projection * current.countFor), 0).toLocaleString("en-US")} points - {allDict.filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).reduce((accumulator, current) => accumulator + Number(current.countFor), 0).toLocaleString("en-US")} players
 							<br/>
-							Opponent Starters: {allDict.reduce((accumulator, current) => accumulator + (current.projection * current.count2), 0).toLocaleString("en-US")} points - {allDict.reduce((accumulator, current) => accumulator + current.count2, 0).toLocaleString("en-US")} players
+							Opponent Starters: {allDict.filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).reduce((accumulator, current) => accumulator + (current.projection * current.countAgainst), 0).toLocaleString("en-US")} points - {allDict.filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).reduce((accumulator, current) => accumulator + Number(current.countAgainst), 0).toLocaleString("en-US")} players
 						</th>
 					</tr>
 					<tr>
@@ -334,10 +288,10 @@ class Matchups extends Component {
 					</tr>
 					<tr>
 						<td colSpan="8">
+							<input name="Healthy" value="healthy" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Healthy}/><label for="Healthy">Healthy</label>
 							<input name="Questionable" value="questionable" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Questionable}/><label for="Questionable">Questionable</label>
 							<input name="Doubtful" value="doubtful" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Doubtful}/><label for="Doubtful">Doubtful</label>
 							<input name="Out" value="out" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Out}/><label for="Out">Out</label>
-							<input name="Healthy" value="healthy" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Healthy}/><label for="Healthy">Healthy</label>
 							<input name="InjuredReserve" value="injuredreserve" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.InjuredReserve}/><label for="injuredreserve">Injured Reserve</label>
 						</td>
 					</tr>
@@ -354,11 +308,11 @@ class Matchups extends Component {
 									<th style={{ cursor: 'pointer' }} name='count' onClick={this.sortByStarting}>Starting</th>
 									<th style={{ cursor: 'pointer' }} name='count2' onClick={this.sortByOpposing}>Opposing</th>
 								</tr>
-								{allDict.sort((a, b) => a[this.state.sortBy] < b[this.state.sortBy] ? 1 : -1).filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).map(player =>
+								{this.state.allDict.sort((a, b) => (Number(a[this.state.sortBy]) < Number(b[this.state.sortBy]) ? 1 : -1)).filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).map(player =>
 									<>
-									<tr className={player.position + " player-row " + player.status.replace(/ +/g, "") + " " + player.position} id={player.name} style={{  borderSpacing: '4em' }}>
+									<tr className={player.position + " player-row " + player.status.replace(/ +/g, "") + " " + player.position} id={player.id} style={{  borderSpacing: '4em' }}>
 										<td style={{ paddingLeft: '1em' }}><img style={{ width: '2.5em' }} src={player.photo} /></td>
-										<td className="name" onClick={this.expandPlayer} value={player.name}>{allPlayers[player.name] === undefined ? player.name : (allPlayers[player.name].position + " " + allPlayers[player.name].first_name + " " + allPlayers[player.name].last_name + " " + allPlayers[player.name].team)}
+										<td className="name" onClick={this.expandPlayer} value={player.id}>{allPlayers[player.id] === undefined ? player.id : (allPlayers[player.id].position + " " + allPlayers[player.id].first_name + " " + allPlayers[player.id].last_name + " " + allPlayers[player.id].team)}
 											&nbsp;{player.status === 'Healthy' ? null : '(' + player.status + ')'}
 											<br/>
 											<em style={{ fontSize: '14px' }}>
@@ -379,10 +333,10 @@ class Matchups extends Component {
 										<td>{player.projection} points</td>
 										<td>{player.rank}</td>
 										<td>{player.forecast}</td>
-										<td>{player.count}</td>
-										<td>({player.count2})</td>
+										<td>{Number(player.countFor)}</td>
+										<td>({Number(player.countAgainst)})</td>
 									</tr>
-									<tr className={player.name + " panel " + (player.status === null ? null : player.status.toLowerCase())} style={{ display: 'none' }}>
+									<tr className={player.id + " panel " + (player.status === null ? null : player.status.toLowerCase())} style={{ display: 'none' }}>
 										<td></td>
 										<td colSpan="7">
 											<table style={{ borderSpacing: '4em'}}>
@@ -390,13 +344,66 @@ class Matchups extends Component {
 													<td style={{ verticalAlign: 'top' }}>
 														<table className="leagues">
 															<tr><th>For</th></tr>
-															{player.leagues === undefined ? 0 : player.leagues.sort((a, b) => a.name > b.name ? 1 : -1).map(l => <tr className="league"><td>{l.name}</td><td>{l.points}</td><td>{l.pointsOpp}</td></tr>)}
+															{player.leaguesFor[0] === undefined ? 0 : player.leaguesFor[0].map(l => 
+																<>
+																<tr onClick={this.expandLeague} style={{ cursor: 'pointer' }} className="league"><td>{l.league.name}</td><td>{l.league.team_pf}</td><td>{l.league.team_pa}</td></tr>
+																<tr className={l.league.name + " lineup"} style={{ display: 'none'}}>
+																	<td colSpan="3">
+																		<table>
+																			<tr>
+																				<td>
+																					<table className="lineup-table">
+																						{l.league.lineupFor.map(lp => 
+																							<tr><td>{allPlayers[lp] === undefined ? lp : allPlayers[lp].first_name + " " + allPlayers[lp].last_name}</td><td>{l.league.player_pointsFor[lp]}</td></tr>
+																						)}
+																					</table>
+																				</td>
+																				<td>
+																					<table className="lineup-table">
+																						{l.league.lineupAgainst.map(lp => 
+																							<tr><td>{allPlayers[lp] === undefined ? lp : allPlayers[lp].first_name + " " + allPlayers[lp].last_name}</td><td>{l.league.player_pointsAgainst[lp]}</td></tr>
+																						)}
+																					</table>
+																				</td>
+																			</tr>
+																		</table>
+																	</td>
+																</tr>
+																</>
+															)}
+															
 														</table>
 													</td>
 													<td style={{ verticalAlign: 'top' }}>
 														<table className="leagues">
 															<tr><th>Against</th></tr>
-															{player.leaguesAgainst === undefined ? 0 : player.leaguesAgainst.sort((a, b) => a.name > b.name ? 1 : -1).map(l => <tr className="league"><td>{l.name}</td><td>{l.points}</td><td>{l.pointsOpp}</td></tr>)}
+															{player.leaguesAgainst[0] === undefined ? 0 : player.leaguesAgainst[0].map(l => 
+																<>
+																<tr onClick={this.expandLeague} style={{ cursor: 'pointer' }} className="league"><td>{l.league.name}</td><td>{l.league.team_pf}</td><td>{l.league.team_pa}</td></tr>
+																<tr className={l.league.name + " lineup"} style={{ display: 'none' }}>
+																	<td colSpan="3">
+																		<table>
+																			<tr>
+																				<td>
+																					<table className="lineup-table">
+																						{l.league.lineupFor.map(lp => 
+																							<tr><td>{allPlayers[lp] === undefined ? lp : allPlayers[lp].first_name + " " + allPlayers[lp].last_name}</td><td>{l.league.player_pointsFor[lp]}</td></tr>
+																						)}
+																					</table>
+																				</td>
+																				<td>
+																					<table className="lineup-table">
+																						{l.league.lineupAgainst.map(lp => 
+																							<tr><td>{allPlayers[lp] === undefined ? lp : allPlayers[lp].first_name + " " + allPlayers[lp].last_name}</td><td>{l.league.player_pointsAgainst[lp]}</td></tr>
+																						)}
+																					</table>
+																				</td>
+																			</tr>
+																		</table>
+																	</td>
+																</tr>	
+																</>	
+															)}
 														</table>
 													</td>
 												</tr>

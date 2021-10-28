@@ -165,13 +165,13 @@ def matchups(week, userid):
 		team = [m for m in matchups if m['roster_id'] == rosterID]
 		opponent = [m for m in matchups if m['roster_id'] != rosterID and len(team) > 0 and m['matchup_id'] == team[0]['matchup_id']]
 
-		starters = team[0]['starters'] if roster != [] else None
+		starters = team[0]['starters'] if (len(team) > 0 and roster != []) else None
 		if starters != None:
-			starters = list(map(lambda x: {'id': x, 'league': {'name': league['name'], 'lineup': team[0]['starters'], 'points': team[0]['players_points']}}, starters))
+			starters = list(map(lambda x: {'id': x, 'type': 1, 'league': {'name': league['name'], 'lineupFor': team[0]['starters'], 'lineupAgainst': opponent[0]['starters'], 'player_pointsFor': team[0]['players_points'], 'player_pointsAgainst': opponent[0]['players_points'], 'team_pf': team[0]['points'], 'team_pa': opponent[0]['points']}}, starters))
 		
 		startersOpp = opponent[0]['starters'] if opponent != [] else None
 		if startersOpp != None:
-			startersOpp = list(map(lambda x: {'id': x, 'league': {'name': league['name'], 'lineup': opponent[0]['starters'], 'points': opponent[0]['players_points'] }}, startersOpp))
+			startersOpp = list(map(lambda x: {'id': x, 'type': 2, 'league': {'name': league['name'], 'lineupFor': team[0]['starters'], 'lineupAgainst': opponent[0]['starters'], 'player_pointsFor': team[0]['players_points'], 'player_pointsAgainst': opponent[0]['players_points'], 'team_pf': team[0]['points'], 'team_pa': opponent[0]['points'] }}, startersOpp))
 
 		return {'starters': starters, 'startersOpp': startersOpp}
 
@@ -185,11 +185,11 @@ def matchups(week, userid):
 	startersOpp = list(filter(lambda x: x['startersOpp'] != None, playersDict))
 	startersOpp = [x['startersOpp'] for x in startersOpp]
 	startersOpp = [x for y in startersOpp for x in y]
-	def getCount(players, type):
+	def getCount(players):
 		res = []
 		for player in players:
 			index = next((index for (index, d) in enumerate(res) if d['id'] == player['id']), None)
-			if type == 1:	
+			if player['type'] == 1:	
 				if index != None:
 					res[index]['countFor'] += 1
 					res[index]['leaguesFor'].append({'league': player['league']})
@@ -215,9 +215,12 @@ def matchups(week, userid):
 					})
 
 		return res  
-				
-	starters = getCount(starters, 1)
-	startersOpp = getCount(startersOpp, 2)
+	
+	with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+		players = list(executor.map(getCount, [starters, startersOpp]))
+
+	starters = players[0]
+	startersOpp = players[1]
 	starterKeys = [x['id'] for x in starters]
 	oppKeys = [x['id'] for x in startersOpp]
 	allKeys = starterKeys + list(set(oppKeys) - set(starterKeys))
@@ -229,7 +232,6 @@ def matchups(week, userid):
 			'countAgainst': [x['countAgainst'] for x in startersOpp if x['id'] == key],
 			'leaguesFor': [x['leaguesFor'] for x in starters if x['id'] == key],
 			'leaguesAgainst': [x['leaguesAgainst'] for x in startersOpp if x['id'] == key]
-
 		})
 
 	return {'data': allStarters }
