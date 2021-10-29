@@ -67,10 +67,8 @@ class Matchups extends Component {
 			Out: true,
 			Healthy: true,
 			InjuredReserve: true,
-			QB: true,
-			RB: true,
-			WR: true,
-			TE: true,
+			filterPos: ['QB', 'RB', 'WR', 'TE'],
+			filterInj: ['Healthy', 'Questionable', 'Doubtful', 'Out', 'Injured Reserve'],
 			allDict: []
 
 
@@ -88,24 +86,39 @@ class Matchups extends Component {
 
 	filterByPosition(e) {
 		let position = e.target.name
-		let players = document.getElementsByClassName(position)
-		for (let i = 0; i < players.length; i++) {
-			players[i].style.display = this.state[position] ? 'none' : 'table-row'
+		let index = this.state.filterPos.indexOf(position)
+		let filterPos = this.state.filterPos
+		if (index === -1) {
+			filterPos.push(position)
+			this.setState({
+				filterPos: filterPos
+			})
 		}
-		this.setState({
-			[position]: !this.state[position]
-		})
+		else {
+			filterPos.splice(index, 1)
+			this.setState({
+				filterPos: filterPos
+			})
+		}
+		
 	}
 
 	filterByInjuryStatus(e) {
 		let injuryStatus = e.target.value
-		let injured = document.getElementsByClassName(e.target.name)
-		for (let i = 0; i < injured.length; i++) {
-			injured[i].style.display = this.state[e.target.name] ? 'none' : 'table-row'
+		let index = this.state.filterInj.indexOf(injuryStatus)
+		let filterInj = this.state.filterInj
+		if (index === -1) {
+			filterInj.push(injuryStatus)
+			this.setState({
+				filterInj: filterInj
+			})
 		}
-		this.setState({
-			[e.target.name]: !this.state[e.target.name]
-		})
+		else {
+			filterInj.splice(index, 1)
+			this.setState({
+				filterInj: filterInj
+			})
+		}
 	}
 
 	sortByOpposing() {
@@ -286,19 +299,19 @@ class Matchups extends Component {
 					</tr>
 					<tr>
 						<td colSpan="8">
-							<input onChange={this.filterByPosition} checked={this.state.QB} name="QB" type="checkbox"/><label for="QB">QB</label>
-							<input onChange={this.filterByPosition} checked={this.state.RB} name="RB" type="checkbox"/><label for="RB">RB</label>
-							<input onChange={this.filterByPosition} checked={this.state.WR} name="WR" type="checkbox"/><label for="WR">WR</label>
-							<input onChange={this.filterByPosition} checked={this.state.TE} name="TE" type="checkbox"/><label for="TE">TE</label>
+							<input onChange={this.filterByPosition} checked={this.state.filterPos.includes("QB")} name="QB" type="checkbox"/><label for="QB">QB</label>
+							<input onChange={this.filterByPosition} checked={this.state.filterPos.includes("RB")} name="RB" type="checkbox"/><label for="RB">RB</label>
+							<input onChange={this.filterByPosition} checked={this.state.filterPos.includes("WR")} name="WR" type="checkbox"/><label for="WR">WR</label>
+							<input onChange={this.filterByPosition} checked={this.state.filterPos.includes("TE")} name="TE" type="checkbox"/><label for="TE">TE</label>
 						</td>
 					</tr>
 					<tr>
 						<td colSpan="8">
-							<input name="Healthy" value="healthy" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Healthy}/><label for="Healthy">Healthy</label>
-							<input name="Questionable" value="questionable" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Questionable}/><label for="Questionable">Questionable</label>
-							<input name="Doubtful" value="doubtful" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Doubtful}/><label for="Doubtful">Doubtful</label>
-							<input name="Out" value="out" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.Out}/><label for="Out">Out</label>
-							<input name="InjuredReserve" value="injuredreserve" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.InjuredReserve}/><label for="injuredreserve">Injured Reserve</label>
+							<input name="Healthy" value="Healthy" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.filterInj.includes('Healthy')}/><label for="Healthy">Healthy</label>
+							<input name="Questionable" value="Questionable" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.filterInj.includes('Questionable')}/><label for="Questionable">Questionable</label>
+							<input name="Doubtful" value="Doubtful" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.filterInj.includes('Doubtful')}/><label for="Doubtful">Doubtful</label>
+							<input name="Out" value="Out" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.filterInj.includes('Out')}/><label for="Out">Out</label>
+							<input name="InjuredReserve" value="Injured Reserve" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.filterInj.includes('Injured Reserve')}/><label for="injuredreserve">Injured Reserve</label>
 						</td>
 					</tr>
 					<tr style={{ verticalAlign: 'top'}}>
@@ -314,7 +327,7 @@ class Matchups extends Component {
 									<th style={{ cursor: 'pointer' }} name='count' onClick={this.sortByStarting}>Starting</th>
 									<th style={{ cursor: 'pointer' }} name='count2' onClick={this.sortByOpposing}>Opposing</th>
 								</tr>
-								{this.state.allDict.sort((a, b) => (Number(a[this.state.sortBy]) < Number(b[this.state.sortBy]) ? 1 : -1)).filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).map(player =>
+								{this.state.allDict.sort((a, b) => (Number(a[this.state.sortBy]) < Number(b[this.state.sortBy]) ? 1 : -1)).filter(x => this.state.filterPos.includes(x.position)).filter(x => this.state.filterInj.includes(x.status)).map(player =>
 									<>
 									<tr className={player.position + " player-row " + player.status.replace(/ +/g, "") + " " + player.position} id={player.id} style={{  borderSpacing: '4em' }}>
 										<td style={{ paddingLeft: '1em' }}><img style={{ width: '2.5em' }} src={player.photo} /></td>
