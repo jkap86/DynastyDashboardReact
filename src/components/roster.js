@@ -228,9 +228,9 @@ class Roster extends Component {
 				)}
 			</tr>
 			</table>
-			<h2><img src={this.state.league_avatar}/></h2>
+			<h1><img src={this.state.league_avatar}/></h1>
 			<h1>{this.state.league_name}</h1>
-			<h2><img src={this.state.avatar}/></h2>
+			<h1><img src={this.state.avatar}/></h1>
 			<h1>{this.state.username}</h1>
 			<h2>Record: {this.state.record}</h2>
 			<h3>

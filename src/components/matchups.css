@@ -9,12 +9,16 @@
 
 .name:after {
 	float: right;
-	content: '\02795';
-	color: red;
+	content: '+';
+	font-size: 1.5em;
 }
 
 .name {
 	cursor: pointer;
+}
+
+.player-row {
+	font-weight: 600;
 }
 
 .player-row.active {
@@ -39,12 +43,26 @@
 	text-shadow: -.05em .05em 0 var(--primary-color), .05em .05em 0 var(--primary-color), .05em -.05em 0 var(--primary-color), -.05em -.05em 0 var(--primary-color);
 }
 
+.player-row:hover img {
+	background-color: var(--primary-color);
+	border: .15em solid var(--third-color);
+}
+
+.player-row.active:hover img {
+	background-color: var(--secondary-color);
+	border: .15em solid var(--third-color);
+
+}
+
 .active .name:after {
-	content: "\2796";
+	content: "-";
+	font-size: 2em;
 }
 
 .active img {
 	border: .15em solid var(--third-color);
+	box-shadow: .1em .1em .5em .25em var(--third-color);
+	background-color: var(--secondary-color);
 }
 
 .league:hover {
@@ -63,29 +81,32 @@
 
 table.leagues {
 	background-color: var(--primary-color);
-	border-radius: 5%;
-	box-shadow: .1em .1em .5em 1em var(--third-color);
+	border-radius: 1.5em;
+	box-shadow: .1em .1em 1em .5em var(--third-color);
 	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
 	border-collapse: collapse;
 }
 
 table.leagues td {
 	padding: 0 0.5em 0.5em 0.5em;
+	vertical-align: top;
 }
 
 .lineup {
 	background-color: var(--third-color);
 	border: 0.15em solid var(--secondary-color);
 	border-top: 0;
+	vertical-align: top;
 }
 
 table.lineup-table {
-	background-color: var(--secondary-color);
-	text-shadow: -.05em .05em 0 var(--primary-color), .05em .05em 0 var(--primary-color), .05em -.05em 0 var(--primary-color), -.05em -.05em 0 var(--primary-color);
+	background-color: var(--primary-color);
+	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
 	color: var(--third-color);
-	box-shadow: .1em .1em .5em .25em var(--primary-color);
+	box-shadow: .01em .01em .5em .25em var(--secondary-color);
 	font-weight: 600;
 	border-collapse: collapse;
+	border-radius: 1em;
 }
 
 table.lineup-table td {
@@ -93,8 +114,7 @@ table.lineup-table td {
 }
 
 table.lineup-table tr:hover {
-	background-color: var(--primary-color);
+	background-color: var(--secondary-color);
 	color: var(--third-color);
-	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
-
+	text-shadow: -.05em .05em 0 var(--primary-color), .05em .05em 0 var(--primary-color), .05em -.05em 0 var(--primary-color), -.05em -.05em 0 var(--primary-color);
 }

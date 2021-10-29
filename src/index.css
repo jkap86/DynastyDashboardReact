@@ -213,7 +213,7 @@ body {
   color: var(--third-color);
   text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05em 0 var(--secondary-color);
   font-weight: 300;
-  font-size: 18px;
+  font-size: 1em;
   padding-bottom: 150px;
 
 }

@@ -17,7 +17,17 @@ img {
 	width: 4em;
 	border-radius: 50%;
 	border: .15em solid var(--secondary-color);
+	box-shadow: .05em .05em .5em .1em var(--primary-color) 
 }
+
+h1 img {
+	width: 4em;
+	border-radius: 50%;
+	border: .15em solid var(--secondary-color);
+	box-shadow: .1em .1em .5em .25em var(--third-color);
+	background-color: var(--secondary-color)
+}
+
 
 table.table {
 	border-spacing: 0;
@@ -30,6 +40,8 @@ table.table {
 	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05px 0 var(--secondary-color);
 	box-shadow: 1px 1px 15px 20px var(--secondary-color);
 	border-collapse: collapse;
+	font-weight: 600;
+
 }
 
 table tr.row:hover {
@@ -64,6 +76,12 @@ table tr.row:hover .front {
 }
 
 table tr.row:hover img {
+	border: .15em solid var(--third-color);
+	background-color: var(--primary-color)
+}
+
+table tr.row img {
+	background-color: var(--secondary-color);
 	border: .15em solid var(--primary-color);
 }
 
@@ -73,10 +91,9 @@ table tr.row:hover img {
 }
 
 td {
-	padding: 1em 0 0 0;
+	padding-left: .5em;
 	text-align: center;
 	white-space: nowrap;
-	vertical-align: top;
 }	
 
 th {

@@ -171,7 +171,7 @@ class PlayerSearch extends Component {
 			<Theme/>
 			<h1><img src={this.state.avatar}/>{this.state.username}</h1>
 			<h2>{this.state.player}</h2>
-			<h2><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${headshot}.png`} /></h2>
+			<h1><img src={`https://assets1.sportsnet.ca/wp-content/uploads/players/280/${headshot}.png`} /></h1>
 			<h3>{this.state.info.filter(x => x.owner === this.state.username).length} Shares ({this.state.leagues.length} Leagues)</h3>
 			<h3>2021 Record: {wins} - {losses} <br/> {(wins/(wins + losses)).toFixed(4)}</h3>
 			<h3><button onClick={this.toggleOwned}><span className="front">Toggle Owned</span></button>&nbsp;

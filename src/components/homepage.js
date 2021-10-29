@@ -326,9 +326,9 @@ class Homepage extends Component {
 			<td style={{  verticalAlign: 'top'  }}>
 				<table className="table">
 					<tr>
-						<td></td>
-						<td>Player</td>
-						<td>Adds</td>
+						<th></th>
+						<th>Player</th>
+						<th>Adds</th>
 					</tr>
 					{this.state.trendingAdds.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player => 
 						<tr className="row">
@@ -348,9 +348,9 @@ class Homepage extends Component {
 			<td style={{  verticalAlign: 'top'  }}>
 				<table className="table">
 					<tr>
-						<td></td>
-						<td>Player</td>
-						<td>Drops</td>
+						<th></th>
+						<th>Player</th>
+						<th>Drops</th>
 					</tr>
 					{this.state.trendingDrops.filter(x => ['QB', 'RB', 'WR', 'TE'].includes(allPlayers[x.player_id].position)).sort((a, b) => a.count < b.count ? 1 : -1).map(player =>
 						<tr className="row">

@@ -312,32 +312,29 @@ class Matchups extends Component {
 				<Theme/>
 				<h1>Matchups {this.state.position}</h1>
 				<h2>{this.state.username} Week {this.state.week}</h2>
-				<h3><img style={{ margin: 'auto', width: '8em' }} src={this.state.avatar}/></h3>
+				<h1><img style={{ margin: 'auto', width: '4em' }} src={this.state.avatar}/></h1>
 				<h3>{this.state.allDict.filter(x => (x.status === 'Out' || x.status === 'Injured Reserve') && Number(x.countFor) > 0).length} Inactives</h3>
 				<table style={{  margin: 'auto', width: '75%'}}>
-					<tr>
-						<th style={{ textAlign: 'center'}}>
+					<tr style={{ paddingBottom: '2em' }}>
+						<th style={{ textAlign: 'center', paddingBottom: '0' }}>
 							Starters: {allDict.filter(x => this.state.filterPos.includes(x.position) && this.state.filterInj.includes(x.status)).reduce((accumulator, current) => accumulator + (current.projection * current.countFor), 0).toLocaleString("en-US")} points - {allDict.filter(x => this.state.filterPos.includes(x.position) && this.state.filterInj.includes(x.status)).reduce((accumulator, current) => accumulator + Number(current.countFor), 0).toLocaleString("en-US")} players
 							<br/>
 							Opponent Starters: {allDict.filter(x => this.state.filterPos.includes(x.position) && this.state.filterInj.includes(x.status)).reduce((accumulator, current) => accumulator + (current.projection * current.countAgainst), 0).toLocaleString("en-US")} points - {allDict.filter(x => this.state.filterPos.includes(x.position) && this.state.filterInj.includes(x.status)).reduce((accumulator, current) => accumulator + Number(current.countAgainst), 0).toLocaleString("en-US")} players
 						</th>
 					</tr>
 					<tr>
-						<td colSpan="8">
+						<th colSpan="8">
 							<input onChange={this.filterByPosition} checked={this.state.filterPos.includes("QB")} name="QB" type="checkbox"/><label for="QB">QB</label>
 							<input onChange={this.filterByPosition} checked={this.state.filterPos.includes("RB")} name="RB" type="checkbox"/><label for="RB">RB</label>
 							<input onChange={this.filterByPosition} checked={this.state.filterPos.includes("WR")} name="WR" type="checkbox"/><label for="WR">WR</label>
 							<input onChange={this.filterByPosition} checked={this.state.filterPos.includes("TE")} name="TE" type="checkbox"/><label for="TE">TE</label>
-						</td>
-					</tr>
-					<tr>
-						<td colSpan="8">
+						<br/>
 							<input name="Healthy" value="Healthy" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.filterInj.includes('Healthy')}/><label for="Healthy">Healthy</label>
 							<input name="Questionable" value="Questionable" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.filterInj.includes('Questionable')}/><label for="Questionable">Questionable</label>
 							<input name="Doubtful" value="Doubtful" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.filterInj.includes('Doubtful')}/><label for="Doubtful">Doubtful</label>
 							<input name="Out" value="Out" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.filterInj.includes('Out')}/><label for="Out">Out</label>
 							<input name="InjuredReserve" value="Injured Reserve" type="checkbox" onChange={this.filterByInjuryStatus} checked={this.state.filterInj.includes('Injured Reserve')}/><label for="injuredreserve">Injured Reserve</label>
-						</td>
+						</th>
 					</tr>
 					<tr style={{ verticalAlign: 'top'}}>
 						<td>
@@ -383,10 +380,10 @@ class Matchups extends Component {
 									</tr>
 									<tr className={player.id + " panel "} style={{ display: 'none' }}>
 										<td></td>
-										<td colSpan="7">
-											<table style={{ borderSpacing: '4em'}}>
+										<td colSpan="7" style={{ padding: '0' }}>
+											<table>
 												<tr>
-													<td style={{ verticalAlign: 'top' }}>
+													<td style={{ padding: '1em 2em 2em 0', verticalAlign: 'top' }}>
 														<table className="leagues">
 															<tr><th>For</th></tr>
 															{player.leaguesFor[0] === undefined ? 0 : player.leaguesFor[0].map(l => 
@@ -429,7 +426,7 @@ class Matchups extends Component {
 															
 														</table>
 													</td>
-													<td style={{ verticalAlign: 'top' }}>
+													<td style={{ padding: '1em 0 2em 2em', verticalAlign: 'top' }}>
 														<table className="leagues">
 															<tr><th>Against</th></tr>
 															{player.leaguesAgainst[0] === undefined ? 0 : player.leaguesAgainst[0].map(l => 
@@ -439,7 +436,7 @@ class Matchups extends Component {
 																	<td colSpan="3">
 																		<table>
 																			<tr>
-																				<td>
+																				<td style={{ verticalAlign: 'top' }}>
 																					<table className="lineup-table">
 																						<tr><th colSpan="2">Starters</th></tr>
 																						{l.league.lineupFor.map(lp => 
@@ -451,7 +448,7 @@ class Matchups extends Component {
 																						)}
 																					</table>
 																				</td>
-																				<td>
+																				<td style={{ verticalAlign: 'top' }}>
 																					<table className="lineup-table">
 																						<tr><th colSpan="2">Starters</th></tr>
 																						{l.league.lineupAgainst.map(lp => 
