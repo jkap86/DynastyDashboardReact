@@ -67,7 +67,7 @@ class Matchups extends Component {
 			Out: true,
 			Healthy: true,
 			InjuredReserve: true,
-			filterPos: ['QB', 'RB', 'WR', 'TE'],
+			filterPos: ['QB', 'FB', 'RB', 'WR', 'TE'],
 			filterInj: ['Healthy', 'Questionable', 'Doubtful', 'Out', 'Injured Reserve'],
 			allDict: []
 
@@ -88,14 +88,22 @@ class Matchups extends Component {
 		let position = e.target.name
 		let index = this.state.filterPos.indexOf(position)
 		let filterPos = this.state.filterPos
+
 		if (index === -1) {
 			filterPos.push(position)
+			if (position === 'RB') {
+				filterPos.push('FB')
+			}
 			this.setState({
 				filterPos: filterPos
 			})
 		}
 		else {
 			filterPos.splice(index, 1)
+			if (position === 'RB') {
+				let index2 = filterPos.indexOf('FB')
+				filterPos.splice(index2, 1)
+			}
 			this.setState({
 				filterPos: filterPos
 			})
@@ -107,6 +115,7 @@ class Matchups extends Component {
 		let injuryStatus = e.target.value
 		let index = this.state.filterInj.indexOf(injuryStatus)
 		let filterInj = this.state.filterInj
+
 		if (index === -1) {
 			filterInj.push(injuryStatus)
 			this.setState({
@@ -122,24 +131,40 @@ class Matchups extends Component {
 	}
 
 	sortByOpposing() {
+		let panels = document.getElementsByClassName("panel")
+		for (let i = 0; i < panels.length; i++) {
+			panels[i].style.display = 'none'
+		}
 		this.setState({
 			sortBy: 'countAgainst'
 		})
 	}
 
 	sortByStarting() {
+		let panels = document.getElementsByClassName("panel")
+		for (let i = 0; i < panels.length; i++) {
+			panels[i].style.display = 'none'
+		}
 		this.setState({
 			sortBy: 'countFor'
 		})
 	}
 
 	sortByProjection() {
+		let panels = document.getElementsByClassName("panel")
+		for (let i = 0; i < panels.length; i++) {
+			panels[i].style.display = 'none'
+		}
 		this.setState({
 			sortBy: 'projection'
 		})
 	}
 
 	sortByOpponent() {
+		let panels = document.getElementsByClassName("panel")
+		for (let i = 0; i < panels.length; i++) {
+			panels[i].style.display = 'none'
+		}
 		this.setState({
 			sortBy: 'opponent'
 		})
@@ -292,9 +317,9 @@ class Matchups extends Component {
 				<table style={{  margin: 'auto', width: '75%'}}>
 					<tr>
 						<th style={{ textAlign: 'center'}}>
-							Starters: {allDict.filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).reduce((accumulator, current) => accumulator + (current.projection * current.countFor), 0).toLocaleString("en-US")} points - {allDict.filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).reduce((accumulator, current) => accumulator + Number(current.countFor), 0).toLocaleString("en-US")} players
+							Starters: {allDict.filter(x => this.state.filterPos.includes(x.position) && this.state.filterInj.includes(x.status)).reduce((accumulator, current) => accumulator + (current.projection * current.countFor), 0).toLocaleString("en-US")} points - {allDict.filter(x => this.state.filterPos.includes(x.position) && this.state.filterInj.includes(x.status)).reduce((accumulator, current) => accumulator + Number(current.countFor), 0).toLocaleString("en-US")} players
 							<br/>
-							Opponent Starters: {allDict.filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).reduce((accumulator, current) => accumulator + (current.projection * current.countAgainst), 0).toLocaleString("en-US")} points - {allDict.filter(x => ["QB", "RB", "WR", "TE", "FB"].includes(x.position)).reduce((accumulator, current) => accumulator + Number(current.countAgainst), 0).toLocaleString("en-US")} players
+							Opponent Starters: {allDict.filter(x => this.state.filterPos.includes(x.position) && this.state.filterInj.includes(x.status)).reduce((accumulator, current) => accumulator + (current.projection * current.countAgainst), 0).toLocaleString("en-US")} points - {allDict.filter(x => this.state.filterPos.includes(x.position) && this.state.filterInj.includes(x.status)).reduce((accumulator, current) => accumulator + Number(current.countAgainst), 0).toLocaleString("en-US")} players
 						</th>
 					</tr>
 					<tr>
@@ -329,9 +354,10 @@ class Matchups extends Component {
 								</tr>
 								{this.state.allDict.sort((a, b) => (Number(a[this.state.sortBy]) < Number(b[this.state.sortBy]) ? 1 : -1)).filter(x => this.state.filterPos.includes(x.position)).filter(x => this.state.filterInj.includes(x.status)).map(player =>
 									<>
-									<tr className={player.position + " player-row " + player.status.replace(/ +/g, "") + " " + player.position} id={player.id} style={{  borderSpacing: '4em' }}>
+									<tbody onClick={this.expandPlayer} value={player.id} className={player.position + " " + player.status.replace(/ +/g, "")} id={player.id}>
+									<tr className="player-row">
 										<td style={{ paddingLeft: '1em' }}><img style={{ width: '2.5em' }} src={player.photo} /></td>
-										<td className="name" onClick={this.expandPlayer} value={player.id}>{allPlayers[player.id] === undefined ? player.id : (allPlayers[player.id].position + " " + allPlayers[player.id].first_name + " " + allPlayers[player.id].last_name + " " + allPlayers[player.id].team)}
+										<td className="name">{allPlayers[player.id] === undefined ? player.id : (allPlayers[player.id].position + " " + allPlayers[player.id].first_name + " " + allPlayers[player.id].last_name + " " + allPlayers[player.id].team)}
 											&nbsp;{player.status === 'Healthy' ? null : '(' + player.status + ')'}
 											<br/>
 											<em style={{ fontSize: '14px' }}>
@@ -355,7 +381,7 @@ class Matchups extends Component {
 										<td>{Number(player.countFor)}</td>
 										<td>({Number(player.countAgainst)})</td>
 									</tr>
-									<tr className={player.id + " panel " + (player.status === null ? null : player.status.toLowerCase())} style={{ display: 'none' }}>
+									<tr className={player.id + " panel "} style={{ display: 'none' }}>
 										<td></td>
 										<td colSpan="7">
 											<table style={{ borderSpacing: '4em'}}>
@@ -449,6 +475,7 @@ class Matchups extends Component {
 											</table>
 										</td>
 									</tr>
+									</tbody>
 									</>
 									)}
 							</table>
