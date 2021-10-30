@@ -186,7 +186,6 @@ class PlayerSearch extends Component {
 						<th>Owner</th>
 						<th>Status</th>
 						<th>Current<br/>Record</th>
-						<th>Waiver Budget<br/>(Used/Initial)</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -199,7 +198,6 @@ class PlayerSearch extends Component {
 						<td>{league.owner}</td>
 						<td>{league.status}</td>
 						<td>{league.wins + " - " + league.losses}</td>
-						<td>{league.owner === 'available' ? `($${league.budget_used_user}/$${league.budget})` : null}</td>
 						<td><Link to={'/roster/' + league.league_id + '/' + (league.owner === 'available' ? this.state.username : league.owner)}><button><span className="front">View {league.owner === 'available' ? this.state.username : league.owner} Roster</span></button></Link></td>
 					</tr>
 				)}
@@ -211,7 +209,6 @@ class PlayerSearch extends Component {
 						<td>{league.owner}</td>
 						<td>{league.status}</td>
 						<td>{league.wins + " - " + league.losses}</td>
-						<td>{league.owner === 'available' ? `($${league.budget_used_user}/$${league.budget})` : null}</td>
 						<td><Link to={'/roster/' + league.league_id + '/' + (league.owner === 'available' ? this.state.username : league.owner)}><button><span className="front">View {league.owner === 'available' ? this.state.username : league.owner} Roster</span></button></Link></td>
 					</tr>
 				)}

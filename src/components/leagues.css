@@ -38,7 +38,7 @@ table.table {
 	border-radius: 2.5em 2.5em;
 	color: var(--primary-color);
 	text-shadow: -.05em .05em 0 var(--secondary-color), .05em .05em 0 var(--secondary-color), .05em -.05em 0 var(--secondary-color), -.05em -.05px 0 var(--secondary-color);
-	box-shadow: 1px 1px 15px 20px var(--secondary-color);
+	box-shadow: .1em .1em 1.5em 2em var(--secondary-color);
 	border-collapse: collapse;
 	font-weight: 600;
 
@@ -63,6 +63,7 @@ table tr.row:hover button {
 
 table tr.row button {
 	background-color: var(--primary-color);
+	font-size: 1em;
 }
 
 table tr.row .front {
@@ -91,7 +92,7 @@ table tr.row img {
 }
 
 td {
-	padding-left: .5em;
+	padding: 0 0 0 .5em;
 	text-align: center;
 	white-space: nowrap;
 }	

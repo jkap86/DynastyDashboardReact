@@ -131,6 +131,10 @@ class Matchups extends Component {
 	}
 
 	sortByOpposing() {
+		let players = document.getElementsByClassName("player-row")
+		for (let i = 0; i < players.length; i++) {
+			players[i].classList.remove("active")
+		}
 		let panels = document.getElementsByClassName("panel")
 		for (let i = 0; i < panels.length; i++) {
 			panels[i].style.display = 'none'
@@ -141,6 +145,10 @@ class Matchups extends Component {
 	}
 
 	sortByStarting() {
+		let players = document.getElementsByClassName("player-row")
+		for (let i = 0; i < players.length; i++) {
+			players[i].classList.remove("active")
+		}
 		let panels = document.getElementsByClassName("panel")
 		for (let i = 0; i < panels.length; i++) {
 			panels[i].style.display = 'none'
@@ -151,6 +159,10 @@ class Matchups extends Component {
 	}
 
 	sortByProjection() {
+		let players = document.getElementsByClassName("player-row")
+		for (let i = 0; i < players.length; i++) {
+			players[i].classList.remove("active")
+		}
 		let panels = document.getElementsByClassName("panel")
 		for (let i = 0; i < panels.length; i++) {
 			panels[i].style.display = 'none'
@@ -161,6 +173,10 @@ class Matchups extends Component {
 	}
 
 	sortByOpponent() {
+		let players = document.getElementsByClassName("player-row")
+		for (let i = 0; i < players.length; i++) {
+			players[i].classList.remove("active")
+		}
 		let panels = document.getElementsByClassName("panel")
 		for (let i = 0; i < panels.length; i++) {
 			panels[i].style.display = 'none'
@@ -357,7 +373,7 @@ class Matchups extends Component {
 										<td className="name">{allPlayers[player.id] === undefined ? player.id : (allPlayers[player.id].position + " " + allPlayers[player.id].first_name + " " + allPlayers[player.id].last_name + " " + allPlayers[player.id].team)}
 											&nbsp;{player.status === 'Healthy' ? null : '(' + player.status + ')'}
 											<br/>
-											<em style={{ fontSize: '14px' }}>
+											<em style={{ fontSize: '.85em' }}>
 												{player.c_a}&nbsp;
 												{player.passYds === null ? null : player.passYds + ' Yds'}&nbsp;
 												{player.passTD === null ? null : player.passTD + ' TD'}&nbsp;
@@ -374,7 +390,7 @@ class Matchups extends Component {
 										<td>{player.opponent}</td>
 										<td>{player.projection} points</td>
 										<td>{player.rank}</td>
-										<td>{player.forecast}</td>
+										<td className="forecast">{player.forecast}</td>
 										<td>{Number(player.countFor)}</td>
 										<td>({Number(player.countAgainst)})</td>
 									</tr>
