@@ -256,7 +256,7 @@ class Homepage extends Component {
 				(<div className="nav-item" id="transactions">
 					<form method="POST">
 						<input type="text" name="username" placeholder="username" onBlur={this.handleChange}/>
-						<label for="week" style={{ fontSize: "24px", padding: "10px" }}>Week</label>
+						<label for="week" style={{ padding: "10px" }}>Week</label>
 						<select type="text" name="week" placeholder="week" onBlur={this.handleChange} defaultValue={this.state.week}>
 							<option>select week</option>
 							<option value="1">1</option>
@@ -289,7 +289,7 @@ class Homepage extends Component {
 				(<div className = "nav-item" id="matchups">
 					<form method="POST">
 						<input type="text" name="username" placeholder="username" onBlur={this.handleChange}/>
-						<label for="week" style={{ fontSize: "24px", padding: "10px" }}>Week</label>
+						<label for="week" style={{ padding: "10px" }}>Week</label>
 						<select type="text" name="week" placeholder="week" onBlur={this.handleChange} defaultValue={this.state.week}>
 							<option>select week</option>
 							<option value="1">1</option>

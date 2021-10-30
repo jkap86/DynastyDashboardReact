@@ -127,7 +127,7 @@ class CommonLeagues extends Component {
 			<h1>Common Leagues</h1>
 			<h1><img src={this.state.avatar1}/>{this.state.username1 + " & " + this.state.username2}<img src={this.state.avatar2} /></h1>
 			<h3>{this.state.leaguesCommon.length} Leagues</h3>
-			<table className="heading-table" style={{  margin: 'auto'  }}>
+			<table className="heading-table" style={{  margin: 'auto', paddingBottom: '1em' }}>
 				<tr>
 					<th></th>
 					<th>{this.state.username1}</th>
@@ -142,11 +142,6 @@ class CommonLeagues extends Component {
 					<td>2021 PF - PA</td>
 					<td>{this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.ptsFor1, 0).toLocaleString("en-US")} - {this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.ptsAgainst1, 0).toLocaleString("en-US")}</td>
 					<td>{this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.ptsFor2, 0).toLocaleString("en-US")} - {this.state.leaguesCommon.reduce((accumlator, current) => accumlator + current.ptsAgainst2, 0).toLocaleString("en-US")}</td>
-				</tr>
-				<tr className="row">
-					<td>2020 Finishes:</td> 
-					<td>1st {this.state.leaguesCommon.filter(x => x.roster_id1 === x.winner).length}  2nd {this.state.leaguesCommon.filter(x => x.roster_id1 === x.second).length}</td>
-					<td>1st {this.state.leaguesCommon.filter(x => x.roster_id2 === x.winner).length}  2nd {this.state.leaguesCommon.filter(x => x.roster_id2 === x.second).length}</td>
 				</tr>
 			</table>			
 			<table className="table">
@@ -168,13 +163,13 @@ class CommonLeagues extends Component {
 					<tr key={league.league_id} className="row">
 						<td><img src={league.avatar === null ? blankplayer : `https://sleepercdn.com/avatars/thumbs/${league.avatar}`}/></td>
 						<td>{league.name}</td>
-						<td>{league.wins1} - {league.losses1} {league.roster_id1 === league.winner ? '(1st)' : (league.roster_id1 === league.second ? '(2nd)' : null)}</td>
-						<td>{league.ptsFor1}</td>
-						<td>{league.ptsAgainst1}</td>
+						<td>{league.wins1} - {league.losses1}</td>
+						<td>{league.ptsFor1 === null ? null : league.ptsFor1.toLocaleString("en-US")}</td>
+						<td>{league.ptsAgainst1 === null ? null : league.ptsAgainst1.toLocaleString("en-US")}</td>
 						<td><Link to={'/roster/' + league.league_id + '/' + this.state.username1}><button><span className="front">View {this.state.username1} roster</span></button></Link></td>
 						<td>{league.wins2} - {league.losses2} {league.roster_id2 === league.winner ? '(1st)' : (league.roster_id2 === league.second ? '(2nd)' : null)}</td>
-						<td>{league.ptsFor2}</td>
-						<td>{league.ptsAgainst2}</td>
+						<td>{league.ptsFor2 === null ? null : league.ptsFor2.toLocaleString("en-US")}</td>
+						<td>{league.ptsAgainst2 === null ? null : league.ptsAgainst2.toLocaleString("en-US")}</td>
 						<td><Link to={'/roster/' + league.league_id + '/' + this.state.username2}><button><span className="front">View {this.state.username2} roster</span></button></Link></td>
 					</tr>
 				)}

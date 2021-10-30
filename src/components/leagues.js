@@ -142,7 +142,7 @@ class Leagues extends Component {
 				<td>{this.state.leagues.length}</td>  
 				<td>BestBall: {this.state.leagues.filter(x => x.best_ball === 1).length}</td>
 			</tr>
-			<tr className="row">{this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1).length > 0 ? this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1).length + " Invalid Lineups" : null}</tr > 
+			<tr className="row">{this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1 && x.roster_id !== 0) ? this.state.leagues.filter(x => x.spots !== x.starters && x.best_ball !== 1 && x.roster_id !== 0).length + " Invalid Lineups" : null}</tr > 
 			</table>
 			</h2>
 			<table className="table">
@@ -191,7 +191,7 @@ class Leagues extends Component {
 						</td>
 						<td>
 							{league.name}<br/><em>{league.roster_id === league.winner ? '2020 1st' : (league.roster_id === league.second ? '2020 2nd' : null)}</em>
-							<div>{league.spots !== league.starters && (league.best_ball !== 1) ? 'INVALID' : null}</div>
+							<div>{league.spots !== league.starters && (league.best_ball !== 1) && league.roster_id !== 0 ? 'INVALID' : null}</div>
 						</td>
 						<td>
 							{league.wins} - {league.losses}

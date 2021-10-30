@@ -44,12 +44,14 @@ input {
 	border-radius: 25%;
 	border: .15em solid var(--secondary-color);
 	padding: .25em;
+	font-size: 1.5vw;
 }
 
 select {
 	border-radius: 25%;
 	border: .15em solid var(--secondary-color);
 	padding: .25em;
+	font-size: 1.5em
 }
 
 .link {

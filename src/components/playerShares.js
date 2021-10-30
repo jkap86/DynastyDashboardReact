@@ -215,7 +215,7 @@ class PlayerShares extends Component {
 				<input onChange={this.filterYear} checked={this.state.nine} value="2012" name="nine" type="checkbox"/> Pre-2013
 			</label>
 			<button onClick={this.checkAll}>
-				<span className="front" style={{ fontSize: '1.2em' }}>
+				<span className="front" style={{ fontSize: '0.8em' }}>
 				Check/Uncheck All
 				</span>
 			</button>

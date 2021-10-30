@@ -313,7 +313,7 @@ class Roster extends Component {
 				<tr><th colspan="7" style={{  textAlign: 'center'  }}>Picks - {picks.reduce((accumulator, current) => accumulator + Number(current.value), 0).toLocaleString("en-US")}</th></tr>
 				<tr>
 					<td colspan="7">
-						<table>
+						<table className="table" style={{ boxShadow: 'none', width: '100%'}}>
 							<tr>
 								<td style={{ verticalAlign: 'top'}}>
 									<table style={{ borderCollapse: 'collapse'}}>
