@@ -1,13 +1,13 @@
 :root {
-	--primary-color: darkblue;
-	--secondary-color: #69BE28;
-	--third-color: #FFEFD5;
+	--primary-color: #000033;
+	--secondary-color: #0076B6;
+	--third-color: orange;
 }
 
 [data-theme="ari"] {
 	--primary-color: #97233F;
-	--secondary-color: black;
-	--third-color: white;
+	--secondary-color: white;
+	--third-color: black;
 }
 
 [data-theme="atl"] {
@@ -89,8 +89,8 @@
 }
 
 [data-theme="no"] {
-	--primary-color: #D3BC8D;
-	--secondary-color: #101820;
+	--primary-color: #101820;
+	--secondary-color: #D3BC8D;
 	--third-color: #FFFFFF;
 }
 
@@ -114,8 +114,8 @@
 
 [data-theme="pit"] {
 	--primary-color: #FFB612;
-	--secondary-color: #A5ACAF;
-	--third-color: #101820;
+	--secondary-color: #101820;
+	--third-color: #A5ACAF;
 }
 
 [data-theme="sea"] {
