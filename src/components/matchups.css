@@ -1,7 +1,7 @@
 .panel {
 	background-color: var(--secondary-color);
 	color: var(--third-color);
-	text-shadow: -.025em .025em 0 var(--primary-color), .025em .025em 0 var(--primary-color), .025em -.025em 0 var(--primary-color), -.025em -.025em 0 var(--primary-color);
+	text-shadow: -.035em .035em 0 var(--primary-color), .035em .035em 0 var(--primary-color), .035em -.035em 0 var(--primary-color), -.035em -.035em 0 var(--primary-color);
 	font-weight: 600;
 	border: 0.25em solid var(--primary-color);
 	border-top: 0;
@@ -24,7 +24,7 @@
 .player-row.active {
 	background-color: var(--primary-color);
 	color: var(--third-color);
-	text-shadow: -.025em .025em 0 var(--secondary-color), .025em .025em 0 var(--secondary-color), .025em -.025em 0 var(--secondary-color), -.025em -.025em 0 var(--secondary-color);
+	text-shadow: -.035em .035em 0 var(--secondary-color), .035em .035em 0 var(--secondary-color), .035em -.035em 0 var(--secondary-color), -.035em -.035em 0 var(--secondary-color);
 	border: 0.25em solid var(--primary-color);
 	border-bottom: 0;
 }
@@ -32,7 +32,7 @@
 .player-row.active:hover {
 	background-color: var(--primary-color);
 	color: var(--third-color);
-	text-shadow: -.025em .025em 0 var(--secondary-color), .025em .025em 0 var(--secondary-color), .025em -.025em 0 var(--secondary-color), -.025em -.025em 0 var(--secondary-color);
+	text-shadow: -.035em .035em 0 var(--secondary-color), .035em .035em 0 var(--secondary-color), .035em -.035em 0 var(--secondary-color), -.035em -.035em 0 var(--secondary-color);
 	border: 0.25em solid var(--primary-color);
 	border-bottom: 0;
 }
@@ -40,7 +40,7 @@
 .player-row:hover {
 	background-color: var(--secondary-color);
 	color: var(--third-color);
-	text-shadow: -.025em .025em 0 var(--primary-color), .025em .025em 0 var(--primary-color), .025em -.025em 0 var(--primary-color), -.025em -.025em 0 var(--primary-color);
+	text-shadow: -.035em .035em 0 var(--primary-color), .035em .035em 0 var(--primary-color), .035em -.035em 0 var(--primary-color), -.035em -.035em 0 var(--primary-color);
 }
 
 .player-row:hover img {
@@ -68,12 +68,12 @@
 .league:hover {
 	background-color: var(--third-color);
 	color: var(--secondary-color);
-	text-shadow: -.025em .025em 0 var(--primary-color), .025em .025em 0 var(--primary-color), .025em -.025em 0 var(--primary-color), -.025em -.025em 0 var(--primary-color);
+	text-shadow: -.035em .035em 0 var(--primary-color), .035em .035em 0 var(--primary-color), .035em -.035em 0 var(--primary-color), -.035em -.035em 0 var(--primary-color);
 }
 
 .league.active {
 	background-color: var(--secondary-color);
-	text-shadow: -.025em .025em 0 var(--primary-color), .025em .025em 0 var(--primary-color), .025em -.025em 0 var(--primary-color), -.025em -.025em 0 var(--primary-color);
+	text-shadow: -.035em .035em 0 var(--primary-color), .035em .035em 0 var(--primary-color), .035em -.035em 0 var(--primary-color), -.035em -.035em 0 var(--primary-color);
 	color: var(--third-color);
 	border: 0.15em solid var(--secondary-color);
 	border-bottom: 0;
@@ -83,7 +83,7 @@ table.leagues {
 	background-color: var(--primary-color);
 	border-radius: 1.5em;
 	box-shadow: .1em .1em 1em .5em var(--third-color);
-	text-shadow: -.025em .025em 0 var(--secondary-color), .025em .025em 0 var(--secondary-color), .025em -.025em 0 var(--secondary-color), -.025em -.025em 0 var(--secondary-color);
+	text-shadow: -.035em .035em 0 var(--secondary-color), .035em .035em 0 var(--secondary-color), .035em -.035em 0 var(--secondary-color), -.035em -.035em 0 var(--secondary-color);
 	border-collapse: collapse;
 }
 
@@ -101,7 +101,7 @@ table.leagues td {
 
 table.lineup-table {
 	background-color: var(--primary-color);
-	text-shadow: -.025em .025em 0 var(--secondary-color), .025em .025em 0 var(--secondary-color), .025em -.025em 0 var(--secondary-color), -.025em -.025em 0 var(--secondary-color);
+	text-shadow: -.035em .035em 0 var(--secondary-color), .035em .035em 0 var(--secondary-color), .035em -.035em 0 var(--secondary-color), -.035em -.035em 0 var(--secondary-color);
 	color: var(--third-color);
 	box-shadow: .01em .01em .5em .25em var(--secondary-color);
 	font-weight: 600;
@@ -116,7 +116,7 @@ table.lineup-table td {
 table.lineup-table tr:hover {
 	background-color: var(--secondary-color);
 	color: var(--third-color);
-	text-shadow: -.025em .025em 0 var(--primary-color), .025em .025em 0 var(--primary-color), .025em -.025em 0 var(--primary-color), -.025em -.025em 0 var(--primary-color);
+	text-shadow: -.035em .035em 0 var(--primary-color), .035em .035em 0 var(--primary-color), .035em -.035em 0 var(--primary-color), -.035em -.035em 0 var(--primary-color);
 }
 
 .forecast {

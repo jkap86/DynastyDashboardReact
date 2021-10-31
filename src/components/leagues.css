@@ -1,14 +1,14 @@
 h1, h2, h3 {
 	text-align: center;
 	white-space: nowrap;
-	text-shadow: -.025em .025em 0 var(--secondary-color), .025em .025em 0 var(--secondary-color), .025em -.025em 0 var(--secondary-color), -.025em -.025em 0 var(--secondary-color);
+	text-shadow: -.035em .035em 0 var(--secondary-color), .035em .035em 0 var(--secondary-color), .035em -.035em 0 var(--secondary-color), -.035em -.035em 0 var(--secondary-color);
 }
 
 table.heading-table {
 	background-color: var(--primary-color);
 	height: 20%;
 	width: 50%;
-	text-shadow: -.03em .03em 0 var(--secondary-color), .03em .03em 0 var(--secondary-color), .03em -.03em 0 var(--secondary-color), -.03em -.03em 0 var(--secondary-color);
+	text-shadow: -.035em .035em 0 var(--secondary-color), .035em .035em 0 var(--secondary-color), .035em -.035em 0 var(--secondary-color), -.035em -.035em 0 var(--secondary-color);
 	border-collapse: collapse;
 	margin: auto;
 	font-weight: 600;
@@ -39,7 +39,7 @@ table.table {
 	background-color: var(--third-color);
 	border-radius: 2.5em 2.5em;
 	color: var(--primary-color);
-	text-shadow: -.025em .025em 0 var(--secondary-color), .025em .025em 0 var(--secondary-color), .025em -.025em 0 var(--secondary-color), -.025em -.025px 0 var(--secondary-color);
+	text-shadow: -.035em .035em 0 var(--secondary-color), .035em .035em 0 var(--secondary-color), .035em -.035em 0 var(--secondary-color), -.035em -.035em 0 var(--secondary-color);
 	box-shadow: .1em .1em 1.5em 1em var(--secondary-color);
 	border-collapse: collapse;
 	font-weight: 600;
@@ -56,7 +56,7 @@ table tr.row:hover {
 table tr:hover .front {
 	background-color: var(--primary-color);
 	color: var(--third-color);
-	text-shadow: -.03em .03em 0 var(--secondary-color), .03em .03em 0 var(--secondary-color), .03em -.03em 0 var(--secondary-color), -.03em -.03px 0 var(--secondary-color);
+	text-shadow: -.035em .035em 0 var(--secondary-color), .035em .035em 0 var(--secondary-color), .035em -.035em 0 var(--secondary-color), -.035em -.035px 0 var(--secondary-color);
 }
 
 table tr.row:hover button {
@@ -70,14 +70,14 @@ table tr.row button {
 
 table tr.row .front {
 	background-color: var(--secondary-color);
-	text-shadow: -.025em .025em 0 var(--primary-color), .025em .025em 0 var(--primary-color), .025em -.025em 0 var(--primary-color), -.025em -.025px 0 var(--primary-color);
+	text-shadow: -.035em .035em 0 var(--primary-color), .035em .035em 0 var(--primary-color), .035em -.035em 0 var(--primary-color), -.035em -.035px 0 var(--primary-color);
 	font-weight: 600;
 	color: var(--third-color)
 }
 
 table tr.row:hover .front {
 	background-color: var(--primary-color);
-	text-shadow: -.03em .03em 0 var(--secondary-color), .03em .03em 0 var(--secondary-color), .03em -.03em 0 var(--secondary-color), -.03em -.03px 0 var(--secondary-color);
+	text-shadow: -.035em .035em 0 var(--secondary-color), .035em .035em 0 var(--secondary-color), .035em -.035em 0 var(--secondary-color), -.035em -.035px 0 var(--secondary-color);
 }
 
 table tr.row:hover img {

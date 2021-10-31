@@ -11,7 +11,7 @@
 	padding-left: 0 0 0 100%;
 	background-color: var(--secondary-color);
 	color: var(--primary-color);
-	text-shadow: -1px 1px 0 var(--third-color), 1px 1px 0 var(--third-color), 1px -1px 0 var(--third-color), -1px -1px 0 var(--third-color);
+	text-shadow: -.05em .05em 0 var(--third-color), .05em .05em 0 var(--third-color), .05em -.05em 0 var(--third-color), -.05em -.05em 0 var(--third-color);
 	font-size: 1em;
 	font-weight: 600;
 	border-top: 0.25em solid var(--primary-color);
