@@ -15,7 +15,6 @@ table.heading-table {
 }
 
 img {
-	width: 4em;
 	border-radius: 50%;
 	border: .15em solid var(--secondary-color);
 	box-shadow: .05em .05em .5em .1em var(--primary-color) 
@@ -98,10 +97,29 @@ table tr.row img {
 td {
 	padding: 0 0 0 .5em;
 	text-align: center;
-	white-space: nowrap;
+	
 }	
 
 th {
 	text-align: center;
-	padding: 1.5em;
+}
+
+@media only screen and (max-width: 1000px) {
+	th {
+		padding: .5em;
+		font-size: .9em
+	}
+	img {
+		width: 2em;
+	}
+}
+
+@media only screen and (min-width: 1001px) {
+	th {
+		padding: 1.5em;
+		white-space: nowrap;
+	}
+	img {
+		width: 4em;
+	}
 }

@@ -69,7 +69,8 @@ class Matchups extends Component {
 			InjuredReserve: true,
 			filterPos: ['QB', 'FB', 'RB', 'WR', 'TE'],
 			filterInj: ['Healthy', 'Questionable', 'Doubtful', 'Out', 'Injured Reserve'],
-			allDict: []
+			allDict: [],
+			values: []
 
 
 		}
@@ -79,6 +80,7 @@ class Matchups extends Component {
 		this.sortByStarting = this.sortByStarting.bind(this)
 		this.sortByProjection = this.sortByProjection.bind(this)
 		this.sortByOpponent = this.sortByOpponent.bind(this)
+		this.sortByDynastyValue = this.sortByDynastyValue.bind(this)
 		this.filterByInjuryStatus = this.filterByInjuryStatus.bind(this)
 		this.filterByPosition = this.filterByPosition.bind(this)
 		this.getStats = this.getStats.bind(this)
@@ -186,6 +188,20 @@ class Matchups extends Component {
 		})
 	}
 
+	sortByDynastyValue() {
+		let players = document.getElementsByClassName("player-row")
+		for (let i = 0; i < players.length; i++) {
+			players[i].classList.remove("active")
+		}
+		let panels = document.getElementsByClassName("panel")
+		for (let i = 0; i < panels.length; i++) {
+			panels[i].style.display = 'none'
+		}
+		this.setState({
+			sortBy: 'value'
+		})
+	}
+
 	expandLeague(e) {
 		let leagues = document.getElementsByClassName("league")
 		for (let i = 0; i < leagues.length; i++) {
@@ -280,8 +296,13 @@ class Matchups extends Component {
 			})
 		})
 
-		
-
+		fetch('/dynastyvalues')
+		.then(res => res.json()).then(data => {
+			let players = data.name
+			this.setState({
+				values: players
+			})
+		})
 		
 	}
 
@@ -300,6 +321,7 @@ class Matchups extends Component {
 			let team = allPlayers[allDict[i].id] === undefined ? null : allPlayers[allDict[i].id].team
 			let forecast = this.state.weather.find(x => x.homeTeam === teams[team] || (p !== undefined && x.homeTeam === teams[p.opponent]))
 			let photo = allPlayers[allDict[i].id] === undefined ? blankplayer : allPlayers[allDict[i].id].swish_id === null ? (allPlayers[allDict[i].id].stats_id === null ? blankplayer : allPlayers[allDict[i].id].stats_id) : allPlayers[allDict[i].id].swish_id
+			let value = this.state.values.find(x => allPlayers[allDict[i].id] !== undefined && x.searchName === allPlayers[allDict[i].id].search_full_name)
 			let stats = this.state.playerStats.find(x => allPlayers[allDict[i].id] !== undefined && Number(x.id) === allPlayers[allDict[i].id].fantasy_data_id)
 			stats = stats !== undefined ? stats : this.state.playerStats.find(x => allPlayers[allDict[i].id] !== undefined && x.searchName === allPlayers[allDict[i].id].search_full_name)
 			allDict[i].forecast = forecast === undefined ? null : forecast.forecast + " " + forecast.wind.split(' ')[0].replace('m', 'mph')
@@ -320,7 +342,7 @@ class Matchups extends Component {
 			allDict[i].recYds = stats === undefined ? null : (stats.recYds === '0' ? null : stats.recYds)
 			allDict[i].recTD = stats === undefined ? null : (stats.recTD === '0' ? null : stats.recTD)
 			allDict[i].position = allPlayers[allDict[i].id] === undefined ? null : allPlayers[allDict[i].id].position
-			
+			allDict[i].value = value === undefined ? '0' : value.value
 		}
 
 		return <>
@@ -362,6 +384,7 @@ class Matchups extends Component {
 									<th style={{ cursor: 'pointer' }} name='projection' onClick={this.sortByProjection}>Projection</th>
 									<th>Rank</th>
 									<th>Forecast</th>
+									<th style={{ cursor: 'pointer' }} name='value' onClick={this.sortByDynastyValue}>Dynasty<br/>Value</th>
 									<th style={{ cursor: 'pointer' }} name='count' onClick={this.sortByStarting}>Starting</th>
 									<th style={{ cursor: 'pointer' }} name='count2' onClick={this.sortByOpposing}>Opposing</th>
 								</tr>
@@ -391,6 +414,7 @@ class Matchups extends Component {
 										<td>{player.projection} points</td>
 										<td>{player.rank}</td>
 										<td className="forecast">{player.forecast}</td>
+										<td>{Number(player.value).toLocaleString("en-US")}</td>
 										<td>{Number(player.countFor)}</td>
 										<td>({Number(player.countAgainst)})</td>
 									</tr>

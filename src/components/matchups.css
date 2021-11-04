@@ -119,9 +119,5 @@ table.lineup-table tr:hover {
 	text-shadow: -.035em .035em 0 var(--primary-color), .035em .035em 0 var(--primary-color), .035em -.035em 0 var(--primary-color), -.035em -.035em 0 var(--primary-color);
 }
 
-.forecast {
-	width: 2em;
-	white-space: pre-wrap;
-}
 
 
