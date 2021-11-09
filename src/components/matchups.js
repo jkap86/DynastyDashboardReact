@@ -70,7 +70,9 @@ class Matchups extends Component {
 			filterPos: ['QB', 'FB', 'RB', 'WR', 'TE'],
 			filterInj: ['Healthy', 'Questionable', 'Doubtful', 'Out', 'Injured Reserve'],
 			allDict: [],
-			values: []
+			values: [],
+			benchDict: [],
+			toggleType: 'starters'
 
 
 		}
@@ -84,6 +86,21 @@ class Matchups extends Component {
 		this.filterByInjuryStatus = this.filterByInjuryStatus.bind(this)
 		this.filterByPosition = this.filterByPosition.bind(this)
 		this.getStats = this.getStats.bind(this)
+		this.toggleStartersBench = this.toggleStartersBench.bind(this)
+	}
+
+	toggleStartersBench(e) {
+		let toggleType = this.state.toggleType
+		if (toggleType === 'starters') {
+			this.setState({
+				toggleType: 'bench'
+			})
+		}
+		else {
+			this.setState({
+				toggleType: 'starters'
+			})
+		}
 	}
 
 	filterByPosition(e) {
@@ -249,6 +266,13 @@ class Matchups extends Component {
 				allDict: allDict
 			})
 		})
+		fetch(`/benchplayers/${this.state.week}/${this.state.user_id}`)
+		.then(res => res.json()).then(data => {
+			let benchDict = data.bench
+			this.setState({
+				benchDict: benchDict
+			})
+		})
  	}
 
 	componentDidMount() {
@@ -313,7 +337,7 @@ class Matchups extends Component {
 	render() {
 		
 		let allDict = this.state.allDict.sort((a, b) => a.countFor < b.countFor ? 1 : -1)
-		
+		let benchDict = this.state.benchDict.sort((a, b) => a.countFor < b.countFor ? 1 : -1)
 		
 		for (let i = 0; i < allDict.length; i++) {
 			let p = this.state.projections.find(x => allPlayers[allDict[i].id] !== undefined && x.searchName.replace('jr', '') === allPlayers[allDict[i].id].search_full_name)
@@ -345,6 +369,16 @@ class Matchups extends Component {
 			allDict[i].value = value === undefined ? '0' : value.value
 		}
 
+		for (let i = 0; i < benchDict.length; i++) {
+			let projection = this.state.projections.find(x => allPlayers[benchDict[i].id] !== undefined && x.searchName.replace('jr', '') === allPlayers[benchDict[i].id].search_full_name)
+			let value = this.state.values.find(x => allPlayers[benchDict[i].id] !== undefined && x.searchName === allPlayers[benchDict[i].id].search_full_name)
+			let photo = allPlayers[benchDict[i].id] === undefined ? blankplayer : allPlayers[benchDict[i].id].swish_id === null ? (allPlayers[benchDict[i].id].stats_id === null ? blankplayer : allPlayers[benchDict[i].id].stats_id) : allPlayers[benchDict[i].id].swish_id
+			benchDict[i].photo = photo === blankplayer ? blankplayer : `https://assets1.sportsnet.ca/wp-content/uploads/players/280/${photo}.png`
+			benchDict[i].value = value === undefined ? '0' : value.value
+			benchDict[i].projection = projection === undefined ? '0' : Number(projection.projection)
+
+		}
+
 		return <>
 				<Link to="/" className="link">Home</Link>
 				<Theme/>
@@ -352,6 +386,9 @@ class Matchups extends Component {
 				<h2>{this.state.username} Week {this.state.week}</h2>
 				<h1><img style={{ margin: 'auto', width: '4em' }} src={this.state.avatar}/></h1>
 				<h3>{this.state.allDict.filter(x => (x.status === 'Out' || x.status === 'Injured Reserve') && Number(x.countFor) > 0).length} Inactives</h3>
+				<h3>
+					<button onClick={this.toggleStartersBench}><span className="front">Toggle Starters/Bench</span></button>
+				</h3>
 				<table style={{  margin: 'auto', width: '75%'}}>
 					<tr style={{ paddingBottom: '2em' }}>
 						<th style={{ textAlign: 'center', paddingBottom: '0' }}>
@@ -375,7 +412,7 @@ class Matchups extends Component {
 						</th>
 					</tr>
 					<tr style={{ verticalAlign: 'top'}}>
-						<td>
+						<td style={ this.state.toggleType === 'starters' ? { display: 'table-cell'} : { display: 'none' }} id="starters">
 							<table className="table">
 								<tr>
 									<th></th>
@@ -517,8 +554,44 @@ class Matchups extends Component {
 									)}
 							</table>
 						</td>
+						<td style={ this.state.toggleType === 'bench' ? { display: 'table-cell'} : { display: 'none' }}  id="bench">
+							<table className="table">
+							<tr>
+								<th></th>
+								<th>Player</th>
+								<th style={{ cursor: 'pointer' }} name='projection' onClick={this.sortByProjection}>Projection</th>
+								<th style={{ cursor: 'pointer' }} name='value' onClick={this.sortByDynastyValue}>Dynasty<br/>Value</th>
+								<th style={{ cursor: 'pointer' }} name='count' onClick={this.sortByStarting}>Benched</th>
+								<th style={{ cursor: 'pointer' }} name='count2' onClick={this.sortByOpposing}>Opposing Benched</th>
+							</tr>
+							{this.state.benchDict.sort((a, b) => Number(a.projection) < Number(b.projection) ? 1 : -1).map(benchPlayer => 
+								<>
+								<tbody onClick={this.expandPlayer}>
+								<tr className="player-row" style={{ cursor: 'pointer' }}>
+									<td><img style={{  width: '2.5em'  }} src={benchPlayer.photo}/></td>
+									<td>{allPlayers[benchPlayer.id].position + " " + allPlayers[benchPlayer.id].first_name + " " + allPlayers[benchPlayer.id].last_name + " " + allPlayers[benchPlayer.id].team}</td>
+									<td>{Number(benchPlayer.projection)} points</td>
+									<td>{Number(benchPlayer.value).toLocaleString("en-US")}</td>
+									<td>{Number(benchPlayer.countFor)}</td>
+									<td>{Number(benchPlayer.countAgainst)}</td>
+								</tr>
+								<tr className="panel" style={{display: 'none'}}>
+									<td colSpan="6"> 
+										<table>
+											{benchPlayer.leaguesFor[0] === undefined ? 0 : benchPlayer.leaguesFor[0].map(l => 
+												<tr className="row"><td>{l.league.name}</td></tr>
+											)}
+										</table>
+									</td>
+								</tr>
+								</tbody>
+								</>
+							)}
+						</table>
+						</td>
 					</tr>
 				</table>
+				
 
 			</>
 	}

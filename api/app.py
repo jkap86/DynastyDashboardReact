@@ -236,3 +236,85 @@ def matchups(week, userid):
 
 	return {'data': allStarters }
 
+
+@app.route('/benchplayers/<week>/<userid>')
+def benchplayers(week, userid):
+	leagues = requests.get('https://api.sleeper.app/v1/user/' + userid + '/leagues/nfl/2021').json()
+	leagues = list(filter(lambda x: 'best_ball' not in x['settings'] or x['settings']['best_ball'] != 1, leagues))
+	def getBenchPlayers(league):
+		rosters = requests.get('https://api.sleeper.app/v1/league/' + league['league_id'] + '/rosters').json()
+		matchups = requests.get('https://api.sleeper.app/v1/league/' + league['league_id'] + '/matchups/' + week).json()
+		roster = [r for r in rosters if r['owner_id'] == userid or (r['co_owners'] != None and userid in r['co_owners'])]
+		rosterID = roster[0]['roster_id'] if roster != [] else 0
+		team = [m for m in matchups if m['roster_id'] == rosterID]
+		opponent = [m for m in matchups if m['roster_id'] != rosterID and len(team) > 0 and m['matchup_id'] == team[0]['matchup_id']]
+
+		bench = list(set(team[0]['players_points'].keys()) - set(team[0]['starters'])) if team != [] else None
+		if bench != None:
+			bench = list(map(lambda x: {'id': x, 'type': 1, 'league': {'name': league['name']}}, bench))
+
+		benchOpp = list(set(opponent[0]['players_points'].keys()) - set(opponent[0]['starters'])) if opponent != [] else None
+		if benchOpp != None:
+			benchOpp = list(map(lambda x: {'id': x, 'type': 2, 'league': {'name': league['name']}}, benchOpp))
+
+		return { 'bench': bench, 'benchOpp': benchOpp }
+
+	with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+		playersDict = list(executor.map(getBenchPlayers, leagues))
+
+	bench = list(filter(lambda x: x['bench'] != None, playersDict))
+	bench = [x['bench'] for x in bench]
+	bench = [x for y in bench for x in y]
+
+	benchOpp = list(filter(lambda x: x['benchOpp'] != None, playersDict))
+	benchOpp = [x['benchOpp'] for x in benchOpp]
+	benchOpp = [x for y in benchOpp for x in y]
+
+	def getCount(players):
+		res = []
+		for player in players:
+			index = next((index for (index, d) in enumerate(res) if d['id'] == player['id']), None)
+			if player['type'] == 1:
+				if index != None:
+					res[index]['countFor'] += 1
+					res[index]['leaguesFor'].append({'league': player['league']}) 
+				else:
+					res.append({
+						'id': player['id'],
+						'countFor': 1,
+						'leaguesFor': [{'league': player['league']}]
+					})
+			else:
+				if index != None:
+					res[index]['countAgainst'] += 1
+					res[index]['leaguesAgainst'].append({'league': player['league']})
+				else:
+					res.append({
+						'id': player['id'],
+						'countAgainst': 1,
+						'leaguesAgainst': [{'league': player['league']}]
+					})
+
+		return res
+
+
+	benchPlayers = getCount(bench)
+	benchPlayersOpp = getCount(benchOpp)
+	
+	benchPlayersKeys = [x['id'] for x in benchPlayers]
+	benchPlayersOppKeys = [x['id'] for x in benchPlayersOpp]
+
+	allKeys = benchPlayersKeys + list(set(benchPlayersOppKeys) - set(benchPlayersKeys))
+	allBenchPlayers = []
+	for key in allKeys:
+		allBenchPlayers.append({
+			'id': key,
+			'countFor': [x['countFor'] for x in benchPlayers if x['id'] == key],
+			'countAgainst': [x['countAgainst'] for x in benchPlayersOpp if x['id'] == key],
+			'leaguesFor': [x['leaguesFor'] for x in benchPlayers if x['id'] == key],
+			'leaguesAgainst': [x['leaguesAgainst'] for x in benchPlayersOpp if x['id'] == key]
+		})
+
+	return {'bench': allBenchPlayers}
+
+
